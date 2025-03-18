@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { IUser } from "../models/user";
+import { IUser } from "../interfaces/User";
 import { Types } from "mongoose";
 
 const transporter = nodemailer.createTransport({
