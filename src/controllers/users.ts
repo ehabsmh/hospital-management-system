@@ -111,7 +111,9 @@ class UserController {
       if (!process.env.JWT_SECRET_KEY) {
         throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
       }
-      const userToken = jwt.sign({ user }, process.env.JWT_SECRET_KEY);
+
+      const userObj = user.toObject();
+      const userToken = jwt.sign(userObj, process.env.JWT_SECRET_KEY);
 
       res.json({ message: "Password created successfully.", userToken });
     } catch (err) {
@@ -168,7 +170,6 @@ class UserController {
 
       if (!isMatch) {
         res.status(400).json({ error: { message: "Password is incorrect" } });
-
         return;
       }
 
@@ -176,7 +177,8 @@ class UserController {
         throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
       }
 
-      const userToken = jwt.sign({ user }, process.env.JWT_SECRET_KEY);
+      const userObj = user.toObject();
+      const userToken = jwt.sign(userObj, process.env.JWT_SECRET_KEY);
       res.json({ data: userToken });
     } catch (err) {
       if (err instanceof NotFoundError) {
