@@ -1,19 +1,38 @@
 import { model, Schema } from "mongoose";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
+import UserModel, { IUserMethods, IUser, IDoctor } from "./../interfaces/User";
+
+const doctorSchema = new Schema<IDoctor>({
+  rank: {
+    type: String,
+    enum: ["استشاري", "أخصائي", "طبيب عام"],
+    required: true,
+  },
+  specialty: { type: String, ref: "Clinic", required: true },
+  isAvailable: { type: Boolean, default: false },
+  avatar: { type: String, required: true },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date, required: true },
+  totalPatients: { type: Number },
+  patientsHandled: { type: Number, default: 0 },
+  lastSignin: { type: Date, required: true },
+});
 
 // Create a schema
-const userSchema = new Schema({
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   fullName: {
     type: String,
     required: true,
     unique: true,
     validate: {
       validator: function (v: string) {
-        return /^[A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,}$/.test(v);
+        return /^[A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,} [A-Zا-ي]{1}[a-zا-ي]{2,}$/.test(
+          v
+        );
       },
       message: `Please insert your quartet name correctly.
-      Each name should start with uppercase letter.`
-    }
+      Each name should start with uppercase letter.`,
+    },
   },
   phoneNumber: {
     type: String,
@@ -22,8 +41,8 @@ const userSchema = new Schema({
     validate: {
       validator: function (v: string) {
         return /^01[0125)]\d{8}$/.test(v);
-      }
-    }
+      },
+    },
   },
   email: {
     type: String,
@@ -32,30 +51,35 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    minLength: 8,
+    validate: {
+      validator(v: string) {
+        if (v.length < 8) return false;
+        return true;
+      },
+      message: "password must be at least 8 characters or digits",
+    },
   },
   avatar: {
     type: String,
-    required: true
+    required: true,
   },
   role: {
     type: String,
-    enum: ['admin', 'receptionist']
+    enum: ["admin", "receptionist", "doctor"],
   },
-})
 
-// Hash user password before saving to the database.
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) return next();
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// })
+  doctorInfo: {
+    type: doctorSchema,
+    required: function () {
+      return this.role === "doctor";
+    },
+  },
+});
 
-userSchema.methods.comparePassword = async function (password: string) {
-  return await bcrypt.compare(password, this.password);
-}
+userSchema.method("comparePassword", async function (password: string) {
+  return await bcrypt.compare(password, this.password!);
+});
 
-// Create a model based on the schema
-const User = model('user', userSchema);
+const User = model("user", userSchema);
 
 export default User;
