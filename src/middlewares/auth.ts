@@ -35,7 +35,6 @@ function isAdmin(req: CustomRequest, res: Response, next: NextFunction) {
   }
 
   if (req.user.role !== "admin") {
-    console.log(req.user.role);
     res.status(403).send("Access denied.");
     return;
   }
