@@ -11,11 +11,9 @@ const doctorSchema = new Schema<IDoctor>({
   specialty: { type: String, ref: "Clinic", required: true },
   isAvailable: { type: Boolean, default: false },
   avatar: { type: String, required: true },
-  startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
   totalPatients: { type: Number },
   patientsHandled: { type: Number, default: 0 },
-  lastSignin: { type: Date, required: true },
+  lastSignin: { type: Date },
 });
 
 // Create a schema

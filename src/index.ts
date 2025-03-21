@@ -3,12 +3,18 @@ import DB from "./database/db";
 import "dotenv/config";
 import userRouter from "./views/users";
 import clinicRouter from "./views/clinics";
+import { seedSchedule } from "./models/schedule";
 
 const app = express();
 const PORT = 3000;
 
 // connect and instantiate DB
 export const db = new DB();
+
+// Seed initial schedules
+(async function () {
+  await seedSchedule();
+})();
 
 app.use(express.json());
 
