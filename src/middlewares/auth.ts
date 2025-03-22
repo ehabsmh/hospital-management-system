@@ -70,4 +70,18 @@ function isReceptionist(req: CustomRequest, res: Response, next: NextFunction) {
   next();
 }
 
-export { auth, isAdmin, isDoctor, isReceptionist };
+function isNotDoctor(req: CustomRequest, res: Response, next: NextFunction) {
+  if (!req.user) {
+    res.status(403).send("Access denied.");
+    return;
+  }
+
+  if (req.user.role === "doctor") {
+    res.status(403).send("Access denied.");
+    return;
+  }
+
+  next();
+}
+
+export { auth, isAdmin, isDoctor, isReceptionist, isNotDoctor };
