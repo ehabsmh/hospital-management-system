@@ -64,6 +64,7 @@ const initialSchedules = [
 workScheduleSchema.pre("save", function (next) {
   console.log(this);
   if (this.extraDay) this.availableDays.push("Friday");
+  if (!this.extraDay) this.availableDays.pop();
 
   next();
 });

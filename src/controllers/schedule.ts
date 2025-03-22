@@ -11,29 +11,70 @@ class ScheduleController {
     // get current day
     const currentDay = now.toLocaleString("en-us", { weekday: "long" });
 
-    // get shifts based on the current day
-    const workSchedule = await WorkSchedule.findOne(
-      {
-        availableDays: currentDay,
-      },
-      { shifts: 1, _id: 0, groupName: 1 }
-    );
+    try {
+      // get shifts based on the current day
+      const workSchedule = await WorkSchedule.findOne(
+        {
+          availableDays: currentDay,
+        },
+        { shifts: 1, _id: 0, groupName: 1 }
+      );
 
-    // get shift index within the current time
-    const shifts = workSchedule?.shifts;
-    const shiftIndex = findShiftIndex(shifts as shiftsType, now);
+      // get shift index within the current time
+      const shifts = workSchedule?.shifts;
+      const shiftIndex = findShiftIndex(shifts as shiftsType, now);
 
-    // get doctors for the current shift
-    const doctorSchedule = await DoctorSchedule.find({
-      belongsToGroup: workSchedule?.groupName,
-      shiftIndex,
-    }).populate("doctor");
+      // get doctors for the current shift
+      const doctorSchedule = await DoctorSchedule.find({
+        belongsToGroup: workSchedule?.groupName,
+        shiftIndex,
+      }).populate("doctor");
 
-    if (!doctorSchedule) {
-      throw new NotFoundError("No doctor found for current shift.");
+      if (!doctorSchedule) {
+        throw new NotFoundError("No doctor found for current shift.");
+      }
+
+      res.json({ data: doctorSchedule });
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error." });
     }
+  }
 
-    res.json({ data: doctorSchedule });
+  static async setExtraDay(req: Request, res: Response) {
+    try {
+      // get work schedules
+      const workSchedule = await WorkSchedule.find();
+
+      // find the group that has extra day is set to true
+      const extraDayGroup = workSchedule.find((schedule) => schedule.extraDay);
+      const otherGroup = workSchedule.find((schedule) => !schedule.extraDay);
+
+      // set it to false and remove the extra day (friday) from available days
+      extraDayGroup!.extraDay = false;
+
+      // set the other group to true
+      otherGroup!.extraDay = true;
+
+      // save the changes
+      if (extraDayGroup && otherGroup) {
+        await WorkSchedule.bulkSave([extraDayGroup, otherGroup]);
+        res.json({ message: "Extra day set successfully." });
+      } else {
+        throw new NotFoundError("Groups not found or extra day group not set.");
+      }
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error." });
+    }
   }
 }
 
