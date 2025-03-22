@@ -4,7 +4,6 @@ export interface IDoctor {
   rank: "استشاري" | "أخصائي" | "طبيب عام";
   specialty: string;
   isAvailable: boolean;
-  avatar: string;
   startTime: Date;
   endTime: Date;
   totalPatients?: number;

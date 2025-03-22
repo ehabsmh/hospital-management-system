@@ -4,6 +4,8 @@ import "dotenv/config";
 import userRouter from "./views/users";
 import clinicRouter from "./views/clinics";
 import { seedSchedule } from "./models/schedule";
+import doctorScheduleRouter from "./views/doctorSchedule";
+import scheduleRouter from "./views/schedule";
 
 const app = express();
 const PORT = 3000;
@@ -20,6 +22,8 @@ app.use(express.json());
 
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1", clinicRouter);
+app.use("/api/v1/schedule", doctorScheduleRouter);
+app.use("/api/v1/schedule", scheduleRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
