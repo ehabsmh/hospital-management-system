@@ -2,19 +2,21 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import UserModel, { IUserMethods, IUser, IDoctor } from "./../interfaces/User";
 
-const doctorSchema = new Schema<IDoctor>({
-  rank: {
-    type: String,
-    enum: ["استشاري", "أخصائي", "طبيب عام"],
-    required: true,
+const doctorSchema = new Schema<IDoctor>(
+  {
+    rank: {
+      type: String,
+      enum: ["استشاري", "اخصائي", "طبيب عام"],
+      required: true,
+    },
+    specialty: { type: String, ref: "Clinic", required: true },
+    isAvailable: { type: Boolean, default: false },
+    totalPatients: { type: Number },
+    patientsHandled: { type: Number, default: 0 },
+    lastSignin: { type: Date },
   },
-  specialty: { type: String, ref: "Clinic", required: true },
-  isAvailable: { type: Boolean, default: false },
-  avatar: { type: String, required: true },
-  totalPatients: { type: Number },
-  patientsHandled: { type: Number, default: 0 },
-  lastSignin: { type: Date },
-});
+  { _id: false }
+);
 
 // Create a schema
 const userSchema = new Schema<IUser, UserModel, IUserMethods>({
