@@ -26,11 +26,11 @@ const workScheduleSchema = new Schema(
         _id: false,
       },
     ],
+
+    extraDay: { type: Boolean, default: false },
   },
   { timestamps: false, versionKey: false, id: false }
 );
-
-const WorkSchedule = model("work_schedule", workScheduleSchema);
 
 const initialSchedules = [
   {
@@ -44,6 +44,7 @@ const initialSchedules = [
       { startTime: "16:00", endTime: "20:00" },
       { startTime: "20:00", endTime: "00:00" },
     ],
+    extraDay: true,
   },
   {
     groupName: "Group B",
@@ -57,26 +58,22 @@ const initialSchedules = [
       { startTime: "20:00", endTime: "00:00" },
     ],
   },
-  {
-    groupName: "Group C",
-    availableDays: ["Friday"],
-    shifts: [
-      { startTime: "00:00", endTime: "04:00" },
-      { startTime: "04:00", endTime: "08:00" },
-      { startTime: "08:00", endTime: "12:00" },
-      { startTime: "12:00", endTime: "16:00" },
-      { startTime: "16:00", endTime: "20:00" },
-      { startTime: "20:00", endTime: "00:00" },
-    ],
-  },
 ];
+
+// Before saving, if extra day is true, add "Friday" to available days
+workScheduleSchema.pre("save", function (next) {
+  console.log(this);
+  if (this.extraDay) this.availableDays.push("Friday");
+
+  next();
+});
 
 // Function to seed initial schedules
 export const seedSchedule = async () => {
   try {
     const existingScheduleLength = await WorkSchedule.countDocuments();
     if (existingScheduleLength === 0) {
-      await WorkSchedule.insertMany(initialSchedules);
+      await WorkSchedule.create(initialSchedules);
       console.log("Initial work schedules added successfully.");
     } else {
       console.log("Work schedules already exist. Skipping seeding.");
@@ -85,5 +82,7 @@ export const seedSchedule = async () => {
     console.error("Error seeding work schedules:", error);
   }
 };
+
+const WorkSchedule = model("work_schedule", workScheduleSchema);
 
 export default WorkSchedule;
