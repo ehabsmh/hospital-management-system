@@ -27,19 +27,15 @@ app.use("/api/v1", clinicRouter);
 app.use("/api/v1/schedule", doctorScheduleRouter);
 app.use("/api/v1/schedule", scheduleRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // Run the endpoint every saturday at 00:00
 cron.schedule("0 0 * * 6", async () => {
   try {
-    const data = await axios.put(
-      "http://localhost:3000/api/v1/schedule/extra-day"
-    );
+    await axios.put("http://localhost:3000/api/v1/schedule/extra-day");
   } catch (err) {
     console.error("Error running cron job:", err);
   }
 });
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
+app.listen(PORT, () =>
+  console.log(`Hospital_MS app listening on port ${PORT}!`)
+);
