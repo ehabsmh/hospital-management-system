@@ -9,7 +9,7 @@ const doctorSchema = new Schema<IDoctor>(
       enum: ["استشاري", "اخصائي", "طبيب عام"],
       required: true,
     },
-    specialty: { type: String, ref: "Clinic", required: true },
+    specialty: { type: String, ref: "clinic", required: true },
     isAvailable: { type: Boolean, default: false },
     totalPatients: { type: Number },
     patientsHandled: { type: Number, default: 0 },
