@@ -11,6 +11,7 @@ import axios from "axios";
 import reservationTypesRouter from "./views/reservationTypes";
 import patientsRouter from "./views/patients";
 import reservationRouter from "./views/reservation";
+import consultationRouter from "./views/consultation";
 
 const app = express();
 const PORT = 3000;
@@ -32,6 +33,7 @@ app.use("/api/v1/schedule", scheduleRouter);
 app.use("/api/v1/reservation-types", reservationTypesRouter);
 app.use("/api/v1/patients", patientsRouter);
 app.use("/api/v1/reservations", reservationRouter);
+app.use("/api/v1/consultations", consultationRouter);
 
 // Run the endpoint every saturday at 00:00
 cron.schedule("0 0 * * 6", async () => {

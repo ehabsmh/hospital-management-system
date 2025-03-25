@@ -12,7 +12,7 @@ export interface IDoctor {
 }
 
 export interface IUser {
-  _id: Types.ObjectId;
+  _id: string;
   fullName: string;
   phoneNumber: string;
   password?: string | null;

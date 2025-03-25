@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { IUser } from "../interfaces/User";
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
   user?: IUser;
 }
 function auth(req: CustomRequest, res: Response, next: NextFunction) {
