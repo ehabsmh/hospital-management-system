@@ -70,6 +70,16 @@ class PatientController {
             message: err.message,
           },
         });
+
+        return;
+      }
+      if (err instanceof RequireError) {
+        res.status(err.statusCode).json({
+          error: {
+            message: err.message,
+          },
+        });
+
         return;
       }
       res.status(500).json({ error: { message: "Internal server error" } });
