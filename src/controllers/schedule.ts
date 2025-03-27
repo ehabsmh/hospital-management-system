@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import WorkSchedule from "../models/schedule";
-import DoctorSchedule from "../models/doctorSchedule";
+import DoctorSchedule from "../models/doctorsShifts";
 import { NotFoundError } from "../utils/errorHandlers";
-import { findShiftIndex, shiftsType } from "../utils/utils";
+import { findShift } from "../utils/utils";
+import DoctorsShifts from "../models/doctorsShifts";
 
 class ScheduleController {
   static async getCurrentShift(req: Request, res: Response) {
+    const shiftId = req.query["shift-id"];
     const now = new Date();
 
     // get current day
     const currentDay = now.toLocaleString("en-us", { weekday: "long" });
+
+    console.log(currentDay);
 
     try {
       // get shifts based on the current day
@@ -17,20 +21,22 @@ class ScheduleController {
         {
           availableDays: currentDay,
         },
-        { shifts: 1, _id: 0, groupName: 1 }
+        { _id: 1 }
       );
 
-      // get shift index within the current time
-      const shifts = workSchedule?.shifts;
-      const shiftIndex = findShiftIndex(shifts as shiftsType, now);
+      //// get shift index within the current time
+      // const shifts = workSchedule?.shifts;
+      const shift = await findShift(now);
+
+      console.log(shift, workSchedule?._id);
 
       // get doctors for the current shift
-      const doctorSchedule = await DoctorSchedule.find({
-        belongsToGroup: workSchedule?.groupName,
-        shiftIndex,
-      }).populate("doctor");
+      const doctorSchedule = await DoctorsShifts.find({
+        groupId: workSchedule?._id,
+        shiftId: shift?._id,
+      }).populate("doctors");
 
-      if (!doctorSchedule) {
+      if (!doctorSchedule.length) {
         throw new NotFoundError("No doctor found for current shift.");
       }
 
@@ -40,7 +46,7 @@ class ScheduleController {
         res.status(err.statusCode).json({ error: err.message });
         return;
       }
-
+      console.log(err);
       res.status(500).json({ error: "Internal server error." });
     }
   }

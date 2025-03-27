@@ -1,15 +1,16 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import UserModel, { IUserMethods, IUser, IDoctor } from "./../interfaces/User";
 
-const doctorSchema = new Schema<IDoctor>(
+export const doctorSchema = new Schema(
   {
     rank: {
       type: String,
       enum: ["استشاري", "اخصائي", "طبيب عام"],
       required: true,
     },
-    specialty: { type: String, ref: "clinic", required: true },
+    clinicId: { type: Types.ObjectId, ref: "clinic", required: true },
+    shiftId: { type: Types.ObjectId, ref: "Doctors_shifts", default: null },
     isAvailable: { type: Boolean, default: false },
     totalPatients: { type: Number },
     patientsHandled: { type: Number, default: 0 },

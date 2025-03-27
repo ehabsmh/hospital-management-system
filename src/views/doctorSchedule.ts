@@ -1,19 +1,26 @@
 import express from "express";
-import DoctorScheduleController from "../controllers/doctorSchedule";
 import { auth, isAdmin } from "../middlewares/auth";
+import DoctorsShiftsController from "../controllers/doctorsShifts";
 
-const doctorScheduleRouter = express.Router();
+const doctorsShiftsRouter = express.Router();
 
 // Add a doctor to a schedule
 // POST /api/v1/schedule/doctor-schedule
-doctorScheduleRouter.post(
-  "/doctor-schedule",
+doctorsShiftsRouter.get(
+  "/doctors-shift",
   auth,
   isAdmin,
-  DoctorScheduleController.assignSchedule
+  DoctorsShiftsController.getDoctorsByShiftId
+);
+
+doctorsShiftsRouter.post(
+  "/doctors-shift",
+  auth,
+  isAdmin,
+  DoctorsShiftsController.addDoctorToShift
 );
 
 // Swap doctor with another doctor in different groups (same specialty)
 // POST /api/v1/schedule/doctor-schedule/swap
 
-export default doctorScheduleRouter;
+export default doctorsShiftsRouter;

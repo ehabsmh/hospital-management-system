@@ -1,3 +1,5 @@
+import Shift from "../models/shift";
+
 type shiftTime = {
   startTime: string;
   endTime: string;
@@ -5,10 +7,12 @@ type shiftTime = {
 
 export type shiftsType = shiftTime[];
 
-export function findShiftIndex(shifts: shiftsType, currentDate: Date) {
+export async function findShift(currentDate: Date) {
   // Convert the current time into total minutes (since midnight).
   const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
-  const shiftIndex = shifts?.findIndex(({ startTime, endTime }) => {
+  const shifts = await Shift.find();
+
+  const shift = shifts?.find(({ startTime, endTime }) => {
     const startHours = parseInt(startTime.split(":")[0]);
     const startMins = parseInt(startTime.split(":")[1]);
     const endHours = parseInt(endTime.split(":")[0]);
@@ -23,5 +27,5 @@ export function findShiftIndex(shifts: shiftsType, currentDate: Date) {
     return currentTime >= startMinutes && currentTime < endMinutes;
   });
 
-  return shiftIndex;
+  return shift;
 }
