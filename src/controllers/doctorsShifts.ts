@@ -13,36 +13,45 @@ class DoctorsShiftsController {
     try {
       const shiftId = req.query["shift-id"];
       const clinicId = req.query["clinic-id"];
+      const { groupId } = req.body;
 
       if (!shiftId) {
-        throw new RequireError("Shift id and clinic id are required.");
+        throw new RequireError(
+          "Shift id and clinic id query params are required."
+        );
+      }
+      if (!groupId) {
+        throw new RequireError("group id is required.");
       }
 
-      const doctorsShifts = await DoctorsShifts.findOne({ shiftId }).populate(
-        "doctors"
-      );
+      const doctorsShifts = await DoctorsShifts.findOne({
+        shiftId,
+        groupId,
+      }).populate("doctors");
 
       if (!doctorsShifts) {
         throw new NotFoundError("No doctors found for the shift");
       }
 
       const doctors = <IUser[]>doctorsShifts.doctors;
-      console.log(doctors);
+
       const doctor = doctors.find(
         (doctor) => doctor.doctorInfo?.clinicId.toString() === clinicId
       );
 
-      console.log(doctor);
+      if (!doctor) {
+        throw new NotFoundError("Doctor not found for this clinic.");
+      }
 
       res.json({ data: doctor });
     } catch (err) {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
+        res.status(err.statusCode).json({ error: { message: err.message } });
         return;
       }
 
       if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
+        res.status(err.statusCode).json({ error: { message: err.message } });
         return;
       }
 
@@ -123,5 +132,9 @@ class DoctorsShiftsController {
     }
   }
 }
+
+type x = string | number;
+const test: x = "Ehab";
+const test2: x = 2;
 
 export default DoctorsShiftsController;
