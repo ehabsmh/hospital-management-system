@@ -120,8 +120,11 @@ class UserController {
         await user.save();
       }
 
-      const userObj = user.toObject();
-      const userToken = jwt.sign(userObj, process.env.JWT_SECRET_KEY);
+      // const userObj = user.toObject();
+      const userToken = jwt.sign(
+        { _id: user._id, role: user.role, email: user.email },
+        process.env.JWT_SECRET_KEY
+      );
 
       res.json({ message: "Password created successfully.", userToken });
     } catch (err) {
@@ -174,10 +177,11 @@ class UserController {
       }
 
       // Compare password with the hashed one
-      const isMatch = user.comparePassword(password);
+      const isMatch = await user.comparePassword(password);
+      console.log(isMatch);
 
       if (!isMatch) {
-        res.status(400).json({ error: { message: "Password is incorrect" } });
+        res.status(400).json({ message: "Password is incorrect" });
         return;
       }
 
@@ -192,8 +196,17 @@ class UserController {
         await user.save();
       }
 
-      const userObj = user.toObject();
-      const userToken = jwt.sign(userObj, process.env.JWT_SECRET_KEY);
+      // const userObj = user.toObject();
+      const userToken = jwt.sign(
+        { _id: user._id, role: user.role, email: user.email },
+        process.env.JWT_SECRET_KEY
+      );
+
+      res.cookie("Authorization", userToken, {
+        httpOnly: true, // Prevent JavaScript access (XSS protection)
+        sameSite: "strict", // Prevent CSRF attacks
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Set expiration time (e.g., 7 days)
+      });
       res.json({ data: userToken });
     } catch (err) {
       if (err instanceof NotFoundError) {

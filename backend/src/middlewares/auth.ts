@@ -6,7 +6,7 @@ export interface CustomRequest extends Request {
   user?: IUser;
 }
 function auth(req: CustomRequest, res: Response, next: NextFunction) {
-  const token = req.header("Authorization");
+  const token = req.cookies["Authorization"];
 
   if (!token) {
     res.status(401).send("Access denied. No token provided.");

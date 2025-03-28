@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import "dotenv/config";
 import DB from "./database/db";
 import userRouter from "./views/users";
@@ -14,9 +15,17 @@ import consultationRouter from "./views/consultation";
 import { seedShifts } from "./models/shift";
 import doctorsRouter from "./views/doctors";
 import shiftsRouter from "./views/shifts";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = 3000;
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 
 // connect and instantiate DB
 export const db = new DB();
@@ -27,7 +36,7 @@ export const db = new DB();
   await seedShifts();
 })();
 
-app.use(express.json());
+app.use([express.json(), cookieParser()]);
 
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1", clinicRouter);
