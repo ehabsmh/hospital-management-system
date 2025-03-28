@@ -20,6 +20,12 @@ class ClinicController {
         throw new DuplicationError("Clinic already exists.");
       }
 
+      const roomNumIsExists = await Clinic.findOne({ roomNumber });
+
+      if (roomNumIsExists) {
+        throw new DuplicationError("Room number already exists.");
+      }
+
       // Create clinic
       const clinic = await Clinic.create({ name, floor, roomNumber });
       res
@@ -57,9 +63,15 @@ class ClinicController {
       const clinicChanged = await Clinic.findOne({ _id: id, ...req.body });
 
       if (clinicChanged) {
-        res.status(400).json({ error: { message: "Nothing changed." } });
+        res.status(400).json({ error: { message: "No changes were made." } });
 
         return;
+      }
+
+      const roomNumIsExists = await Clinic.findOne({ roomNumber });
+
+      if (roomNumIsExists) {
+        throw new DuplicationError("Room number already exists.");
       }
 
       const clinic = await Clinic.findByIdAndUpdate(
@@ -73,6 +85,14 @@ class ClinicController {
       res.json({ data: clinic, message: "Clinic updated successfully." });
     } catch (err) {
       if (err instanceof NotFoundError) {
+        res
+          .status(err.statusCode)
+          .json({ error: { name: err.name, message: err.message } });
+
+        return;
+      }
+
+      if (err instanceof DuplicationError) {
         res
           .status(err.statusCode)
           .json({ error: { name: err.name, message: err.message } });

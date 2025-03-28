@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { DuplicationError, RequireError } from "../utils/errorHandlers";
-import reservationRouter from "./../views/reservation";
+import reservationRouter from "../views/reservations";
 import ReservationType from "../models/reservationType";
 
 class ReservationTypeController {

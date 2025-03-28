@@ -7,9 +7,11 @@ import {
   RequireError,
 } from "../utils/errorHandlers";
 import DoctorsShifts from "../models/doctorsShifts";
+import WorkSchedule from "../models/schedule";
+import { findShift } from "../utils/utils";
 
 class DoctorsShiftsController {
-  static async getDoctorsByShiftId(req: Request, res: Response) {
+  static async getDoctor(req: Request, res: Response) {
     try {
       const shiftId = req.query["shift-id"];
       const clinicId = req.query["clinic-id"];
@@ -131,10 +133,44 @@ class DoctorsShiftsController {
       res.status(500).json({ error: "Internal server error." });
     }
   }
-}
 
-type x = string | number;
-const test: x = "Ehab";
-const test2: x = 2;
+  static async getCurrentShift(req: Request, res: Response) {
+    const now = new Date();
+
+    // get current day
+    const currentDay = now.toLocaleString("en-us", { weekday: "long" });
+
+    try {
+      // get shifts based on the current day
+      const workSchedule = await WorkSchedule.findOne(
+        {
+          availableDays: currentDay,
+        },
+        { _id: 1 }
+      );
+
+      const shift = await findShift(now);
+
+      // get doctors for the current shift
+      const doctorSchedule = await DoctorsShifts.find({
+        groupId: workSchedule?._id,
+        shiftId: shift?._id,
+      }).populate("doctors");
+
+      if (!doctorSchedule.length) {
+        throw new NotFoundError("No doctor found for current shift.");
+      }
+
+      res.json({ data: doctorSchedule });
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
+}
 
 export default DoctorsShiftsController;

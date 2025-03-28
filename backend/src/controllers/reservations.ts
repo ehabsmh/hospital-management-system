@@ -8,7 +8,7 @@ import Reservation from "../models/reservation";
 import User from "../models/user";
 import Patient from "../models/patient";
 
-class ReservationController {
+class ReservationsController {
   static async createReservation(req: Request, res: Response) {
     const doctorId = req.query["doctor-id"];
     const patientId = req.query["patient-id"];
@@ -125,6 +125,29 @@ class ReservationController {
       res.json({ error: { message: "internal server error" } });
     }
   }
+
+  static async deleteReservation(req: Request, res: Response) {
+    const doctorId = req.query["doctor-id"];
+    const patientId = req.query["patient-id"];
+
+    try {
+      if (!doctorId || !patientId) {
+        throw new RequireError(
+          "Missing doctor-id or patient-id query parameter"
+        );
+      }
+
+      await Reservation.deleteOne({ doctorId, patientId });
+
+      res.json({ message: "Reservation cancelled" });
+    } catch (err) {
+      if (err instanceof RequireError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+      res.json({ error: { message: "internal server error" } });
+    }
+  }
 }
 
-export default ReservationController;
+export default ReservationsController;

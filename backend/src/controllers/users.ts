@@ -102,6 +102,7 @@ class UserController {
 
       // Validate password and update, only if it has passed the validation.
       user.password = password;
+
       await user.validate(["password"]);
       await user.updateOne({ password: await bcrypt.hash(password, 10) });
 
@@ -110,6 +111,13 @@ class UserController {
 
       if (!process.env.JWT_SECRET_KEY) {
         throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
+      }
+
+      if (user.role === "doctor") {
+        if (user.doctorInfo) {
+          user.doctorInfo.isAvailable = true;
+        }
+        await user.save();
       }
 
       const userObj = user.toObject();
@@ -175,6 +183,13 @@ class UserController {
 
       if (!process.env.JWT_SECRET_KEY) {
         throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
+      }
+
+      if (user.role === "doctor") {
+        if (user.doctorInfo) {
+          user.doctorInfo.isAvailable = true;
+        }
+        await user.save();
       }
 
       const userObj = user.toObject();

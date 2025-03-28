@@ -6,5 +6,6 @@ const patientsRouter = express.Router();
 
 patientsRouter.post("/", auth, isNotDoctor, PatientController.newPatient);
 patientsRouter.get("/", auth, isNotDoctor, PatientController.getPatient);
+patientsRouter.put("/", auth, isNotDoctor, PatientController.editPatient);
 
 export default patientsRouter;
