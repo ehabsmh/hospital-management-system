@@ -2,9 +2,10 @@
 @import "tailwindcss";
 
 
-@theme {}
-
-@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --color-dark: #242424;
+  --color-primary: #23B1F8;
+}
 
 /* .poppins-thin {
   font-family: "Poppins", sans-serif;
