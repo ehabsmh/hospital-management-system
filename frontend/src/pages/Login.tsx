@@ -2,6 +2,8 @@ import styled from "styled-components";
 import LoginForm from "../components/auth/LoginForm";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export type FormData = {
   email: string;
@@ -22,20 +24,32 @@ function Login() {
     formState: { errors },
   } = useForm<FormData>();
 
+  const { setUser } = useAuth();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit = handleSubmit(async (formData) => {
+    setIsLoading(true);
     try {
       const { data } = await axios.post(
         "http://localhost:3000/api/v1/auth/sign-in",
-        formData
+        formData,
+        { withCredentials: true }
       );
-      console.log(data);
+      setUser(data.user);
+
+      setError("");
     } catch (err) {
       if (err instanceof AxiosError) {
         if (err.response) {
           const error = err.response.data;
-          console.error(error.message);
+          console.log(error);
+          if (error.error) setError(error.error.message);
+          else setError(error.message);
         }
       }
+    } finally {
+      setIsLoading(false);
     }
   });
 
@@ -43,7 +57,13 @@ function Login() {
     <LoginSection className="h-screen bg-dark">
       <div className="layer h-full bg-black/75">
         <div className="container h-full lg:w-1/2 mx-auto flex justify-center items-center">
-          <LoginForm register={register} onSubmit={onSubmit} errors={errors} />
+          <LoginForm
+            register={register}
+            onSubmit={onSubmit}
+            errors={errors}
+            error={error}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </LoginSection>

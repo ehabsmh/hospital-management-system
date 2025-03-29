@@ -2,19 +2,29 @@ import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormData } from "../../pages/Login";
+import Loader from "../../ui/Loader";
 
 type LoginFormProps = {
   register: UseFormRegister<FormData>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   errors: FieldErrors<FormData>;
+  error: string;
+  isLoading: boolean;
 };
-function LoginForm({ register, onSubmit, errors }: LoginFormProps) {
+function LoginForm({
+  register,
+  onSubmit,
+  errors,
+  error,
+  isLoading,
+}: LoginFormProps) {
   return (
     <form
       onSubmit={onSubmit}
       className="border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70"
     >
       <div className="w-full max-w-md px-1 mb-6">
+        <p className="text-center text-sm text-red-400">{error}</p>
         <Field>
           <Label className="text-sm/6 font-medium text-white">Email</Label>
           <Input
@@ -54,7 +64,7 @@ function LoginForm({ register, onSubmit, errors }: LoginFormProps) {
           type="submit"
           className="mt-3 block w-full rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
         >
-          Login
+          {isLoading ? <Loader size={15} /> : "Login"}
         </Button>
       </div>
     </form>
