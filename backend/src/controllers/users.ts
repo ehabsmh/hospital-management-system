@@ -232,6 +232,17 @@ class UserController {
       }
     }
   }
+
+  static async logout(req: Request, res: Response): Promise<void> {
+    try {
+      res.clearCookie("Authorization", { path: "/" });
+      res.status(200).json({ message: "User logged out successfully." });
+    } catch (err) {
+      res.status(500).json({
+        error: { message: "Something went wrong with the server." },
+      });
+    }
+  }
 }
 
 export default UserController;
