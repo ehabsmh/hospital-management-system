@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import LoginForm from "../components/auth/LoginForm";
+import LoginForm from "../../components/auth/LoginForm";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export type FormData = {
   email: string;
@@ -27,6 +28,7 @@ function Login() {
   const { setUser } = useAuth();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (formData) => {
     setIsLoading(true);
@@ -36,14 +38,14 @@ function Login() {
         formData,
         { withCredentials: true }
       );
-      setUser(data.user);
 
       setError("");
+      setUser(data.user);
+      navigate("/dashboard");
     } catch (err) {
       if (err instanceof AxiosError) {
         if (err.response) {
           const error = err.response.data;
-          console.log(error);
           if (error.error) setError(error.error.message);
           else setError(error.message);
         }

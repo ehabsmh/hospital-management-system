@@ -1,7 +1,7 @@
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { FormData } from "../../pages/Login";
+import { FormData } from "../../pages/auth/Login";
 import Loader from "../../ui/Loader";
 
 type LoginFormProps = {
