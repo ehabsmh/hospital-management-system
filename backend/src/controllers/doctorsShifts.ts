@@ -9,6 +9,7 @@ import {
 import DoctorsShifts from "../models/doctorsShifts";
 import WorkSchedule from "../models/schedule";
 import { findShift } from "../utils/utils";
+import Clinic from "../models/clinic";
 
 class DoctorsShiftsController {
   static async getDoctor(req: Request, res: Response) {
@@ -152,13 +153,21 @@ class DoctorsShiftsController {
       const shift = await findShift(now);
 
       // get doctors for the current shift
-      const doctorSchedule = await DoctorsShifts.find({
+      const doctorSchedule = await DoctorsShifts.findOne({
         groupId: workSchedule?._id,
         shiftId: shift?._id,
-      }).populate("doctors");
+      }).populate({
+        path: "doctors",
+        select: "fullName avatar doctorInfo",
+        populate: {
+          path: "doctorInfo.clinicId",
+          model: Clinic,
+          select: "name",
+        },
+      });
 
-      if (!doctorSchedule.length) {
-        throw new NotFoundError("No doctor found for current shift.");
+      if (!doctorSchedule) {
+        throw new NotFoundError("No doctors found for current shift.");
       }
 
       res.json({ data: doctorSchedule });
@@ -167,7 +176,7 @@ class DoctorsShiftsController {
         res.status(err.statusCode).json({ error: err.message });
         return;
       }
-
+      console.log(err);
       res.status(500).json({ error: "Internal server error." });
     }
   }

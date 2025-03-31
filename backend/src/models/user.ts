@@ -12,7 +12,7 @@ export const doctorSchema = new Schema(
     clinicId: { type: Types.ObjectId, ref: "clinic", required: true },
     shiftId: { type: Types.ObjectId, ref: "Doctors_shifts", default: null },
     isAvailable: { type: Boolean, default: false },
-    totalPatients: { type: Number },
+    totalPatients: { type: Number, default: 20 },
     patientsHandled: { type: Number, default: 0 },
     lastSignin: { type: Date },
   },

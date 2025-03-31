@@ -1,0 +1,13 @@
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/users/Sidebar";
+
+function Main() {
+  return (
+    <main className="h-screen grid grid-cols-[minmax(320px,auto)_1fr]">
+      <Sidebar />
+      <Outlet />
+    </main>
+  );
+}
+
+export default Main;

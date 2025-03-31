@@ -1,4 +1,4 @@
-import { useState, CSSProperties } from "react";
+import { CSSProperties } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const override: CSSProperties = {
@@ -6,9 +6,7 @@ const override: CSSProperties = {
   margin: "0 auto",
 };
 
-function Loader({ size }: { size: number }) {
-  let [color, setColor] = useState("#ffffff");
-
+function Loader({ size, color = "#ffffff" }: { size: number; color?: string }) {
   return (
     <div className="sweet-loading">
       <ClipLoader
