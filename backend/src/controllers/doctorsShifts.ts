@@ -85,6 +85,7 @@ class DoctorsShiftsController {
 
       let doctorsShift = await DoctorsShifts.findOne({
         shiftId,
+        groupId,
       }).populate("doctors");
 
       if (!doctorsShift) {
@@ -108,7 +109,8 @@ class DoctorsShiftsController {
         //     }
 
         doctorsShift?.doctors.push(doctorId);
-        if (doctor.doctorInfo?.shiftId) {
+
+        if (doctor.doctorInfo) {
           doctor.doctorInfo.shiftId = doctorsShift._id;
           await doctor.save();
           await doctorsShift?.save();
