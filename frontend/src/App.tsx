@@ -5,6 +5,7 @@ import Main from "./ui/Main";
 import CurrentShift from "./pages/users/current-shift/CurrentShift";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import DoctorReservations from "./pages/DoctorReservations";
 
 function App() {
   const { user, loading } = useAuth();
@@ -31,6 +32,7 @@ function App() {
           <Route index element={<CurrentShift />} />
           <Route path="schedule" element={<p>schedule</p>} />
         </Route>
+        <Route path="/doctor/:id" element={<DoctorReservations />} />
       </Routes>
     </QueryClientProvider>
   );

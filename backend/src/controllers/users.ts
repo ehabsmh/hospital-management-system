@@ -11,6 +11,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { CustomRequest } from "../middlewares/auth";
+import Clinic from "../models/clinic";
 
 class UserController {
   static async signup(req: Request, res: Response): Promise<void> {
@@ -63,6 +64,12 @@ class UserController {
         return;
       }
 
+      const isClinicExist = await Clinic.findById(doctorInfo?.clinicId);
+
+      if (!isClinicExist) {
+        throw new NotFoundError("Clinic does not exist.");
+      }
+
       // create user
       const newUser = await User.create({
         fullName,
@@ -84,8 +91,22 @@ class UserController {
 
         return;
       }
+      if (err instanceof NotFoundError) {
+        res
+          .status(err.statusCode)
+          .json({ error: { name: err.name, message: err.message } });
+
+        return;
+      }
+
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).json({ message: err.message });
+
+        return;
+      }
 
       if (err instanceof Error) {
+        console.log(err);
         res.status(500).json({
           error: { message: "Something went wrong with the server." },
         });
