@@ -1,10 +1,10 @@
 import axios, { AxiosError } from "axios";
 
-export async function getCurrentShift() {
+export async function getDoctorReservations(doctorId: string) {
   try {
     const { data } = await axios.get(
-      "http://localhost:3000/api/v1/shifts/current",
-      { withCredentials: true }
+      "http://localhost:3000/api/v1/reservations",
+      { withCredentials: true, params: { "doctor-id": doctorId } }
     );
     console.log(data.data);
 

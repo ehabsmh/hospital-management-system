@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCurrentShiftDoctors } from "../services/apiShifts";
+import { getCurrentShift } from "../services/apiShifts";
 
 function useCurrentDoctors() {
   const {
     isLoading,
-    data: currShiftDoctors,
+    data: currentShift,
     error,
   } = useQuery({
     queryKey: ["current-shifts"],
-    queryFn: getCurrentShiftDoctors,
+    queryFn: getCurrentShift,
   });
 
-  return { isLoading, currShiftDoctors, error };
+  return { isLoading, currentShift, error };
 }
 
 export default useCurrentDoctors;

@@ -1,8 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { IUser } from "../../../interfaces/User";
 
 function TableRow({ doctor }: { doctor: IUser }) {
+  const navigate = useNavigate();
+
+  function goToDoctorReservations() {
+    navigate(`/doctor/${doctor._id}`);
+  }
+
   return (
-    <tr>
+    <tr onClick={goToDoctorReservations}>
       <td className="p-3 border border-gray-300 text-center">
         <img
           src={doctor.avatar}
