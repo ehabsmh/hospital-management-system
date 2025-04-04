@@ -32,7 +32,7 @@ function App() {
           <Route index element={<CurrentShift />} />
           <Route path="schedule" element={<p>schedule</p>} />
         </Route>
-        <Route path="/doctor/:id" element={<DoctorReservations />} />
+        <Route path="/doctor" element={<DoctorReservations />} />
       </Routes>
     </QueryClientProvider>
   );

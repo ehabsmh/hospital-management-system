@@ -2,58 +2,21 @@ import { createContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { IUser } from "../../../interfaces/User";
 
-const TableContext = createContext(null);
-
-// function Table({ currShiftDoctors }: { currShiftDoctors: ICurrentShift }) {
-//   console.log(currShiftDoctors);
-
-//   return (
-//     <div className="w-full overflow-x-auto">
-//       <table className="w-full border-collapse border border-gray-300 text-center">
-//         <TableHead />
-//         <tbody>
-//           {currShiftDoctors.doctors.map((doctor) => (
-//             <TableRow key={doctor._id} doctor={doctor} />
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// }
-
-// const doctorColumns = [
-//   { key: "avatar", label: "Avatar" },
-//   { key: "doctorName", label: "Doctor" },
-//   { key: "patientsHandled", label: "Patients Handled" },
-//   { key: "rank", label: "Rank" },
-//   { key: "clinic", label: "Clinic" },
-//   { key: "status", label: "Status" },
-// ];
-
-// const doctorReservationsColumns = [
-//   { key: "name", label: "Name" },
-//   { key: "age", label: "Age" },
-//   { key: "job", label: "Job" },
-//   { key: "phoneNumber", label: "Phone Number" },
-//   { key: "reservation", label: "Reservation" },
-//   { key: "edit/cancel", label: "" },
-// ];
+const TableContext = createContext<{ doctor?: IUser } | null>(null);
 
 function Table({ children }: { children: ReactNode }) {
   return (
-    <TableContext.Provider>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300 text-center">
-          {children}
-        </table>
-      </div>
-    </TableContext.Provider>
+    <div className="w-full overflow-x-auto">
+      <table className="w-full border-collapse border border-gray-300 text-center">
+        {children}
+      </table>
+    </div>
   );
 }
 
 function Header({ children }: { children: ReactNode }) {
   return (
-    <thead className="bg-gray-200">
+    <thead className="bg-gray-200 dark:bg-gray-800">
       <tr>{children}</tr>
     </thead>
   );
@@ -67,29 +30,40 @@ function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
   const navigate = useNavigate();
 
   function goToDoctorReservations() {
-    navigate(`/doctor/${doctor?._id}`);
+    navigate(
+      `/doctor?id=${doctor?._id}&name=${encodeURIComponent(doctor!.fullName)}`
+    );
   }
 
   if (!doctor) return <tr>{children}</tr>;
 
   return (
-    <tr className="cursor-pointer" onClick={goToDoctorReservations}>
-      {children}
-    </tr>
+    <TableContext.Provider value={{ doctor }}>
+      <tr
+        className={`cursor-pointer ${doctor ? "hover:bg-gray-100" : ""}`}
+        onClick={doctor ? goToDoctorReservations : undefined}
+      >
+        {children}
+      </tr>
+    </TableContext.Provider>
+  );
+}
+
+function Columns({ headers }: { headers: string[] }) {
+  return (
+    <>
+      {headers.map((header, index) => (
+        <th key={index} className="p-3 border border-gray-300">
+          {header}
+        </th>
+      ))}
+    </>
   );
 }
 
 Table.Header = Header;
 Table.Body = Body;
 Table.Row = Row;
+Table.Columns = Columns;
 
-/*
-
-<TableHead />
-        <tbody>
-          {currShiftDoctors.doctors.map((doctor) => (
-            <TableRow key={doctor._id} doctor={doctor} />
-          ))}
-        </tbody>
-*/
 export default Table;

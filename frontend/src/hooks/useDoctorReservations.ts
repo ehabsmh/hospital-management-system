@@ -8,7 +8,7 @@ function useDoctorReservations(doctorId: string) {
     error,
   } = useQuery({
     queryKey: ["doctor-reservations", doctorId],
-    queryFn: ({ queryKey }) => getDoctorReservations(queryKey[1]),
+    queryFn: async ({ queryKey }) => await getDoctorReservations(queryKey[1]),
     enabled: !!doctorId
   });
 

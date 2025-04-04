@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import ICurrentShift from "../interfaces/CurrentShift";
 
 export async function getCurrentShift() {
   try {
@@ -6,9 +7,9 @@ export async function getCurrentShift() {
       "http://localhost:3000/api/v1/shifts/current",
       { withCredentials: true }
     );
-    console.log(data.data);
 
-    return data.data;
+    const currentShift: ICurrentShift = data.data;
+    return currentShift;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }

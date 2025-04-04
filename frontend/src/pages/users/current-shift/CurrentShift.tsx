@@ -3,6 +3,15 @@ import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
 import Table from "./Table";
 import ICurrentShift from "../../../interfaces/CurrentShift";
 
+const currShiftCols = [
+  "Avatar",
+  "Doctor",
+  "Rank",
+  "Clinic",
+  "Patients Handled",
+  "Status",
+];
+
 function CurrentShift() {
   const { isLoading, currentShift, error } = useCurrentDoctors();
 
@@ -23,12 +32,7 @@ function CurrentShift() {
       {!isLoading && !error && (
         <Table>
           <Table.Header>
-            <th className="p-3 border border-gray-300">Avatar</th>
-            <th className="p-3 border border-gray-300">Doctor</th>
-            <th className="p-3 border border-gray-300">Rank</th>
-            <th className="p-3 border border-gray-300">Clinic</th>
-            <th className="p-3 border border-gray-300">Patients Handled</th>
-            <th className="p-3 border border-gray-300">Status</th>
+            <Table.Columns headers={currShiftCols} />
           </Table.Header>
           <Table.Body
             render={() =>
@@ -37,7 +41,7 @@ function CurrentShift() {
                   <td className="p-3 border border-gray-300 text-center">
                     <img
                       src={doctor.avatar}
-                      alt="Doctor Avatar"
+                      alt={doctor.fullName + " photo"}
                       className="w-10 h-10 rounded-full mx-auto"
                     />
                   </td>
