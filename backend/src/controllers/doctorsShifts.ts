@@ -99,13 +99,16 @@ class DoctorsShiftsController {
         // Check if a doctor of the same specialty is already assigned to this shift
         const doctors = <IUser[]>doctorsShift.doctors;
         const isSameSpecialty = doctors.some(
-          (doctor) => doctor.doctorInfo?.clinicId === doctorSpecialty
+          (doctor) =>
+            doctor.doctorInfo?.clinicId.toString() ===
+            doctorSpecialty?.toString()
         );
 
-        if (isSameSpecialty)
+        if (isSameSpecialty) {
           throw new DuplicationError(
             "A doctor of the same specialty is already assigned to this shift."
           );
+        }
         //     }
 
         doctorsShift?.doctors.push(doctorId);
