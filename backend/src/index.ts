@@ -57,6 +57,18 @@ cron.schedule("0 0 * * 6", async () => {
   }
 });
 
+// Delete reservations every 4 hrs
+cron.schedule("10 4 * * *", async () => {
+  try {
+    await axios.delete("http://localhost:3000/api/v1/reservations/all", {
+      withCredentials: true,
+    });
+    console.log("Deleted");
+  } catch (err) {
+    console.error("Error running cron job:", err);
+  }
+});
+
 app.listen(PORT, () =>
   console.log(`Hospital_MS app listening on port ${PORT}!`)
 );
