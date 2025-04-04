@@ -36,48 +36,41 @@ class PatientController {
     } catch (err) {
       if (err instanceof RequireError) {
         res.status(err.statusCode).json({
-          error: {
-            message: err.message,
-          },
+          message: err.message,
         });
+
         return;
       }
       if (err instanceof DuplicationError) {
         res.status(err.statusCode).json({
-          error: {
-            message: err.message,
-          },
+          message: err.message,
         });
+
         return;
       }
-      res.status(500).json({ error: { message: "Internal server error" } });
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
   static async getPatient(req: Request, res: Response) {
     const phoneNumber = req.query["phone-number"];
 
-    if (!phoneNumber) throw new RequireError("Phone number is required");
-
     try {
+      if (!phoneNumber) throw new RequireError("Phone number is required");
       const patient = await Patient.findOne({ phoneNumber });
       if (!patient) throw new NotFoundError("Patient not found");
       res.status(200).json({ data: patient });
     } catch (err) {
       if (err instanceof NotFoundError) {
         res.status(err.statusCode).json({
-          error: {
-            message: err.message,
-          },
+          message: err.message,
         });
 
         return;
       }
       if (err instanceof RequireError) {
         res.status(err.statusCode).json({
-          error: {
-            message: err.message,
-          },
+          message: err.message,
         });
 
         return;

@@ -31,6 +31,7 @@ class ReservationsController {
 
       // check if patient id is valid patient id
       const isPatient = await Patient.countDocuments({ _id: patientId });
+
       if (!isPatient) {
         throw new NotFoundError("Patient not found");
       }
@@ -67,7 +68,7 @@ class ReservationsController {
         res.status(err.statusCode).json({ error: err.message });
         return;
       }
-      res.json({ error: { message: "internal server error" } });
+      res.json({ error: "internal server error" });
     }
   }
 
@@ -142,6 +143,26 @@ class ReservationsController {
       res.json({ message: "Reservation cancelled" });
     } catch (err) {
       if (err instanceof RequireError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+      res.json({ error: { message: "internal server error" } });
+    }
+  }
+  static async deleteReservations(req: Request, res: Response) {
+    try {
+      const isExist = await Reservation.countDocuments({
+        date: { $exists: false },
+      });
+      if (!isExist) {
+        throw new NotFoundError("No reservations found to delete");
+      }
+
+      await Reservation.deleteMany({ date: { $exists: false } });
+
+      res.json({ message: "Reservations deleted" });
+    } catch (err) {
+      if (err instanceof NotFoundError) {
         res.status(err.statusCode).json({ error: err.message });
         return;
       }

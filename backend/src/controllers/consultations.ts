@@ -12,6 +12,11 @@ class ConsultationController {
         throw new RequireError("Missing patientId or dueDate in request body");
       }
 
+      await Consultation.findOneAndDelete({
+        doctorId,
+        patientId,
+      });
+
       const newConsultation = await Consultation.create({
         doctorId,
         patientId,
