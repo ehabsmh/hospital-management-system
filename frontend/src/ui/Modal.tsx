@@ -55,10 +55,12 @@ function Window<T extends { onCloseModal: () => void }>({
   name: string;
 }) {
   const context = useContext(ModalContext);
+
   if (!context) {
     throw new Error("Open must be used within a ModalContext.Provider");
   }
   const { openName, close } = context;
+
   if (name !== openName) return null;
 
   return createPortal(

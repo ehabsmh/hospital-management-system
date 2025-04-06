@@ -1,58 +1,72 @@
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { addPatient } from "../../../services/apiPatients";
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createReservation } from "../../../services/apiReservations";
+import { addPatient, editPatient } from "../../../services/apiPatients";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Loader from "../../../ui/Loader";
+import useNewReservation from "./useNewReservation";
+import IPatient from "../../../interfaces/Patient";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type PatientFormData = {
+  _id: string;
   fullName: string;
   job: string;
   phoneNumber: string;
   age: number;
 };
 
-function AddPatient({ onCloseModal, setPatientIsFound, phoneNumber }) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<PatientFormData>();
+type AddPatientProps = {
+  onCloseModal?: () => void;
+  setPatientIsFound?: Dispatch<SetStateAction<null | boolean>>;
+  phoneNumber: string;
+  patientToEdit?: IPatient;
+};
+
+function AddPatient({
+  onCloseModal,
+  setPatientIsFound,
+  phoneNumber,
+  patientToEdit,
+}: AddPatientProps) {
+  const { register, handleSubmit, setValue } = useForm<PatientFormData>();
 
   const [searchParams] = useSearchParams();
   const doctorId = searchParams.get("id");
   const queryClient = useQueryClient();
 
   const [isLoading, setIsLoading] = useState(false);
-
-  const { mutate: newReservation } = useMutation({
-    mutationFn: createReservation,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["doctor-reservations", doctorId],
-      });
-      onCloseModal?.();
-      setPatientIsFound(null);
-    },
-  });
+  const { newReservation } = useNewReservation(doctorId!);
 
   const [error, setError] = useState("");
 
   async function onSubmit(patientInfo: PatientFormData) {
     setIsLoading(true);
     try {
-      const patient = await addPatient(patientInfo);
+      // Add new patient
+      if (!patientToEdit) {
+        const patient = await addPatient(patientInfo);
 
-      if (!doctorId) {
-        setError("No doctor id found");
-        return;
+        if (!doctorId) {
+          setError("No doctor id found");
+          return;
+        }
+
+        newReservation({ doctorId, patientId: patient._id });
       }
 
-      newReservation({ doctorId, patientId: patient._id });
+      // Edit a patient
+      if (patientToEdit) {
+        const { _id } = patientToEdit;
+        patientInfo._id = _id;
+
+        await editPatient(patientInfo);
+        queryClient.invalidateQueries({ queryKey: ["doctor-reservations"] });
+      }
+
+      onCloseModal?.();
+      if (!patientToEdit) setPatientIsFound?.(null);
 
       setError("");
     } catch (err) {
@@ -65,8 +79,13 @@ function AddPatient({ onCloseModal, setPatientIsFound, phoneNumber }) {
   useEffect(
     function () {
       setValue("phoneNumber", phoneNumber);
+      if (patientToEdit) {
+        setValue("fullName", patientToEdit.fullName);
+        setValue("job", patientToEdit.job);
+        setValue("age", patientToEdit.age);
+      }
     },
-    [phoneNumber, setValue]
+    [phoneNumber, setValue, patientToEdit]
   );
 
   return (
@@ -74,7 +93,9 @@ function AddPatient({ onCloseModal, setPatientIsFound, phoneNumber }) {
       onSubmit={handleSubmit(onSubmit)}
       className="border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70"
     >
-      <h2 className="mb-3 font-bold text-lg">New patient</h2>
+      {!patientToEdit && (
+        <h2 className="mb-3 font-bold text-lg">New patient</h2>
+      )}
       <p className="error text-red-400">{error}</p>
       <Field className="mb-4">
         <Label className="text-sm/6 font-medium text-black">Full Name</Label>
@@ -129,12 +150,18 @@ function AddPatient({ onCloseModal, setPatientIsFound, phoneNumber }) {
           type="submit"
           className="mt-3 shadow-md rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
         >
-          {isLoading ? <Loader size={20} /> : "Add patient"}
+          {isLoading ? (
+            <Loader size={20} />
+          ) : patientToEdit ? (
+            "Edit Patient"
+          ) : (
+            "Add patient"
+          )}
         </Button>
         <button
           onClick={() => {
-            onCloseModal();
-            setPatientIsFound(null);
+            onCloseModal?.();
+            if (!patientToEdit) setPatientIsFound?.(null);
           }}
           type="reset"
           className="mt-3 shadow-md rounded-lg border-none py-1.5 px-3 text-sm/6 text-black bg-gray-300 duration-300 hover:bg-gray-400/70 cursor-pointer"
