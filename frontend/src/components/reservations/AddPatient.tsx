@@ -1,12 +1,12 @@
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { addPatient, editPatient } from "../../../services/apiPatients";
+import { addPatient, editPatient } from "../../services/apiPatients";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Loader from "../../../ui/Loader";
+import Loader from "../../ui/Loader";
 import useNewReservation from "./useNewReservation";
-import IPatient from "../../../interfaces/Patient";
+import IPatient from "../../interfaces/Patient";
 import { useQueryClient } from "@tanstack/react-query";
 
 export type PatientFormData = {

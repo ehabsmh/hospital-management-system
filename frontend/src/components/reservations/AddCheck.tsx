@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../../../ui/Modal";
+import Modal from "../../ui/Modal";
 import SearchPatient from "./SearchPatient";
 import AddPatient from "./AddPatient";
 import Reservation from "./Reservation";

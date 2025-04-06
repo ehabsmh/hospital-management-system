@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteReservation } from "../../../services/apiReservations";
+import { deleteReservation } from "../../services/apiReservations";
 import { toast } from "sonner";
 
 function useDeleteReservation() {

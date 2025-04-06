@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPatient } from "../../../services/apiPatients";
+import { getPatient } from "../../services/apiPatients";
 
 // function usePatient() {
 //   const { } = useQuery({

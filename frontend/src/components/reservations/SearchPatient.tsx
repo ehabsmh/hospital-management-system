@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import React, { Dispatch, FormEvent, useState } from "react";
 import useDoctorReservations from "./useDoctorReservations";
 import { useSearchParams } from "react-router-dom";
-import { fetchPatient } from "../../../services/apiPatients";
+import { fetchPatient } from "../../services/apiPatients";
 
 type SearchPatientProps = {
   onCloseModal?: () => void;

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getDoctorReservations } from "../../../services/apiReservations";
+import { getDoctorReservations } from "../../services/apiReservations";
 
 function useDoctorReservations(doctorId: string) {
   const {

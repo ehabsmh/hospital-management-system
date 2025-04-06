@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import IPatient from "../../../interfaces/Patient";
+import IPatient from "../../interfaces/Patient";
 import useNewReservation from "./useNewReservation";
 import { useSearchParams } from "react-router-dom";
-import { getConsultation } from "../../../services/apiConsultations";
-import { fetchPatient } from "../../../services/apiPatients";
+import { getConsultation } from "../../services/apiConsultations";
+import { fetchPatient } from "../../services/apiPatients";
 
 type ReservationProps = {
   phoneNumber: string;
