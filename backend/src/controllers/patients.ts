@@ -82,7 +82,7 @@ class PatientController {
   static async editPatient(req: Request, res: Response) {
     const { id } = req.params;
     const { fullName, age, job, additionalInfo } = req.body;
-
+    console.log(req.body);
     try {
       const patient = await Patient.findById(id);
       if (!patient) throw new NotFoundError("Patient not found");
@@ -92,13 +92,12 @@ class PatientController {
     } catch (err) {
       if (err instanceof NotFoundError) {
         res.status(err.statusCode).json({
-          error: {
-            message: err.message,
-          },
+          error: err.message,
         });
         return;
       }
-      res.status(500).json({ error: { message: "Internal server error" } });
+      console.log(err);
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 }

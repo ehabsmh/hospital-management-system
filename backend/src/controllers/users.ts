@@ -276,7 +276,6 @@ class UserController {
   static async me(req: CustomRequest, res: Response): Promise<void> {
     try {
       const user = req.user;
-      console.log(user);
       if (!user) throw new NotFoundError("User not found.");
 
       res.status(200).json(user);

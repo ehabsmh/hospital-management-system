@@ -128,25 +128,13 @@ class ReservationsController {
   }
 
   static async deleteReservation(req: Request, res: Response) {
-    const doctorId = req.query["doctor-id"];
-    const patientId = req.query["patient-id"];
-
     try {
-      if (!doctorId || !patientId) {
-        throw new RequireError(
-          "Missing doctor-id or patient-id query parameter"
-        );
-      }
 
-      await Reservation.deleteOne({ doctorId, patientId });
+      await Reservation.findByIdAndDelete(req.params.id);
 
       res.json({ message: "Reservation cancelled" });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.json({ error: { message: "internal server error" } });
+      res.status(500).json({ error: "internal server error" });
     }
   }
   static async deleteReservations(req: Request, res: Response) {
@@ -166,7 +154,7 @@ class ReservationsController {
         res.status(err.statusCode).json({ error: err.message });
         return;
       }
-      res.json({ error: { message: "internal server error" } });
+      res.status(500).json({ error: { message: "internal server error" } });
     }
   }
 }

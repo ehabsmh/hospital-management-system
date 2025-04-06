@@ -21,7 +21,7 @@ reservationsRouter.get(
 reservationsRouter.put("/", auth, ReservationsController.editReservation);
 
 reservationsRouter.delete(
-  "/",
+  "/:id",
   auth,
   isNotDoctor,
   ReservationsController.deleteReservation
