@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DoctorReservations from "./pages/users/reservations/DoctorReservations";
 import { Toaster } from "sonner";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./ui/ProtectedRoute";
 
 function App() {
   const { user, loading } = useAuth();

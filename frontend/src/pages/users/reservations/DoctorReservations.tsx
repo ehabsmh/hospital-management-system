@@ -1,11 +1,11 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Table } from "../current-shift/Table";
+import { Table } from "../../../components/current-shift/Table";
 import Loader from "../../../ui/Loader";
 import useDoctorReservations from "../../../components/reservations/useDoctorReservations";
 import AddCheck from "../../../components/reservations/AddCheck";
 import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
-import DoctorReservation from "./DoctorReservation";
 import { useEffect } from "react";
+import DoctorReservation from "../../../components/reservations/DoctorReservation";
 
 const doctorReservationsCols = [
   "Name",

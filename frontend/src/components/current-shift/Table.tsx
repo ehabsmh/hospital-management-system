@@ -1,6 +1,6 @@
 import { createContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { IUser } from "../../../interfaces/User";
+import { IUser } from "../../interfaces/User";
 
 const TableContext = createContext<{ doctor?: IUser } | null>(null);
 

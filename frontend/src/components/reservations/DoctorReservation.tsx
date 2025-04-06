@@ -1,8 +1,8 @@
-import Modal from "../../../ui/Modal";
+import IDoctorReservation from "../../interfaces/DoctorReservation";
 import { MdEdit } from "react-icons/md";
-import AddPatient from "../../../components/reservations/AddPatient";
-import useDeleteReservation from "../../../components/reservations/useDeleteReservation";
-import IDoctorReservation from "../../../interfaces/DoctorReservation";
+import Modal from "../../ui/Modal";
+import AddPatient from "./AddPatient";
+import useDeleteReservation from "./useDeleteReservation";
 
 function DoctorReservation({
   reservation,

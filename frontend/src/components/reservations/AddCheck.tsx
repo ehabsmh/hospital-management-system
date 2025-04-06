@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../../ui/Modal";
 import SearchPatient from "./SearchPatient";
 import AddPatient from "./AddPatient";
-import Reservation from "./Reservation";
+import Reservation from "./NewReservation";
 
 function AddCheck() {
   const [patientIsFound, setPatientIsFound] = useState<boolean | null>(null);

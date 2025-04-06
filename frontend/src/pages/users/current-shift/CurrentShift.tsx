@@ -1,7 +1,7 @@
 import Loader from "../../../ui/Loader";
 import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
-import { Table } from "./Table";
-import CurrentShiftDoctor from "./CurrentShiftDoctor";
+import { Table } from "../../../components/current-shift/Table";
+import CurrentShiftDoctor from "../../../components/current-shift/CurrentShiftDoctor";
 
 const currShiftCols = [
   "Avatar",
