@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import Login from "../pages/auth/Login";
+import { useAuth } from "./auth/useAuth";
+import { ReactNode } from "react";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children }: { children: ReactNode }) {
   const { user } = useAuth();
 
   if (user) return children;
-  return Navigate({ to: "/login" });
+  return <Navigate to="/" />;
 }
 
 export default ProtectedRoute;

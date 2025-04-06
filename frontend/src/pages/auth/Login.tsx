@@ -3,7 +3,7 @@ import LoginForm from "../../components/auth/LoginForm";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../components/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export type FormData = {

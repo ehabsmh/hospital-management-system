@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getDoctorReservations } from "../services/apiReservations";
+import { getDoctorReservations } from "../../../services/apiReservations";
 
 function useDoctorReservations(doctorId: string) {
   const {
@@ -8,7 +8,7 @@ function useDoctorReservations(doctorId: string) {
     error,
   } = useQuery({
     queryKey: ["doctor-reservations", doctorId],
-    queryFn: async ({ queryKey }) => await getDoctorReservations(queryKey[1]),
+    queryFn: ({ queryKey }) => getDoctorReservations(queryKey[1]),
     enabled: !!doctorId
   });
 

@@ -1,7 +1,7 @@
 import Loader from "../../../ui/Loader";
 import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
-import Table from "./Table";
-import ICurrentShift from "../../../interfaces/CurrentShift";
+import { Table } from "./Table";
+import CurrentShiftDoctor from "./CurrentShiftDoctor";
 
 const currShiftCols = [
   "Avatar",
@@ -14,8 +14,6 @@ const currShiftCols = [
 
 function CurrentShift() {
   const { isLoading, currentShift, error } = useCurrentDoctors();
-
-  const currShift: ICurrentShift = currentShift;
 
   return (
     <>
@@ -36,38 +34,9 @@ function CurrentShift() {
           </Table.Header>
           <Table.Body
             render={() =>
-              currShift.doctors.map((doctor) => (
+              currentShift?.doctors.map((doctor) => (
                 <Table.Row key={doctor._id} doctor={doctor}>
-                  <td className="p-3 border border-gray-300 text-center">
-                    <img
-                      src={doctor.avatar}
-                      alt={doctor.fullName + " photo"}
-                      className="w-10 h-10 rounded-full mx-auto"
-                    />
-                  </td>
-                  <td className="p-3 border border-gray-300">
-                    {doctor.fullName.split(" ")[0]}{" "}
-                    {doctor.fullName.split(" ")[3]}
-                  </td>
-                  <td className="p-3 border border-gray-300">
-                    {doctor.doctorInfo?.rank}
-                  </td>
-                  <td className="p-3 border border-gray-300">
-                    {typeof doctor.doctorInfo?.clinicId === "object"
-                      ? doctor.doctorInfo.clinicId?.name
-                      : "x"}
-                  </td>
-                  <td className="p-3 border border-gray-300 text-center">
-                    {doctor.doctorInfo?.patientsHandled}/
-                    {doctor.doctorInfo?.totalPatients}
-                  </td>
-                  <td className="p-3 border border-gray-300">
-                    <div
-                      className={`w-full h-full flex justify-center items-center`}
-                    >
-                      <p className="w-4 h-4 bg-red-500 rounded-full"></p>
-                    </div>
-                  </td>
+                  <CurrentShiftDoctor />
                 </Table.Row>
               ))
             }

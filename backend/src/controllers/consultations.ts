@@ -48,11 +48,15 @@ class ConsultationController {
       }
 
       const now = new Date();
-      const isExists = await Consultation.findOne({
+      const consultationExists = await Consultation.findOne({
         patientId,
         doctorId,
-        dueDate: { $gte: now },
       });
+
+      if (!consultationExists) {
+        throw new NotFoundError("Consultation not found");
+      }
+      const isExists = consultationExists.dueDate >= now;
 
       if (!isExists) {
         throw new NotFoundError("Consultation is expired");

@@ -4,7 +4,7 @@ import { IUser } from "../../../interfaces/User";
 
 const TableContext = createContext<{ doctor?: IUser } | null>(null);
 
-function Table({ children }: { children: ReactNode }) {
+export function Table({ children }: { children: ReactNode }) {
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full border-collapse border border-gray-300 text-center">
@@ -16,9 +16,21 @@ function Table({ children }: { children: ReactNode }) {
 
 function Header({ children }: { children: ReactNode }) {
   return (
-    <thead className="bg-gray-200 dark:bg-gray-800">
+    <thead className="bg-gray-200 ">
       <tr>{children}</tr>
     </thead>
+  );
+}
+
+function Columns({ headers }: { headers: string[] }) {
+  return (
+    <>
+      {headers.map((header, index) => (
+        <th key={index} className="p-3 border border-gray-300">
+          {header}
+        </th>
+      ))}
+    </>
   );
 }
 
@@ -49,21 +61,9 @@ function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
   );
 }
 
-function Columns({ headers }: { headers: string[] }) {
-  return (
-    <>
-      {headers.map((header, index) => (
-        <th key={index} className="p-3 border border-gray-300">
-          {header}
-        </th>
-      ))}
-    </>
-  );
-}
-
 Table.Header = Header;
 Table.Body = Body;
 Table.Row = Row;
 Table.Columns = Columns;
 
-export default Table;
+export default TableContext;

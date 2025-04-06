@@ -2,13 +2,12 @@ import { useState } from "react";
 import Modal from "../../../ui/Modal";
 import SearchPatient from "./SearchPatient";
 import AddPatient from "./AddPatient";
+import Reservation from "./Reservation";
 
 function AddCheck() {
   const [patientIsFound, setPatientIsFound] = useState<boolean | null>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
-  function onCloseModal() {
-    throw new Error("Function not implemented.");
-  }
+
   return (
     <div className="text-center">
       <Modal>
@@ -19,17 +18,18 @@ function AddCheck() {
         </Modal.Open>
         <Modal.Window name="new-check">
           {patientIsFound ? (
-            <p>Patient found</p>
+            <Reservation
+              phoneNumber={phoneNumber}
+              setPatientIsFound={setPatientIsFound}
+            />
           ) : patientIsFound === false ? (
             <AddPatient
-              onCloseModal={onCloseModal}
               setPatientIsFound={setPatientIsFound}
               phoneNumber={phoneNumber}
             />
           ) : (
             <SearchPatient
               setPatientIsFound={setPatientIsFound}
-              onCloseModal={onCloseModal}
               phoneNumber={phoneNumber}
               setPhoneNumber={setPhoneNumber}
             />
