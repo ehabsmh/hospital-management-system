@@ -5,7 +5,7 @@ function Sidebar() {
     <aside className="bg-primary">
       <ul className="mt-10 flex flex-col items-center gap-10 text-white">
         <li>
-          <img src="images/logo.webp" alt="logo" className="w-44" />
+          <img src="/images/logo.webp" alt="logo" className="w-44" />
         </li>
         <li>
           <NavLink

@@ -7,4 +7,6 @@ const scheduleRouter = express.Router();
 // set extra day to true for a specific group
 scheduleRouter.put("/extra-day", ScheduleController.setExtraDay);
 
+scheduleRouter.get("/", ScheduleController.getGroups);
+
 export default scheduleRouter;

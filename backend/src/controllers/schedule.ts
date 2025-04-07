@@ -34,6 +34,15 @@ class ScheduleController {
       res.status(500).json({ error: "Internal server error." });
     }
   }
+
+  static async getGroups(req: Request, res: Response) {
+    try {
+      const workSchedules = await WorkSchedule.find();
+      res.json(workSchedules);
+    } catch (err) {
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
 }
 
 export default ScheduleController;

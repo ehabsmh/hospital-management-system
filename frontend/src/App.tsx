@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import DoctorReservations from "./pages/users/reservations/DoctorReservations";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import Schedule from "./pages/users/schedule/Schedule";
 
 function App() {
   const { user, loading } = useAuth();
@@ -47,7 +48,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="schedule" element={<p>schedule</p>} />
+            <Route path="schedule" element={<Schedule />} />
           </Route>
           <Route
             path="/doctor"

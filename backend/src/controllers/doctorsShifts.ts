@@ -10,21 +10,22 @@ import DoctorsShifts from "../models/doctorsShifts";
 import WorkSchedule from "../models/schedule";
 import { findShift } from "../utils/utils";
 import Clinic from "../models/clinic";
+import Shift from "../models/shift";
 
 class DoctorsShiftsController {
   static async getDoctor(req: Request, res: Response) {
     try {
-      const shiftId = req.query["shift-id"];
+      const { id: shiftId } = req.params;
       const clinicId = req.query["clinic-id"];
-      const { groupId } = req.body;
+      const groupId = req.query["group-id"];
 
       if (!shiftId) {
-        throw new RequireError(
-          "Shift id and clinic id query params are required."
-        );
+        throw new RequireError("Shift id param is required.");
       }
-      if (!groupId) {
-        throw new RequireError("group id is required.");
+      if (!groupId && !clinicId) {
+        throw new RequireError(
+          "group id and clinic id query params are required."
+        );
       }
 
       const doctorsShifts = await DoctorsShifts.findOne({
@@ -46,15 +47,15 @@ class DoctorsShiftsController {
         throw new NotFoundError("Doctor not found for this clinic.");
       }
 
-      res.json({ data: doctor });
+      res.json(doctor);
     } catch (err) {
       if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: { message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
         return;
       }
 
       if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: { message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
         return;
       }
 
@@ -182,6 +183,15 @@ class DoctorsShiftsController {
         return;
       }
       console.log(err);
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
+
+  static async getAllShifts(req: Request, res: Response) {
+    try {
+      const shifts = await Shift.find();
+      res.json(shifts);
+    } catch (err) {
       res.status(500).json({ error: "Internal server error." });
     }
   }

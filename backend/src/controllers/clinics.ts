@@ -107,5 +107,24 @@ class ClinicController {
       }
     }
   }
+
+  static async get(req: Request, res: Response) {
+    try {
+      const clinics = await Clinic.find().select("-__v");
+
+      if (!clinics) {
+        throw new NotFoundError("Clinics not found.");
+      }
+
+      res.json(clinics);
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
 }
 export default ClinicController;

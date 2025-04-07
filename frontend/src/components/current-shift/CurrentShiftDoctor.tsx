@@ -22,7 +22,7 @@ function CurrentShiftDoctor() {
       <td className="p-3 border border-gray-300">
         {typeof doctor.doctorInfo?.clinicId === "object"
           ? doctor.doctorInfo.clinicId?.name
-          : "x"}
+          : doctor.doctorInfo?.clinicId}
       </td>
       <td className="p-3 border border-gray-300 text-center">
         {doctor.doctorInfo?.patientsHandled}/{doctor.doctorInfo?.totalPatients}

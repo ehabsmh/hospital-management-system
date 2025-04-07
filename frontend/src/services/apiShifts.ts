@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import ICurrentShift from "../interfaces/CurrentShift";
+import { IUser } from "../interfaces/User";
 
 export async function getCurrentShift() {
   try {
@@ -10,6 +11,30 @@ export async function getCurrentShift() {
 
     const currentShift: ICurrentShift = data.data;
     return currentShift;
+  } catch (err) {
+    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+  }
+}
+
+export async function fetchShifts() {
+  try {
+    const { data } = await axios.get("http://localhost:3000/api/v1/shifts/all", {
+      withCredentials: true,
+    });
+    return data;
+  } catch (err) {
+    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+  }
+}
+
+export async function fetchDoctorByShift(params: { groupId: string, clinicId: string }, shiftId: string) {
+  try {
+    const { data }: { data: IUser } = await axios.get(
+      `http://localhost:3000/api/v1/shifts/${shiftId}`,
+      { withCredentials: true, params: { 'group-id': params.groupId, 'clinic-id': params.clinicId } }
+    );
+
+    return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }
