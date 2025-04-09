@@ -10,7 +10,7 @@ type ShiftProps = {
 
 function Shift({ shift, clinics, groupId }: ShiftProps) {
   return (
-    <div className="border rounded-xl p-4 shadow-md bg-white">
+    <div className="border border-gray-300 mb-5 rounded-xl p-4 shadow-lg bg-white">
       <div className="font-medium text-gray-700">
         {shift.startTime} - {shift.endTime}
       </div>

@@ -40,7 +40,7 @@ class DoctorsShiftsController {
       const doctors = <IUser[]>doctorsShifts.doctors;
 
       const doctor = doctors.find(
-        (doctor) => doctor.doctorInfo?.clinicId.toString() === clinicId
+        (doctor) => doctor.doctorInfo?.clinicId?.toString() === clinicId
       );
 
       if (!doctor) {
@@ -68,15 +68,20 @@ class DoctorsShiftsController {
       const { doctorId, groupId, shiftId } = req.body;
 
       if (!doctorId || !groupId || !shiftId) {
-        throw new RequireError("Doctor id, group id and shift id is required.");
+        throw new RequireError(
+          "Doctor id, group id and shift id are required."
+        );
       }
 
       const doctor = await User.findById(doctorId);
+
       if (!doctor) {
         throw new NotFoundError("Doctor not found.");
       }
 
       const isDoctorAlreadyAssigned = await DoctorsShifts.findOne({
+        groupId,
+        shiftId,
         doctors: { $in: [doctorId] },
       });
 
@@ -97,6 +102,7 @@ class DoctorsShiftsController {
         });
       } else {
         const doctorSpecialty = doctor.doctorInfo?.clinicId;
+
         // Check if a doctor of the same specialty is already assigned to this shift
         const doctors = <IUser[]>doctorsShift.doctors;
         const isSameSpecialty = doctors.some(
@@ -121,7 +127,7 @@ class DoctorsShiftsController {
         }
       }
 
-      res.status(201).json({ data: doctorsShift });
+      res.status(201).json(doctorsShift);
     } catch (err) {
       if (err instanceof RequireError) {
         res.status(err.statusCode).json({ error: err.message });

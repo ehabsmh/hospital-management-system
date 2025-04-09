@@ -18,10 +18,10 @@ class DoctorsController {
       const doctors = await User.find({
         role: "doctor",
         "doctorInfo.clinicId": clinicId,
-        "doctorInfo.shiftId": { $exists: false },
-      }).select("fullName");
+        "doctorInfo.shiftId": null,
+      });
 
-      res.json({ data: doctors });
+      res.json(doctors);
     } catch (err) {}
   }
 }
