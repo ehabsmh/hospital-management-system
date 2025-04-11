@@ -8,16 +8,14 @@ const override: CSSProperties = {
 
 function Loader({ size, color = "#ffffff" }: { size: number; color?: string }) {
   return (
-    <div className="sweet-loading">
-      <ClipLoader
-        color={color}
-        loading={true}
-        cssOverride={override}
-        size={size}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />
-    </div>
+    <ClipLoader
+      color={color}
+      loading={true}
+      cssOverride={override}
+      size={size}
+      aria-label="Loading Spinner"
+      data-testid="loader"
+    />
   );
 }
 

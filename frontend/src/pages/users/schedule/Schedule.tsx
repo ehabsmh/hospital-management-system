@@ -40,27 +40,4 @@ function Schedule() {
   );
 }
 
-/*
-
-{shiftsByGroup["A"].map((shift) => (
-              <div
-                key={shift._id}
-                className="border rounded-xl p-4 shadow-md bg-white"
-              >
-                <div className="font-medium text-gray-700">
-                  {shift.startTime} - {shift.endTime}
-                </div>
-                <div className="mt-2 space-y-1">
-                  {shift.doctors.map((doc) => (
-                    <div
-                      key={doc._id}
-                      className="text-sm px-3 py-1 bg-blue-100 rounded-md"
-                    >
-                      {doc.fullName} - {doc.specialty}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-*/
 export default Schedule;

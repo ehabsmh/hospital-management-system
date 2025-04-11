@@ -11,11 +11,18 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import Schedule from "./pages/users/schedule/Schedule";
 import Accounts from "./pages/admins/Accounts";
 import CreateNewPassword from "./pages/CreateNewPassword";
+import Loader from "./ui/Loader";
 
 function App() {
   const { user, loading } = useAuth();
   const location = useLocation();
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Loader size={50} color="#23B1F8" />;
+      </div>
+    );
+  }
 
   const queryClient = new QueryClient();
 
@@ -34,39 +41,50 @@ function App() {
               )
             }
           />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Main />
-              </ProtectedRoute>
-            }
-          >
+          {user?.role !== "doctor" ? (
             <Route
-              index
+              path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <CurrentShift />
+                  <Main />
+                </ProtectedRoute>
+              }
+            >
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <CurrentShift />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="schedule"
+                element={
+                  <ProtectedRoute>
+                    <Schedule />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="accounts&clinics"
+                element={
+                  <ProtectedRoute>
+                    <Accounts />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+          ) : (
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Main />
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="schedule"
-              element={
-                <ProtectedRoute>
-                  <Schedule />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="accounts&clinics"
-              element={
-                <ProtectedRoute>
-                  <Accounts />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          )}
           <Route
             path="/doctor"
             element={
