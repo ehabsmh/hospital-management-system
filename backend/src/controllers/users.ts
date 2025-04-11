@@ -47,6 +47,11 @@ class UserController {
       const emailIsFound = await User.findOne({ email });
       if (emailIsFound) throw new DuplicationError("Email already exists.");
 
+      // Check first name duplication
+      const fullNameIsFound = await User.findOne({ fullName });
+      if (fullNameIsFound)
+        throw new DuplicationError("Full name already exists.");
+
       // check phoneNumber duplication
       const userPhoneIsFound = await User.findOne({ phoneNumber });
       if (userPhoneIsFound)
@@ -114,16 +119,20 @@ class UserController {
 
     try {
       const user = await User.findById(userId);
+
       if (!user) throw new NotFoundError("user does not exist");
 
       // Validate password and update, only if it has passed the validation.
+      console.log(password);
       user.password = password;
-
       await user.validate(["password"]);
-      await user.updateOne({ password: await bcrypt.hash(password, 10) });
 
-      // Sign a token and send it in the response body.
-      user.password = undefined;
+      const hashedPw = await bcrypt.hash(password, 10);
+      console.log(hashedPw);
+
+      user.password = hashedPw;
+
+      // user.password = undefined;
 
       if (!process.env.JWT_SECRET_KEY) {
         throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
@@ -137,35 +146,43 @@ class UserController {
       }
 
       // const userObj = user.toObject();
+
       const userToken = jwt.sign(
         { _id: user._id, role: user.role, email: user.email },
         process.env.JWT_SECRET_KEY
       );
 
-      res.json({ message: "Password created successfully.", userToken });
+      res.cookie("Authorization", userToken, {
+        httpOnly: true, // Prevent JavaScript access (XSS protection)
+        sameSite: "strict", // Prevent CSRF attacks
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Set expiration time (e.g., 7 days)
+      });
+
+      user.password = undefined; // Remove password from the user object
+
+      res.json({ message: "Password created successfully.", user });
     } catch (err) {
       if (
         err instanceof mongoose.Error.ValidationError &&
         Object.keys(err.errors).includes("password")
       ) {
         res.status(400).json({
-          error: { message: err.message },
+          error: err.message,
         });
 
         return;
       }
 
       if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
 
         return;
       }
 
       if (err instanceof Error) {
         res.status(500).json({
-          error: { message: "Something went wrong with the server." },
+          error: "Something went wrong with the server.",
         });
       }
     }
@@ -258,12 +275,16 @@ class UserController {
 
   static async logout(req: Request, res: Response): Promise<void> {
     try {
+      console.log(req.cookies);
+      console.log(req.cookies.Authorization);
+      if (!req.cookies.Authorization) {
+        res.status(400).json({ message: "User is not logged in." });
+        return;
+      }
       res.clearCookie("Authorization", { path: "/" });
       res.status(200).json({ message: "User logged out successfully." });
     } catch (err) {
-      res.status(500).json({
-        error: { message: "Something went wrong with the server." },
-      });
+      res.status(500).json({ error: "Something went wrong with the server." });
     }
   }
 

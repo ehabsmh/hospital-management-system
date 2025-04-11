@@ -71,9 +71,8 @@ const generateHtmlContent = (userId: Types.ObjectId) => {
             <p>
               Thank for becoming one of us! Setup a password
             </p>
-            <a href="http://localhost:5173/create-new-password/${userId}" target="_blank" class="email-button"
-              ><p style="color: white">Create new password</p></a
-            >
+            <a href="http://localhost:5173/create-new-password/${userId}" target="_blank" style="cursor: pointer;" class="email-button"
+              ><p style="color: white">Create new password</p></a>
           </div>
           <div class="email-footer">
             <p>© 2025 Hospital Management System. All rights reserved.</p>

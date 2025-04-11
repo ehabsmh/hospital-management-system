@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import Schedule from "./pages/users/schedule/Schedule";
 import Accounts from "./pages/admins/Accounts";
+import CreateNewPassword from "./pages/CreateNewPassword";
 
 function App() {
   const { user, loading } = useAuth();
@@ -49,8 +50,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="schedule" element={<Schedule />} />
-            <Route path="accounts&clinics" element={<Accounts />} />
+            <Route
+              path="schedule"
+              element={
+                <ProtectedRoute>
+                  <Schedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="accounts&clinics"
+              element={
+                <ProtectedRoute>
+                  <Accounts />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route
             path="/doctor"
@@ -59,6 +74,10 @@ function App() {
                 <DoctorReservations />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/create-new-password/:id"
+            element={<CreateNewPassword />}
           />
         </Routes>
       </QueryClientProvider>

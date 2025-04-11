@@ -1,9 +1,17 @@
+import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import { logout } from "../services/apiAuth";
+import { useAuth } from "../components/auth/useAuth";
 
 function Sidebar() {
+  const { setUser } = useAuth();
+  async function onLogout() {
+    await logout();
+    setUser(null);
+  }
   return (
-    <aside className="bg-primary">
-      <ul className="mt-10 flex flex-col items-center gap-10 text-white">
+    <aside className="bg-primary flex flex-col items-center py-16 h-screen">
+      <ul className="flex flex-col items-center gap-10 text-white">
         <li>
           <img src="/images/logo.webp" alt="logo" className="w-44" />
         </li>
@@ -42,10 +50,12 @@ function Sidebar() {
           </NavLink>
         </li>
         <li>
-          <NavLink>
-            <p>Settings</p>
-          </NavLink>
+          <p>Settings</p>
         </li>
+      </ul>
+
+      <ul className="mt-auto text-white mb-4">
+        <MdLogout size={30} className="cursor-pointer" onClick={onLogout} />
       </ul>
     </aside>
   );
