@@ -17,10 +17,10 @@ function DoctorDashboard() {
         doctorId={user?._id as string}
         doctorName={user?.fullName as string}
       />
-      <div className="w-full max-w-md px-1">
+      <div className="w-full max-w-md px-1 absolute bottom-0 left-1/2">
         <Button
           onClick={onLogout}
-          className="mt-3 absolute bottom-0 rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
+          className="mt-3 rounded-lg border-none py-3 px-7 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
         >
           Logout
         </Button>
