@@ -85,7 +85,7 @@ class DoctorsShiftsController {
         doctors: { $in: [doctorId] },
       });
 
-      if (isDoctorAlreadyAssigned) {
+      if (isDoctorAlreadyAssigned || doctor.doctorInfo?.shiftId) {
         throw new DuplicationError("Doctor is already assigned to a shift.");
       }
 
@@ -116,15 +116,15 @@ class DoctorsShiftsController {
             "A doctor of the same specialty is already assigned to this shift."
           );
         }
-        //     }
 
         doctorsShift?.doctors.push(doctorId);
+      }
 
-        if (doctor.doctorInfo) {
-          doctor.doctorInfo.shiftId = doctorsShift._id;
-          await doctor.save();
-          await doctorsShift?.save();
-        }
+      if (doctor.doctorInfo) {
+        doctor.doctorInfo.shiftId = doctorsShift._id;
+        await doctor.save();
+        await doctorsShift?.save();
+        console.log(doctor.doctorInfo);
       }
 
       res.status(201).json(doctorsShift);

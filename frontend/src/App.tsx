@@ -9,6 +9,7 @@ import DoctorReservations from "./pages/users/reservations/DoctorReservations";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import Schedule from "./pages/users/schedule/Schedule";
+import Accounts from "./pages/admins/Accounts";
 
 function App() {
   const { user, loading } = useAuth();
@@ -49,6 +50,7 @@ function App() {
               }
             />
             <Route path="schedule" element={<Schedule />} />
+            <Route path="accounts&clinics" element={<Accounts />} />
           </Route>
           <Route
             path="/doctor"
@@ -60,7 +62,7 @@ function App() {
           />
         </Routes>
       </QueryClientProvider>
-      <Toaster />
+      <Toaster richColors position="top-center" />
     </>
   );
 }

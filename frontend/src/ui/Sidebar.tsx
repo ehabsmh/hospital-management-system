@@ -31,7 +31,13 @@ function Sidebar() {
           </NavLink>
         </li>
         <li>
-          <NavLink>
+          <NavLink
+            to="accounts&clinics"
+            className={({ isActive }) =>
+              (isActive ? "font-bold text-lg" : "font-normal text-sm") +
+              " duration-150"
+            }
+          >
             <p>Accounts & Clinics</p>
           </NavLink>
         </li>

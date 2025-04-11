@@ -1,11 +1,12 @@
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import IClinic from "../../../interfaces/Clinic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IUser } from "../../../interfaces/User";
 import { fetchDoctorsByClinicId } from "../../../services/apiDoctors";
 import { toast } from "sonner";
 import useDoctorByShift from "./useDoctorByShift";
 import useAddDoctorToShift from "./useAddDoctorToShift";
+import Loader from "../../../ui/Loader";
 
 type ClinicProps = {
   clinic: IClinic;
@@ -14,7 +15,7 @@ type ClinicProps = {
 };
 
 function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
-  const { doctor } = useDoctorByShift(shiftId, {
+  const { doctor, isError, isLoading } = useDoctorByShift(shiftId, {
     groupId,
     clinicId: clinic._id,
   });
@@ -49,13 +50,35 @@ function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
 
   return (
     <>
-      <div
-        key={clinic._id}
-        className="text-sm px-3 py-2 bg-blue-100 rounded-md"
-      >
-        <div className="min-w-52 grid grid-cols-2 justify-between">
-          {!doctor ? (
-            isAdding ? (
+      <div className="text-sm px-3 py-2 bg-blue-100 rounded-md">
+        {isLoading && !isError && <Loader size={13} color="#000" />}
+
+        {!isLoading && (
+          <div className="min-w-52 grid grid-cols-2">
+            {isError &&
+              (isAdding ? (
+                <FaMinusCircle
+                  onClick={() => setIsAdding(false)}
+                  className="text-gray-500  duration-150 text-lg hover:text-xl cursor-pointer"
+                />
+              ) : (
+                <FaPlusCircle
+                  onClick={getDoctorsByClinicId}
+                  className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
+                />
+              ))}
+
+            {!isError && <p>Dr. {doctor?.fullName}</p>}
+            <p>{clinic.name}</p>
+          </div>
+        )}
+        {/* {!isLoading && isError }
+
+        {!isLoading && !isError }
+
+        {!isLoading && isError ? (
+        <div className="min-w-52 grid grid-cols-2">
+            {isAdding ? (
               <FaMinusCircle
                 onClick={() => setIsAdding(false)}
                 className="text-gray-500  duration-150 text-lg hover:text-xl cursor-pointer"
@@ -65,12 +88,37 @@ function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
                 onClick={getDoctorsByClinicId}
                 className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
               />
-            )
-          ) : (
-            <p>Dr. {doctor?.fullName}</p>
-          )}
-          <p>{clinic.name}</p>
-        </div>
+            )}
+          </div>
+        ) : (
+          <FaPlusCircle
+            onClick={getDoctorsByClinicId}
+            className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
+          />
+        )}
+        {!isError && !isLoading && <p>Dr. {doctor?.fullName}</p>}
+
+        {!isLoading && <p>{clinic.name}</p>} */}
+
+        {/* {!isLoading && (
+          <div className="min-w-52 grid grid-cols-2">
+            {isError &&
+              (isAdding ? (
+                <FaMinusCircle
+                  onClick={() => setIsAdding(false)}
+                  className="text-gray-500  duration-150 text-lg hover:text-xl cursor-pointer"
+                />
+              ) : (
+                <FaPlusCircle
+                  onClick={getDoctorsByClinicId}
+                  className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
+                />
+              ))}
+
+            {!isError && !isLoading && <p>Dr. {doctor?.fullName}</p>}
+            
+          </div>
+        )} */}
       </div>
       {isAdding && (
         <div className="bg-zinc-50">

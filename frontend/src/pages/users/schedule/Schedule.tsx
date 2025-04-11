@@ -24,14 +24,14 @@ function Schedule() {
   return (
     <div className="p-6 grid grid-cols-2 gap-8 overflow-auto">
       {schedule?.map((group) => (
-        <div>
+        <div key={group._id}>
           <div>
             <h2 className="text-xl font-semibold">{group.groupName}</h2>
             <h4 className="text-sm font-extralight mb-4 text-neutral-400">
               {group.availableDays.join(", ")}
             </h4>
           </div>
-          <div key={group._id} className="space-y-4 overflow-auto h-[87vh]">
+          <div className="space-y-4 overflow-auto h-[87vh]">
             <Shifts groupId={group._id} />
           </div>
         </div>

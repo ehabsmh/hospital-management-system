@@ -14,20 +14,22 @@ import { CustomRequest } from "../middlewares/auth";
 import Clinic from "../models/clinic";
 
 class UserController {
-  static async signup(req: Request, res: Response): Promise<void> {
+  static async signup(req: CustomRequest, res: Response): Promise<void> {
     const { fullName, phoneNumber, email, avatar, role, doctorInfo } = req.body;
+
+    console.log(avatar);
+
+    const currentUserRole = req.user?.role;
 
     try {
       // todo: handle that only admins can signup users.
-      // if (role !== 'admin') throw new UnauthorizedError("Signup allowed only for admins.");
+      if (currentUserRole !== "admin")
+        throw new UnauthorizedError("Only Admins can sign up users.");
 
       // If role is doctor, doctorInfo should be provided.
       if (role !== "doctor" && doctorInfo) {
         res.status(400).json({
-          error: {
-            message:
-              "Doctor info should be provided only if the role is doctor.",
-          },
+          error: "Doctor info should be provided only if the role is doctor.",
         });
 
         return;
@@ -35,9 +37,7 @@ class UserController {
 
       if (role === "doctor" && !doctorInfo) {
         res.status(400).json({
-          error: {
-            message: "Doctor info should be provided if the role is doctor.",
-          },
+          error: "Doctor info should be provided if the role is doctor.",
         });
 
         return;
@@ -55,19 +55,19 @@ class UserController {
       // Check if the user provides a password while signing up.
       if (req.body.password) {
         res.status(400).json({
-          error: {
-            message:
-              "Passwords must be set up only when the user logs in for the first time.",
-          },
+          error:
+            "Passwords must be set up only when the user logs in for the first time.",
         });
 
         return;
       }
 
-      const isClinicExist = await Clinic.findById(doctorInfo?.clinicId);
+      if (role === "doctor") {
+        const isClinicExist = await Clinic.findById(doctorInfo?.clinicId);
 
-      if (!isClinicExist) {
-        throw new NotFoundError("Clinic does not exist.");
+        if (!isClinicExist) {
+          throw new NotFoundError("Clinic does not exist.");
+        }
       }
 
       // create user
@@ -80,27 +80,21 @@ class UserController {
         doctorInfo: doctorInfo ? doctorInfo : undefined,
       });
       await sendEmail(newUser);
-      res
-        .status(201)
-        .json({ data: newUser, message: "User created successfully." });
+      res.status(201).json({ newUser, message: "User created successfully." });
     } catch (err) {
       if (err instanceof DuplicationError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
 
         return;
       }
       if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
 
         return;
       }
 
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ error: err.message });
 
         return;
       }
@@ -108,7 +102,7 @@ class UserController {
       if (err instanceof Error) {
         console.log(err);
         res.status(500).json({
-          error: { message: "Something went wrong with the server." },
+          error: "Something went wrong with the server.",
         });
       }
     }

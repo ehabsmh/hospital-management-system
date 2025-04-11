@@ -62,7 +62,6 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   },
   avatar: {
     type: String,
-    required: true,
   },
   role: {
     type: String,

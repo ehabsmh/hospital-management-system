@@ -9,6 +9,7 @@ function useCurrentDoctors() {
   } = useQuery({
     queryKey: ["current-shifts"],
     queryFn: getCurrentShift,
+    retry: false
   });
 
   return { isLoading, currentShift, error };

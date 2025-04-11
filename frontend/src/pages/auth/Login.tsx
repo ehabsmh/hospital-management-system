@@ -1,22 +1,15 @@
-import styled from "styled-components";
 import LoginForm from "../../components/auth/LoginForm";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { useAuth } from "../../components/auth/useAuth";
 import { useNavigate } from "react-router-dom";
+import FormAccounts from "../../ui/FormAccounts";
 
 export type FormData = {
   email: string;
   password: string;
 };
-
-const LoginSection = styled.section`
-  background-image: url("/images/login-bg.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 75% 25%;
-`;
 
 function Login() {
   const {
@@ -56,19 +49,15 @@ function Login() {
   });
 
   return (
-    <LoginSection className="h-screen bg-dark">
-      <div className="layer h-full bg-black/75">
-        <div className="container h-full lg:w-1/2 mx-auto flex justify-center items-center">
-          <LoginForm
-            register={register}
-            onSubmit={onSubmit}
-            errors={errors}
-            error={error}
-            isLoading={isLoading}
-          />
-        </div>
-      </div>
-    </LoginSection>
+    <FormAccounts layerBgColor="bg-black/75">
+      <LoginForm
+        register={register}
+        onSubmit={onSubmit}
+        errors={errors}
+        error={error}
+        isLoading={isLoading}
+      />
+    </FormAccounts>
   );
 }
 
