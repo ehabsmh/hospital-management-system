@@ -5,7 +5,7 @@ import { MdAddCircle } from "react-icons/md";
 import { UseFormGetValues, UseFormRegister } from "react-hook-form";
 import { ICaseRecord } from "./CreateCaseRecord";
 
-type CreatePrescProps = {
+type CreatePrescriptionProps = {
   register: UseFormRegister<ICaseRecord>;
   setRecordType: React.Dispatch<React.SetStateAction<string>>;
   getValues: UseFormGetValues<ICaseRecord>;
@@ -15,13 +15,13 @@ function CreatePrescription({
   setRecordType,
   register,
   getValues,
-}: CreatePrescProps) {
+}: CreatePrescriptionProps) {
   const [medicines, setMedicines] = useState(() =>
     !getValues?.().prescription?.length
       ? [{ name: "", type: "", dosage: "" }]
       : getValues?.().prescription
   );
-  console.log(getValues?.());
+
   return (
     <>
       <Table>
@@ -30,21 +30,27 @@ function CreatePrescription({
         </Table.Header>
         <Table.Body
           render={() =>
-            medicines.map((medicine, i) => (
+            medicines.map((_, i) => (
               <Table.Row key={i}>
                 <td className="border border-gray-200 ">
                   <input
                     type="text"
+                    placeholder="Medicine Name"
                     className="w-full text-sm text-center"
                     {...register(`prescription.${i}.name`)}
                   />
                 </td>
                 <td className="border border-gray-200">
-                  <input
-                    type="text"
+                  <select
+                    defaultValue="tablet"
+                    className="w-full"
                     {...register(`prescription.${i}.type`)}
-                    className="w-full text-sm text-center"
-                  />
+                  >
+                    <option value="tablet">tablet</option>
+                    <option value="syrup">syrup</option>
+                    <option value="injection">injection</option>
+                    <option value="ointment">ointment</option>
+                  </select>
                 </td>
                 <td className="border border-gray-200">
                   <input

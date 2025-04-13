@@ -2,13 +2,26 @@ import { Button } from "@headlessui/react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-function CreateConsultation({ setRecordType, dueDate, onChange }) {
+type CreateConsultationProps = {
+  setRecordType: React.Dispatch<React.SetStateAction<string>>;
+  dueDate: Date;
+  onChange: React.Dispatch<React.SetStateAction<Date>>;
+};
+function CreateConsultation({
+  setRecordType,
+  dueDate,
+  onChange,
+}: CreateConsultationProps) {
   console.log(dueDate);
 
   return (
     <div>
       <Calendar
-        onChange={onChange}
+        onChange={(value) => {
+          if (value instanceof Date) {
+            onChange(value);
+          }
+        }}
         value={dueDate}
         calendarType="islamic"
         minDate={new Date()}

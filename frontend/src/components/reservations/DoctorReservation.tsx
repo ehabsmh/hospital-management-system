@@ -71,7 +71,10 @@ function DoctorReservation({
                   />
                 </Modal.Open>
                 <Modal.Window name="complete-patient-check">
-                  <CreateCaseRecord patientId={reservation.patientId._id} />
+                  <CreateCaseRecord
+                    patientId={reservation.patientId._id}
+                    reservationId={reservation._id}
+                  />
                 </Modal.Window>
               </>
             )}

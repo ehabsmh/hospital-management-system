@@ -7,6 +7,8 @@ import { createCaseRecord } from "../../services/apiCaseRecord";
 import CreateConsultation from "./CreateConsultation";
 import { createConsultation } from "../../services/apiConsultations";
 import { toast } from "sonner";
+import { MdClose } from "react-icons/md";
+import useDeleteReservation from "../reservations/useDeleteReservation";
 
 export interface ICaseRecord {
   patientId: string;
@@ -25,11 +27,17 @@ type Value = Date;
 type CreateCaseRecordProps = {
   patientId: string;
   onCloseModal?: () => void;
+  reservationId: string;
 };
 
-function CreateCaseRecord({ patientId, onCloseModal }: CreateCaseRecordProps) {
+function CreateCaseRecord({
+  patientId,
+  onCloseModal,
+  reservationId,
+}: CreateCaseRecordProps) {
   const [recordType, setRecordType] = useState("Report");
   const [dueDate, onChangeDueDate] = useState<Value>(new Date());
+  const { delReservation } = useDeleteReservation();
 
   const { register, handleSubmit, getValues, setValue } =
     useForm<ICaseRecord>();
@@ -51,13 +59,20 @@ function CreateCaseRecord({ patientId, onCloseModal }: CreateCaseRecordProps) {
       console.log(consultation);
       onCloseModal?.();
       toast.success(`Record created for case #${patientId}.`);
+      delReservation(reservationId);
     } catch (error) {
       if (error instanceof Error) console.log(error.message);
     }
   }
 
   return (
-    <section className="border rounded-md border-white/20  w-1/2 p-10 shadow-lg shadow-black/70">
+    <section className="border relative rounded-md border-white/20  w-1/2 p-10 shadow-lg shadow-black/70">
+      <div
+        className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
+        onClick={onCloseModal}
+      >
+        <MdClose size={25} />
+      </div>
       <div className="flex justify-center gap-8">
         <Button
           disabled={recordType !== "Report"}

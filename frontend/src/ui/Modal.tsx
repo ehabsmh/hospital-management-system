@@ -65,7 +65,7 @@ function Window<T extends { onCloseModal: () => void }>({
 
   return createPortal(
     <div
-      onClick={close}
+      id="overlay"
       className="overlay bg-white/85 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center"
     >
       {cloneElement(children, { ...children.props, onCloseModal: close })}
