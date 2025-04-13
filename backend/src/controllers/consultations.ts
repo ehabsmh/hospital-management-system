@@ -24,15 +24,15 @@ class ConsultationController {
         alertOn,
       });
 
-      res.status(201).json({ data: newConsultation });
+      res.status(201).json(newConsultation);
     } catch (err) {
       if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: { message: err.message } });
+        res.status(err.statusCode).json({ error: err.message });
 
         return;
       }
 
-      res.status(500).json({ error: { message: "internal server error" } });
+      res.status(500).json({ error: "internal server error" });
     }
   }
 

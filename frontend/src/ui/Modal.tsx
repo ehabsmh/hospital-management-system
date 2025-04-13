@@ -64,10 +64,11 @@ function Window<T extends { onCloseModal: () => void }>({
   if (name !== openName) return null;
 
   return createPortal(
-    <div className="overlay bg-white/85 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center">
-      <div className="">
-        {cloneElement(children, { ...children.props, onCloseModal: close })}
-      </div>
+    <div
+      onClick={close}
+      className="overlay bg-white/85 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center"
+    >
+      {cloneElement(children, { ...children.props, onCloseModal: close })}
     </div>,
     document.body
   );

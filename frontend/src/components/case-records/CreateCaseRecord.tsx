@@ -1,0 +1,109 @@
+import { Button } from "@headlessui/react";
+import { useEffect, useState } from "react";
+import CreateReport from "./CreateReport";
+import CreatePrescription from "./CreatePrescription";
+import { useForm } from "react-hook-form";
+import { createCaseRecord } from "../../services/apiCaseRecord";
+import CreateConsultation from "./CreateConsultation";
+import { createConsultation } from "../../services/apiConsultations";
+import { toast } from "sonner";
+
+export interface ICaseRecord {
+  patientId: string;
+  report: {
+    title: string;
+    body: string;
+  };
+  prescription: {
+    name: string;
+    type: string;
+    dosage: string;
+  }[];
+}
+
+type Value = Date;
+type CreateCaseRecordProps = {
+  patientId: string;
+  onCloseModal?: () => void;
+};
+
+function CreateCaseRecord({ patientId, onCloseModal }: CreateCaseRecordProps) {
+  const [recordType, setRecordType] = useState("Report");
+  const [dueDate, onChangeDueDate] = useState<Value>(new Date());
+
+  const { register, handleSubmit, getValues, setValue } =
+    useForm<ICaseRecord>();
+
+  useEffect(
+    function () {
+      setValue("patientId", patientId);
+    },
+    [patientId, setValue]
+  );
+
+  async function onSubmit(data: ICaseRecord) {
+    try {
+      const message = await createCaseRecord(data);
+      console.log(dueDate);
+
+      const consultation = await createConsultation({ patientId, dueDate });
+      console.log(message);
+      console.log(consultation);
+      onCloseModal?.();
+      toast.success(`Record created for case #${patientId}.`);
+    } catch (error) {
+      if (error instanceof Error) console.log(error.message);
+    }
+  }
+
+  return (
+    <section className="border rounded-md border-white/20  w-1/2 p-10 shadow-lg shadow-black/70">
+      <div className="flex justify-center gap-8">
+        <Button
+          disabled={recordType !== "Report"}
+          className="mt-3 shadow-md rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary data-[disabled]:bg-primary/50 duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
+        >
+          Report
+        </Button>
+        <Button
+          disabled={recordType !== "Prescription"}
+          className="mt-3 shadow-md rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary data-[disabled]:bg-primary/50 duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
+        >
+          Prescription
+        </Button>
+        <Button
+          disabled={recordType !== "Consultation"}
+          className="mt-3 shadow-md rounded-lg border-none py-1.5 px-3 text-sm/6 text-white bg-primary data-[disabled]:bg-primary/50 duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
+        >
+          Consultation
+        </Button>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex items-center flex-col"
+      >
+        <div className="w-1/2">
+          {recordType === "Report" && (
+            <CreateReport setRecordType={setRecordType} register={register} />
+          )}
+        </div>
+        {recordType === "Prescription" && (
+          <CreatePrescription
+            setRecordType={setRecordType}
+            register={register}
+            getValues={getValues}
+          />
+        )}
+        {recordType === "Consultation" && (
+          <CreateConsultation
+            setRecordType={setRecordType}
+            dueDate={dueDate}
+            onChange={onChangeDueDate}
+          />
+        )}
+      </form>
+    </section>
+  );
+}
+
+export default CreateCaseRecord;

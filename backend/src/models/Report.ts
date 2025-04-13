@@ -1,16 +1,6 @@
 import { model, Schema } from "mongoose";
 
 const ReportSchema = new Schema({
-  doctorId: {
-    type: String,
-    required: true,
-    ref: "user",
-  },
-  patientId: {
-    type: String,
-    required: true,
-    ref: "patient",
-  },
   title: {
     type: String,
     required: true,
@@ -21,6 +11,6 @@ const ReportSchema = new Schema({
   },
 });
 
-const Report = model("Report", ReportSchema);
+// const Report = model("Report", ReportSchema);
 
-export default Report;
+export default ReportSchema;

@@ -16,7 +16,7 @@ import { seedShifts } from "./models/shift";
 import doctorsRouter from "./views/doctors";
 import shiftsRouter from "./views/shifts";
 import cookieParser from "cookie-parser";
-import reportsRouter from "./views/reports";
+import caseRecordsRouter from "./views/caseRecords";
 
 const app = express();
 const PORT = 3000;
@@ -48,7 +48,7 @@ app.use("/api/v1/reservations", reservationsRouter);
 app.use("/api/v1/consultations", consultationRouter);
 app.use("/api/v1/doctors", doctorsRouter);
 app.use("/api/v1/shifts", shiftsRouter);
-app.use("/api/v1/reports", reportsRouter);
+app.use("/api/v1/case-record", caseRecordsRouter);
 
 // Run the endpoint every saturday at 00:00
 cron.schedule("0 0 * * 6", async () => {

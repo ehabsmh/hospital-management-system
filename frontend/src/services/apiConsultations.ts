@@ -12,3 +12,16 @@ export async function getConsultation(params: { doctorId: string, patientId: str
     if (err instanceof AxiosError) throw new Error(err.response?.data.error.message);
   }
 }
+
+export async function createConsultation(payload: { patientId: string, dueDate: Date }) {
+  try {
+    const { data } = await axios.post(
+      "http://localhost:3000/api/v1/consultations",
+      payload,
+      { withCredentials: true }
+    );
+    return data;
+  } catch (error) {
+    if (error instanceof AxiosError) throw new Error(error.response?.data.error);
+  }
+}

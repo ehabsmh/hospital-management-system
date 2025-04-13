@@ -5,6 +5,7 @@ import AddPatient from "./AddPatient";
 import useDeleteReservation from "./useDeleteReservation";
 import { useAuth } from "../auth/useAuth";
 import { FaCheckCircle } from "react-icons/fa";
+import CreateCaseRecord from "../case-records/CreateCaseRecord";
 
 function DoctorReservation({
   reservation,
@@ -70,10 +71,7 @@ function DoctorReservation({
                   />
                 </Modal.Open>
                 <Modal.Window name="complete-patient-check">
-                  <AddPatient
-                    patientToEdit={reservation.patientId}
-                    phoneNumber={reservation.patientId.phoneNumber}
-                  />
+                  <CreateCaseRecord patientId={reservation.patientId._id} />
                 </Modal.Window>
               </>
             )}
