@@ -73,10 +73,10 @@ function UsersForm({ formType, userForm, errors }: UsersFormProps) {
       <Field className="mb-5">
         <Label className="text-sm/6 font-medium text-black">Avatar</Label>
         <Input
-          {...register("avatar")}
           id="image"
           type="file"
           accept="image/*"
+          {...register("avatar")}
           data-focus
           className={clsx(
             `cursor-pointer mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,

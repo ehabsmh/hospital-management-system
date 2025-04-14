@@ -6,13 +6,16 @@ export async function signup(formData: AccountsFormData) {
   try {
 
     const { data } = await axios.post(
-      "http://localhost:3000/api/v1/auth/sign-up", formData, { withCredentials: true })
+      "http://localhost:3000/api/v1/auth/sign-up", formData, {
+      withCredentials: true
+    })
 
     return data.message;
 
   } catch (err) {
     if (axios.isAxiosError(err)) {
       if (err.response) {
+        console.log(err.response);
         const error = err.response.data.error;
         if (error) throw new Error(error)
       }
@@ -47,4 +50,12 @@ export async function setNewPassword(payload: { password: string, userId: string
       }
     }
   }
+}
+
+export async function uploadAvatar(avatar: File | string) {
+  const formData = new FormData();
+  formData.append("avatar", avatar);
+  const { data }: { data: { message: string, avatarPath: string } } = await axios.post('http://localhost:3000/api/v1/auth/upload-avatar', formData, { withCredentials: true })
+  return data
+
 }

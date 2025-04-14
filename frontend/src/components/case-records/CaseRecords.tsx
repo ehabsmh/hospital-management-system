@@ -3,6 +3,7 @@ import { MdClose } from "react-icons/md";
 import CaseRecord from "./CaseRecord";
 import { fetchCaseRecords } from "../../services/apiCaseRecord";
 import ICaseRecord from "../../interfaces/CaseRecord";
+import { toast } from "sonner";
 
 type CaseRecordsProps = {
   onCloseModal?: () => void;
@@ -23,6 +24,9 @@ function CaseRecords({ onCloseModal, patientId }: CaseRecordsProps) {
         try {
           const data = await fetchCaseRecords(patientId);
           console.log(data);
+          if (!data.length) {
+            toast.error("No case records found for this patient.");
+          }
 
           setCaseRecords(data);
         } catch (error) {

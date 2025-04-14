@@ -6,7 +6,7 @@ import UsersForm from "../../components/Forms/UsersForm";
 import DoctorsForm from "../../components/Forms/DoctorsForm";
 import ClinicsForm from "../../components/Forms/ClinicsForm";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { signup } from "../../services/apiAuth";
+import { signup, uploadAvatar } from "../../services/apiAuth";
 import { toast } from "sonner";
 import Loader from "../../ui/Loader";
 
@@ -14,8 +14,8 @@ export type AccountsFormData = {
   fullName: string;
   role: "receptionist" | "admin" | "doctor";
   phoneNumber: string;
-  email: string;
   avatar: FileList | string;
+  email: string;
   doctorInfo: {
     rank: string;
     clinicId: string;
@@ -39,19 +39,31 @@ function Accounts() {
 
   const onValid: SubmitHandler<AccountsFormData> = async (data) => {
     setIsLoading(true);
+
     try {
-      const file = data.avatar?.[0];
+      let avatar = data.avatar;
+      if (avatar instanceof FileList) {
+        console.log(avatar);
 
-      if (!file) setValue("avatar", undefined);
-
-      if (file instanceof File) {
-        console.log("y");
-
-        setValue("avatar", file.name);
+        avatar = avatar[0];
+        console.log(avatar);
       }
+      // const avatar = data.avatar[0].name;
 
-      const message = await signup(data);
-      toast.success(message);
+      // if (avatar instanceof File) {
+      //   setValue("avatar", avatar.name);
+      // }
+
+      if (avatar) {
+        const { avatarPath } = await uploadAvatar(avatar);
+
+        const message = await signup({ ...data, avatar: avatarPath });
+        toast.success(message);
+        console.log(data);
+      } else {
+        const message = await signup({ ...data, avatar });
+        toast.success(message);
+      }
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
     } finally {

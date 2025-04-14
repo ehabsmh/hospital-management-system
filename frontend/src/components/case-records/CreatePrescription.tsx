@@ -70,11 +70,11 @@ function CreatePrescription({
         className="text-green-400 mt-2 cursor-pointer"
         size={25}
         onClick={() => {
-          console.log();
+          console.log(getValues());
 
           if (
-            getValues().prescription.at(-1).name === "" ||
-            getValues().prescription.at(-1).dosage === ""
+            getValues().prescription?.at(-1)?.name === "" ||
+            getValues().prescription?.at(-1)?.dosage === ""
           )
             return;
           setMedicines((medicines) => [

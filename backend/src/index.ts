@@ -28,6 +28,8 @@ app.use(
   })
 );
 
+app.use("/public", express.static("public"));
+
 // connect and instantiate DB
 export const db = new DB();
 

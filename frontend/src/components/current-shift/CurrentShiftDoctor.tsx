@@ -5,12 +5,13 @@ function CurrentShiftDoctor() {
   const tableContext = useContext(TableContext);
   const doctor = tableContext?.doctor;
   if (!doctor) return null;
+  console.log(doctor.avatar);
 
   return (
     <>
       <td className="p-3 border border-gray-300">
         <img
-          src={doctor.avatar}
+          src={`http://localhost:3000/${doctor.avatar}`}
           alt={doctor.fullName + " photo"}
           className="w-12 h-12 rounded-full mx-auto"
         />

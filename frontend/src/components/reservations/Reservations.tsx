@@ -70,7 +70,10 @@ function Reservations({
                       </Modal>
                     </Table.Row>
                   ) : (
-                    <DoctorReservation reservation={reservation} />
+                    <DoctorReservation
+                      key={reservation._id}
+                      reservation={reservation}
+                    />
                   )
                 )
               }

@@ -17,8 +17,6 @@ class UserController {
   static async signup(req: CustomRequest, res: Response): Promise<void> {
     const { fullName, phoneNumber, email, avatar, role, doctorInfo } = req.body;
 
-    console.log(avatar);
-
     const currentUserRole = req.user?.role;
 
     try {
@@ -84,7 +82,10 @@ class UserController {
         role,
         doctorInfo: doctorInfo ? doctorInfo : undefined,
       });
+
+      // send email to the user with a link to create a password.
       await sendEmail(newUser);
+
       res.status(201).json({ newUser, message: "User created successfully." });
     } catch (err) {
       if (err instanceof DuplicationError) {
@@ -123,12 +124,10 @@ class UserController {
       if (!user) throw new NotFoundError("user does not exist");
 
       // Validate password and update, only if it has passed the validation.
-      console.log(password);
       user.password = password;
       await user.validate(["password"]);
 
       const hashedPw = await bcrypt.hash(password, 10);
-      console.log(hashedPw);
 
       user.password = hashedPw;
 
@@ -211,7 +210,6 @@ class UserController {
 
       // Compare password with the hashed one
       const isMatch = await user.comparePassword(password);
-      console.log(isMatch);
 
       if (!isMatch) {
         res.status(400).json({ message: "Password is incorrect" });
@@ -275,8 +273,6 @@ class UserController {
 
   static async logout(req: Request, res: Response): Promise<void> {
     try {
-      console.log(req.cookies);
-      console.log(req.cookies.Authorization);
       if (!req.cookies.Authorization) {
         res.status(400).json({ message: "User is not logged in." });
         return;
@@ -294,6 +290,47 @@ class UserController {
       if (!user) throw new NotFoundError("User not found.");
 
       res.status(200).json(user);
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        res
+          .status(err.statusCode)
+          .json({ error: { name: err.name, message: err.message } });
+
+        return;
+      }
+
+      if (err instanceof Error) {
+        res.status(500).json({
+          error: { message: "Something went wrong with the server." },
+        });
+      }
+    }
+  }
+
+  static async uploadAvatar(req: CustomRequest, res: Response) {
+    try {
+      const user = req.user;
+      if (!user) throw new NotFoundError("User not found.");
+
+      console.log(req.file);
+
+      // // Check if the user is logged in
+      // if (!req.file) {
+      //   res.status(400).json({ error: "No image file provided." });
+      //   return;
+      // }
+
+      // Update the user's avatar field with the new image path
+      if (!req.file) {
+        res.status(400).json({ error: "No image file provided." });
+        return;
+      }
+      res
+        .status(200)
+        .json({
+          message: "Image uploaded successfully.",
+          avatarPath: req.file?.path,
+        });
     } catch (err) {
       if (err instanceof NotFoundError) {
         res
