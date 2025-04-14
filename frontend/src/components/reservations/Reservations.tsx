@@ -1,4 +1,7 @@
 import Loader from "../../ui/Loader";
+import Modal from "../../ui/Modal";
+import { useAuth } from "../auth/useAuth";
+import CaseRecords from "../case-records/CaseRecords";
 import { Table } from "../current-shift/Table";
 import AddCheck from "./AddCheck";
 import DoctorReservation from "./DoctorReservation";
@@ -27,6 +30,8 @@ function Reservations({
     doctorId!
   );
 
+  const { user } = useAuth();
+
   return (
     <>
       {isLoading && (
@@ -52,11 +57,22 @@ function Reservations({
             </Table.Header>
             <Table.Body
               render={() =>
-                doctorReservations?.map((reservation) => (
-                  <Table.Row key={reservation._id}>
+                doctorReservations?.map((reservation) =>
+                  user?.role === "doctor" ? (
+                    <Table.Row key={reservation._id}>
+                      <Modal>
+                        <Modal.Open opens="case-records">
+                          <DoctorReservation reservation={reservation} />
+                        </Modal.Open>
+                        <Modal.Window name="case-records">
+                          <CaseRecords patientId={reservation.patientId._id} />
+                        </Modal.Window>
+                      </Modal>
+                    </Table.Row>
+                  ) : (
                     <DoctorReservation reservation={reservation} />
-                  </Table.Row>
-                ))
+                  )
+                )
               }
             />
           </Table>

@@ -57,21 +57,23 @@ class CaseRecordsController {
   static async getDoctorCaseRecords(req: CustomRequest, res: Response) {
     const doctorId = req.user?._id;
     try {
-      const cases = await CaseRecord.find({ doctorId })
+      const cases = await CaseRecord.find({
+        doctorId,
+        patientId: req.query["patient-id"],
+      })
         .populate("report")
         .populate("prescription");
 
       if (!cases) throw new NotFoundError("No cases found");
 
-      res.status(200).json({ cases });
+      res.status(200).json(cases);
     } catch (error) {
       if (error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ message: error.message });
+        res.status(error.statusCode).json({ error: error.message });
         return;
       }
 
-      console.error("Error fetching cases:", error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 }

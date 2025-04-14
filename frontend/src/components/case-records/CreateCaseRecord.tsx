@@ -67,12 +67,14 @@ function CreateCaseRecord({
 
   return (
     <section className="border relative rounded-md border-white/20  w-1/2 p-10 shadow-lg shadow-black/70">
-      <div
+      <MdClose
+        onClick={(e) => {
+          onCloseModal?.();
+          e.stopPropagation();
+        }}
         className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
-        onClick={onCloseModal}
-      >
-        <MdClose size={25} />
-      </div>
+        size={25}
+      />
       <div className="flex justify-center gap-8">
         <Button
           disabled={recordType !== "Report"}

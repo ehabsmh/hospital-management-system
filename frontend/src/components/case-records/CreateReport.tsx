@@ -36,7 +36,9 @@ function CreateReport({ setRecordType, register }: CreateReportProps) {
       </Field>
       <div className="text-end">
         <Button
-          onClick={() => setRecordType("Prescription")}
+          onClick={(e) => {
+            setRecordType("Prescription");
+          }}
           type="button"
           className="mt-3 shadow-md rounded-lg border-none py-1.5 px-7 text-sm/6 text-white bg-primary data-[disabled]:bg-primary/50 duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
         >

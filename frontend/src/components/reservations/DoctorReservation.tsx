@@ -7,16 +7,20 @@ import { useAuth } from "../auth/useAuth";
 import { FaCheckCircle } from "react-icons/fa";
 import CreateCaseRecord from "../case-records/CreateCaseRecord";
 
-function DoctorReservation({
-  reservation,
-}: {
+type DoctorReservationProps = {
   reservation: IDoctorReservation;
-}) {
+  onClick?: () => void;
+};
+
+function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
   const { delReservation } = useDeleteReservation();
   const { user } = useAuth();
 
   return (
-    <>
+    <tr
+      onClick={onClick}
+      className={"cursor-pointer hover:bg-primary/15 duration-150"}
+    >
       <td className="p-3 border border-gray-300">
         {reservation.patientId.fullName.split(" ")[0]}{" "}
         {reservation.patientId.fullName.split(" ")[3]}
@@ -81,7 +85,7 @@ function DoctorReservation({
           </Modal>
         </div>
       </td>
-    </>
+    </tr>
   );
 }
 

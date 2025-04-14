@@ -17,10 +17,10 @@ function CreatePrescription({
   getValues,
 }: CreatePrescriptionProps) {
   const [medicines, setMedicines] = useState(() =>
-    !getValues?.().prescription?.length
-      ? [{ name: "", type: "", dosage: "" }]
-      : getValues?.().prescription
+    !getValues?.().prescription?.length ? [] : getValues?.().prescription
   );
+
+  console.log(getValues());
 
   return (
     <>
@@ -32,47 +32,56 @@ function CreatePrescription({
           render={() =>
             medicines.map((_, i) => (
               <Table.Row key={i}>
-                <td className="border border-gray-200 ">
-                  <input
-                    type="text"
-                    placeholder="Medicine Name"
-                    className="w-full text-sm text-center"
-                    {...register(`prescription.${i}.name`)}
-                  />
-                </td>
-                <td className="border border-gray-200">
-                  <select
-                    defaultValue="tablet"
-                    className="w-full"
-                    {...register(`prescription.${i}.type`)}
-                  >
-                    <option value="tablet">tablet</option>
-                    <option value="syrup">syrup</option>
-                    <option value="injection">injection</option>
-                    <option value="ointment">ointment</option>
-                  </select>
-                </td>
-                <td className="border border-gray-200">
-                  <input
-                    type="text"
-                    {...register(`prescription.${i}.dosage`)}
-                    className="w-full text-sm text-center"
-                  />
-                </td>
+                <tr>
+                  <td className="border border-gray-200 ">
+                    <input
+                      type="text"
+                      placeholder="Medicine Name"
+                      className="w-full text-sm text-center"
+                      {...register(`prescription.${i}.name`)}
+                    />
+                  </td>
+                  <td className="border border-gray-200">
+                    <select
+                      defaultValue="tablet"
+                      className="w-full"
+                      {...register(`prescription.${i}.type`)}
+                    >
+                      <option value="tablet">tablet</option>
+                      <option value="syrup">syrup</option>
+                      <option value="injection">injection</option>
+                      <option value="ointment">ointment</option>
+                    </select>
+                  </td>
+                  <td className="border border-gray-200">
+                    <input
+                      type="text"
+                      {...register(`prescription.${i}.dosage`)}
+                      className="w-full text-sm text-center"
+                    />
+                  </td>
+                </tr>
               </Table.Row>
             ))
           }
         />
       </Table>
       <MdAddCircle
-        className="text-green-400 mt-2"
+        className="text-green-400 mt-2 cursor-pointer"
         size={25}
-        onClick={() =>
+        onClick={() => {
+          console.log();
+
+          if (
+            getValues().prescription.at(-1).name === "" ||
+            getValues().prescription.at(-1).dosage === ""
+          )
+            return;
           setMedicines((medicines) => [
             ...medicines,
             { name: "", type: "", dosage: "" },
-          ])
-        }
+          ]);
+        }}
       />
       <div className="w-full flex justify-between">
         <Button

@@ -1,6 +1,7 @@
 import { createContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { IUser } from "../../interfaces/User";
+import { useAuth } from "../auth/useAuth";
 
 const TableContext = createContext<{ doctor?: IUser } | null>(null);
 
@@ -40,6 +41,7 @@ function Body({ render }: { render: () => ReactNode }) {
 
 function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   function goToDoctorReservations() {
     navigate(
@@ -47,12 +49,20 @@ function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
     );
   }
 
-  if (!doctor) return <tr>{children}</tr>;
+  // if (!doctor) return <tr>{children}</tr>;
+
+  if (user?.role === "doctor") {
+    return (
+      <TableContext.Provider value={{ doctor }}>
+        {children}
+      </TableContext.Provider>
+    );
+  }
 
   return (
     <TableContext.Provider value={{ doctor }}>
       <tr
-        className={`cursor-pointer ${doctor ? "hover:bg-gray-100" : ""}`}
+        className={"cursor-pointer hover:bg-primary/15 duration-150"}
         onClick={doctor ? goToDoctorReservations : undefined}
       >
         {children}

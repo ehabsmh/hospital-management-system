@@ -41,9 +41,14 @@ function Open<T extends { onClick: () => void }>({
   }
   const { open } = context;
 
+  function onClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    open(opensWindowName);
+  }
+
   return cloneElement(children, {
     ...children.props,
-    onClick: () => open(opensWindowName),
+    onClick: onClick,
   });
 }
 
@@ -65,6 +70,9 @@ function Window<T extends { onCloseModal: () => void }>({
 
   return createPortal(
     <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       id="overlay"
       className="overlay bg-white/85 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center"
     >
