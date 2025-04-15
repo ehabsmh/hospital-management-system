@@ -27,28 +27,24 @@ class ClinicController {
       }
 
       // Create clinic
-      const clinic = await Clinic.create({ name, floor, roomNumber });
-      res
-        .status(201)
-        .json({ data: clinic, message: "Clinic created successfully." });
+      await Clinic.create({ name, floor, roomNumber });
+      res.status(201).json({ message: "Clinic created successfully." });
     } catch (err) {
       if (err instanceof RequireError) {
-        res.status(err.statusCode).send(err.message);
+        res.status(err.statusCode).json({ message: err.message });
 
         return;
       }
 
       if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({
-          error: { message: err.message },
-        });
+        res.status(err.statusCode).json({ message: err.message });
 
         return;
       }
 
       if (err instanceof Error) {
         res.status(500).json({
-          error: { message: "Something went wrong with the server." },
+          message: "Something went wrong with the server.",
         });
       }
     }

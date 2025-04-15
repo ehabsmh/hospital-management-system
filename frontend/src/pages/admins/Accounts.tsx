@@ -19,7 +19,7 @@ export type AccountsFormData = {
   doctorInfo: {
     rank: string;
     clinicId: string;
-  };
+  } | null;
 };
 
 function Accounts() {
@@ -35,24 +35,17 @@ function Accounts() {
     formState: { errors },
   } = form;
 
-  console.log(getValues());
-
   const onValid: SubmitHandler<AccountsFormData> = async (data) => {
     setIsLoading(true);
 
     try {
-      let avatar = data.avatar;
+      let avatar: FileList | File | string = data.avatar;
       if (avatar instanceof FileList) {
         console.log(avatar);
 
         avatar = avatar[0];
         console.log(avatar);
       }
-      // const avatar = data.avatar[0].name;
-
-      // if (avatar instanceof File) {
-      //   setValue("avatar", avatar.name);
-      // }
 
       if (avatar) {
         const { avatarPath } = await uploadAvatar(avatar);
@@ -120,24 +113,19 @@ function Accounts() {
 
           {formType === "doctor" && <DoctorsForm doctorForm={form} />}
 
-          {formType === "clinic" && <ClinicsForm />}
-
           <div className="flex justify-center">
-            <Button
-              onClick={handleSubmit(onValid, onInvalid)}
-              type="submit"
-              className="mt-3 block rounded-lg border-none py-2 px-9 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
-            >
-              {isLoading ? (
-                <Loader size={18} />
-              ) : formType === "clinic" ? (
-                "Create Clinic"
-              ) : (
-                "Sign up"
-              )}
-            </Button>
+            {formType !== "clinic" && (
+              <Button
+                onClick={handleSubmit(onValid, onInvalid)}
+                type="submit"
+                className="mt-3 block rounded-lg border-none py-2 px-9 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
+              >
+                {isLoading ? <Loader size={18} /> : "Sign up"}
+              </Button>
+            )}
           </div>
         </form>
+        {formType === "clinic" && <ClinicsForm />}
       </div>
     </FormAccounts>
   );
