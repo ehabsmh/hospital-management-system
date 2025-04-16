@@ -1,56 +1,45 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Clinic from "../models/clinic";
 import {
+  AppError,
   DuplicationError,
   NotFoundError,
   RequireError,
 } from "../utils/errorHandlers";
 
 class ClinicController {
-  static async create(req: Request, res: Response) {
+  static async create(req: Request, res: Response, next: NextFunction) {
     const { name, floor, roomNumber } = req.body;
 
     if (!name || !floor || !roomNumber) {
-      throw new RequireError("Please provide all fields.");
+      throw new AppError("Please provide all fields.", "RequireError", 400);
     }
 
     try {
       const isClinicFound = await Clinic.findOne({ name });
       if (isClinicFound) {
-        throw new DuplicationError("Clinic already exists.");
+        throw new AppError("Clinic already exists.", "DuplicationError", 409);
       }
 
       const roomNumIsExists = await Clinic.findOne({ roomNumber });
 
       if (roomNumIsExists) {
-        throw new DuplicationError("Room number already exists.");
+        throw new AppError(
+          "Room number already exists.",
+          "DuplicationError",
+          409
+        );
       }
 
       // Create clinic
       await Clinic.create({ name, floor, roomNumber });
       res.status(201).json({ message: "Clinic created successfully." });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ message: err.message });
-
-        return;
-      }
-
-      if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({ message: err.message });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          message: "Something went wrong with the server.",
-        });
-      }
+      next(err);
     }
   }
 
-  static async edit(req: Request, res: Response) {
+  static async edit(req: Request, res: Response, next: NextFunction) {
     const { name, floor, roomNumber } = req.body;
     const { id } = req.params;
 
@@ -67,7 +56,11 @@ class ClinicController {
       const roomNumIsExists = await Clinic.findOne({ roomNumber });
 
       if (roomNumIsExists) {
-        throw new DuplicationError("Room number already exists.");
+        throw new AppError(
+          "Room number already exists.",
+          "DuplicationError",
+          409
+        );
       }
 
       const clinic = await Clinic.findByIdAndUpdate(
@@ -76,50 +69,25 @@ class ClinicController {
         { new: true }
       );
 
-      if (!clinic) throw new NotFoundError("Clinic not found.");
+      if (!clinic)
+        throw new AppError("Clinic not found.", "NotFoundError", 404);
 
       res.json({ data: clinic, message: "Clinic updated successfully." });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof DuplicationError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: { message: "Something went wrong with the server." },
-        });
-      }
+      next(err);
     }
   }
 
-  static async get(req: Request, res: Response) {
+  static async get(req: Request, res: Response, next: NextFunction) {
     try {
       const clinics = await Clinic.find().select("-__v");
 
-      if (!clinics) {
-        throw new NotFoundError("Clinics not found.");
-      }
+      if (!clinics)
+        throw new AppError("Clinics not found.", "NotFoundError", 404);
 
       res.json(clinics);
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      res.status(500).json({ error: "Internal server error." });
+      next(err);
     }
   }
 }

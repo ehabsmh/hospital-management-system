@@ -1,7 +1,7 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import { CustomRequest } from "../middlewares/auth";
 import CaseRecord from "../models/CaseRecord";
-import { NotFoundError } from "../utils/errorHandlers";
+import { AppError } from "../utils/errorHandlers";
 
 class CaseRecordsController {
   static async addCaseRecord(req: CustomRequest, res: Response) {
@@ -21,40 +21,43 @@ class CaseRecordsController {
         case: newCase,
       });
     } catch (error) {
-      console.error("Error adding case:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 
-  static async deleteCaseRecord(req: CustomRequest, res: Response) {
+  static async deleteCaseRecord(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const doctorId = req.user?._id;
       const { caseId } = req.params;
+
       const deletedCase = await CaseRecord.findOneAndDelete({
         _id: caseId,
         doctorId,
       });
 
       if (!deletedCase) {
-        throw new NotFoundError(
-          "Case not found or you do not have permission to delete it"
+        throw new AppError(
+          "Case not found or you do not have permission to delete it",
+          "NotfoundError",
+          404
         );
       }
 
       res.status(200).json({ message: "Case deleted successfully" });
     } catch (error) {
-      console.error("Error deleting case:", error);
-
-      if (error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
     }
   }
 
-  static async getDoctorCaseRecords(req: CustomRequest, res: Response) {
+  static async getDoctorCaseRecords(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     const doctorId = req.user?._id;
     try {
       const cases = await CaseRecord.find({
@@ -64,16 +67,11 @@ class CaseRecordsController {
         .populate("report")
         .populate("prescription");
 
-      if (!cases) throw new NotFoundError("No cases found");
+      if (!cases) throw new AppError("No cases found", "NotFoundError", 404);
 
       res.status(200).json(cases);
     } catch (error) {
-      if (error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ error: error.message });
-        return;
-      }
-
-      res.status(500).json({ error: "Internal server error" });
+      next(error);
     }
   }
 }

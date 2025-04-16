@@ -33,3 +33,13 @@ export class RequireError extends Error {
     this.statusCode = 400;
   }
 }
+
+export class AppError extends Error {
+  statusCode: number;
+  name: string;
+  constructor(message: string, name: string, statusCode: number) {
+    super(message);
+    this.name = name;
+    this.statusCode = statusCode;
+  }
+}

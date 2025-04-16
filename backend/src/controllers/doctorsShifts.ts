@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import { IUser } from "../interfaces/User";
 import {
+  AppError,
   DuplicationError,
   NotFoundError,
   RequireError,
@@ -13,18 +14,20 @@ import Clinic from "../models/clinic";
 import Shift from "../models/shift";
 
 class DoctorsShiftsController {
-  static async getDoctor(req: Request, res: Response) {
+  static async getDoctor(req: Request, res: Response, next: NextFunction) {
     try {
       const { id: shiftId } = req.params;
       const clinicId = req.query["clinic-id"];
       const groupId = req.query["group-id"];
 
       if (!shiftId) {
-        throw new RequireError("Shift id param is required.");
+        throw new AppError("Shift id param is required.", "RequireError", 400);
       }
       if (!groupId && !clinicId) {
-        throw new RequireError(
-          "group id and clinic id query params are required."
+        throw new AppError(
+          "group id and clinic id query params are required.",
+          "RequireError",
+          400
         );
       }
 
@@ -34,7 +37,11 @@ class DoctorsShiftsController {
       }).populate("doctors");
 
       if (!doctorsShifts) {
-        throw new NotFoundError("No doctors found for the shift");
+        throw new AppError(
+          "No doctors found for the shift",
+          "NotFoundError",
+          404
+        );
       }
 
       const doctors = <IUser[]>doctorsShifts.doctors;
@@ -44,39 +51,39 @@ class DoctorsShiftsController {
       );
 
       if (!doctor) {
-        throw new NotFoundError("Doctor not found for this clinic.");
+        throw new AppError(
+          "Doctor not found for this clinic.",
+          "NotFoundError",
+          404
+        );
       }
 
       res.json(doctor);
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      res.status(500).json({ error: "Internal server error." });
+      next(err);
     }
   }
 
-  static async addDoctorToShift(req: Request, res: Response) {
+  static async addDoctorToShift(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { doctorId, groupId, shiftId } = req.body;
 
       if (!doctorId || !groupId || !shiftId) {
-        throw new RequireError(
-          "Doctor id, group id and shift id are required."
+        throw new AppError(
+          "Doctor id, group id and shift id are required.",
+          "RequireError",
+          400
         );
       }
 
       const doctor = await User.findById(doctorId);
 
       if (!doctor) {
-        throw new NotFoundError("Doctor not found.");
+        throw new AppError("Doctor not found.", "NotFoundError", 404);
       }
 
       const isDoctorAlreadyAssigned = await DoctorsShifts.findOne({
@@ -86,7 +93,11 @@ class DoctorsShiftsController {
       });
 
       if (isDoctorAlreadyAssigned || doctor.doctorInfo?.shiftId) {
-        throw new DuplicationError("Doctor is already assigned to a shift.");
+        throw new AppError(
+          "Doctor is already assigned to a shift.",
+          "DuplicationError",
+          409
+        );
       }
 
       let doctorsShift = await DoctorsShifts.findOne({
@@ -112,8 +123,10 @@ class DoctorsShiftsController {
         );
 
         if (isSameSpecialty) {
-          throw new DuplicationError(
-            "A doctor of the same specialty is already assigned to this shift."
+          throw new AppError(
+            "A doctor of the same specialty is already assigned to this shift.",
+            "DuplicationError",
+            409
           );
         }
 
@@ -124,37 +137,28 @@ class DoctorsShiftsController {
         doctor.doctorInfo.shiftId = doctorsShift._id;
         await doctor.save();
         await doctorsShift?.save();
-        console.log(doctor.doctorInfo);
       }
 
       res.status(201).json(doctorsShift);
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.status(500).json({ error: "Internal server error." });
+      next(err);
     }
   }
 
-  static async deleteDoctorFromShift(req: Request, res: Response) {
+  static async deleteDoctorFromShift(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { shiftId } = req.params;
       const { doctorId, groupId } = req.body;
 
       if (!doctorId || !groupId || !shiftId) {
-        throw new RequireError(
-          "Doctor id, group id and shift id are required."
+        throw new AppError(
+          "Doctor id, group id and shift id are required.",
+          "RequireError",
+          400
         );
       }
 
@@ -164,7 +168,7 @@ class DoctorsShiftsController {
       );
 
       if (!doctorShift) {
-        throw new NotFoundError("Doctor shift not found.");
+        throw new AppError("Doctor shift not found.", "NotFoundError", 404);
       }
 
       const doctor = await User.findByIdAndUpdate(doctorId, {
@@ -178,12 +182,15 @@ class DoctorsShiftsController {
         doctorShift,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "Internal server error." });
+      next(error);
     }
   }
 
-  static async getCurrentShift(req: Request, res: Response) {
+  static async getCurrentShift(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const now = new Date();
 
     // get current day
@@ -215,17 +222,16 @@ class DoctorsShiftsController {
       });
 
       if (!doctorSchedule || !doctorSchedule.doctors.length) {
-        throw new NotFoundError("No doctors found for current shift.");
+        throw new AppError(
+          "No doctors found for current shift.",
+          "NotFoundError",
+          404
+        );
       }
 
       res.json(doctorSchedule);
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      console.log(err);
-      res.status(500).json({ error: "Internal server error." });
+      next(err);
     }
   }
 

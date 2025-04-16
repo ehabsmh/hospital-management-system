@@ -20,8 +20,7 @@ function Sidebar() {
             to="/dashboard"
             end
             className={({ isActive }) =>
-              (isActive ? "font-bold text-lg" : "font-normal text-sm") +
-              " duration-150"
+              (isActive ? "font-bold" : "font-normal") + " duration-150"
             }
           >
             Current Shift
@@ -31,8 +30,7 @@ function Sidebar() {
           <NavLink
             to="schedule"
             className={({ isActive }) =>
-              (isActive ? "font-bold text-lg" : "font-normal text-sm") +
-              " duration-150"
+              (isActive ? "font-bold" : "font-normal") + " duration-150"
             }
           >
             Schedule
@@ -43,8 +41,7 @@ function Sidebar() {
             <NavLink
               to="accounts&clinics"
               className={({ isActive }) =>
-                (isActive ? "font-bold text-lg" : "font-normal text-sm") +
-                " duration-150"
+                (isActive ? "font-bold" : "font-normal") + " duration-150"
               }
             >
               <p>Accounts & Clinics</p>

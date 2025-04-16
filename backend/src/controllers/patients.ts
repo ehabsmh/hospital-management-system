@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
+  AppError,
   DuplicationError,
   NotFoundError,
   RequireError,
@@ -7,13 +8,15 @@ import {
 import Patient from "../models/patient";
 
 class PatientController {
-  static async newPatient(req: Request, res: Response) {
+  static async newPatient(req: Request, res: Response, next: NextFunction) {
     const { fullName, phoneNumber, age, job, additionalInfo } = req.body;
 
     try {
       if (!fullName || !phoneNumber || !age || !job) {
-        throw new RequireError(
-          "Full name, phone number, age, and job are required fields"
+        throw new AppError(
+          "Full name, phone number, age, and job are required fields",
+          "RequireError",
+          400
         );
       }
 
@@ -22,7 +25,8 @@ class PatientController {
         $or: [{ fullName }, { phoneNumber }],
       });
 
-      if (patientExists) throw new DuplicationError("Patient already exists");
+      if (patientExists)
+        throw new AppError("Patient already exists", "DuplicationError", 409);
 
       // Create a new patient
       const newPatient = await Patient.create({
@@ -34,70 +38,37 @@ class PatientController {
       });
       res.status(201).json({ data: newPatient });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({
-          message: err.message,
-        });
-
-        return;
-      }
-      if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({
-          message: err.message,
-        });
-
-        return;
-      }
-      res.status(500).json({ message: "Internal server error" });
+      next(err);
     }
   }
 
-  static async getPatient(req: Request, res: Response) {
+  static async getPatient(req: Request, res: Response, next: NextFunction) {
     const phoneNumber = req.query["phone-number"];
 
     try {
-      if (!phoneNumber) throw new RequireError("Phone number is required");
+      if (!phoneNumber)
+        throw new AppError("Phone number is required", "RequireError", 400);
       const patient = await Patient.findOne({ phoneNumber });
-      if (!patient) throw new NotFoundError("Patient not found");
+      if (!patient)
+        throw new AppError("Patient not found", "NotFoundError", 404);
       res.status(200).json({ data: patient });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({
-          message: err.message,
-        });
-
-        return;
-      }
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({
-          message: err.message,
-        });
-
-        return;
-      }
-      res.status(500).json({ error: { message: "Internal server error" } });
+      next(err);
     }
   }
 
-  static async editPatient(req: Request, res: Response) {
+  static async editPatient(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const { fullName, age, job, additionalInfo } = req.body;
-    console.log(req.body);
     try {
       const patient = await Patient.findById(id);
-      if (!patient) throw new NotFoundError("Patient not found");
+      if (!patient)
+        throw new AppError("Patient not found", "NotFoundError", 404);
 
       await patient.updateOne({ fullName, age, job, additionalInfo });
       res.status(200).json({ message: "Patient updated successfully" });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({
-          error: err.message,
-        });
-        return;
-      }
-      console.log(err);
-      res.status(500).json({ error: "Internal server error" });
+      next(err);
     }
   }
 }

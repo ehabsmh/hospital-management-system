@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import DB from "./database/db";
@@ -17,6 +17,7 @@ import doctorsRouter from "./views/doctors";
 import shiftsRouter from "./views/shifts";
 import cookieParser from "cookie-parser";
 import caseRecordsRouter from "./views/caseRecords";
+import { AppError } from "./utils/errorHandlers";
 
 const app = express();
 const PORT = 3000;
@@ -51,6 +52,23 @@ app.use("/api/v1/consultations", consultationRouter);
 app.use("/api/v1/doctors", doctorsRouter);
 app.use("/api/v1/shifts", shiftsRouter);
 app.use("/api/v1/case-record", caseRecordsRouter);
+
+// error handler middleware
+app.use(
+  (
+    error: Error | AppError,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json({ message: error.message });
+      return;
+    }
+
+    res.status(500).json({ message: "Internal server error" });
+  }
+);
 
 // Run the endpoint every saturday at 00:00
 cron.schedule("0 0 * * 6", async () => {

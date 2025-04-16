@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
+  AppError,
   DuplicationError,
   NotFoundError,
   RequireError,
@@ -9,14 +10,20 @@ import User from "../models/user";
 import Patient from "../models/patient";
 
 class ReservationsController {
-  static async createReservation(req: Request, res: Response) {
+  static async createReservation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const doctorId = req.query["doctor-id"];
     const patientId = req.query["patient-id"];
 
     try {
       if (!doctorId || !patientId) {
-        throw new RequireError(
-          "Missing doctor-id or patient-id query parameter"
+        throw new AppError(
+          "Missing doctor-id or patient-id query parameter",
+          "RequireError",
+          400
         );
       }
 
@@ -26,20 +33,24 @@ class ReservationsController {
         role: "doctor",
       });
       if (!isDoctor) {
-        throw new NotFoundError("Doctor not found");
+        throw new AppError("Doctor not found", "NotFoundError", 404);
       }
 
       // check if patient id is valid patient id
       const isPatient = await Patient.countDocuments({ _id: patientId });
 
       if (!isPatient) {
-        throw new NotFoundError("Patient not found");
+        throw new AppError("Patient not found", "NotFoundError", 404);
       }
 
       const { reservationTypeId } = req.body;
 
       if (!reservationTypeId) {
-        throw new RequireError("Missing reservationTypeId in request body");
+        throw new AppError(
+          "Missing reservationTypeId in request body",
+          "RequireError",
+          400
+        );
       }
 
       const isFound = await Reservation.findOne({
@@ -48,7 +59,11 @@ class ReservationsController {
       });
 
       if (isFound) {
-        throw new DuplicationError("Reservation already exists");
+        throw new AppError(
+          "Reservation already exists",
+          "DuplicationError",
+          409
+        );
       }
 
       // Create reservation
@@ -60,24 +75,24 @@ class ReservationsController {
 
       res.status(201).json({ data: reservation });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.json({ error: "internal server error" });
+      next(err);
     }
   }
 
-  static async getReservationsByDoctor(req: Request, res: Response) {
+  static async getReservationsByDoctor(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const doctorId = req.query["doctor-id"];
 
     try {
       if (!doctorId) {
-        throw new RequireError("Missing doctor-id query parameter");
+        throw new AppError(
+          "Missing doctor-id query parameter",
+          "RequireError",
+          400
+        );
       }
 
       const reservations = await Reservation.find({
@@ -90,22 +105,24 @@ class ReservationsController {
 
       res.json({ data: reservations });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.json({ error: { message: "internal server error" } });
+      next(err);
     }
   }
 
-  static async editReservation(req: Request, res: Response) {
+  static async editReservation(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const doctorId = req.query["doctor-id"];
     const patientId = req.query["patient-id"];
 
     try {
       if (!doctorId || !patientId) {
-        throw new RequireError(
-          "Missing doctor-id or patient-id query parameter"
+        throw new AppError(
+          "Missing doctor-id or patient-id query parameter",
+          "RequireError",
+          400
         );
       }
 
@@ -119,17 +136,12 @@ class ReservationsController {
 
       res.json({ data: reservation });
     } catch (err) {
-      if (err instanceof RequireError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.json({ error: { message: "internal server error" } });
+      next(err);
     }
   }
 
   static async deleteReservation(req: Request, res: Response) {
     try {
-
       await Reservation.findByIdAndDelete(req.params.id);
 
       res.json({ message: "Reservation cancelled" });
@@ -137,24 +149,28 @@ class ReservationsController {
       res.status(500).json({ error: "internal server error" });
     }
   }
-  static async deleteReservations(req: Request, res: Response) {
+  static async deleteReservations(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const isExist = await Reservation.countDocuments({
         date: { $exists: false },
       });
       if (!isExist) {
-        throw new NotFoundError("No reservations found to delete");
+        throw new AppError(
+          "No reservations found to delete",
+          "NotFoundError",
+          404
+        );
       }
 
       await Reservation.deleteMany({ date: { $exists: false } });
 
       res.json({ message: "Reservations deleted" });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-      res.status(500).json({ error: { message: "internal server error" } });
+      next(err);
     }
   }
 }

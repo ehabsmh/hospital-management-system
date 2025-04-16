@@ -6,6 +6,7 @@ import useDeleteReservation from "./useDeleteReservation";
 import { useAuth } from "../auth/useAuth";
 import { FaCheckCircle } from "react-icons/fa";
 import CreateCaseRecord from "../case-records/CreateCaseRecord";
+import { toast } from "sonner";
 
 type DoctorReservationProps = {
   reservation: IDoctorReservation;
@@ -15,6 +16,20 @@ type DoctorReservationProps = {
 function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
   const { delReservation } = useDeleteReservation();
   const { user } = useAuth();
+
+  function onCancelReservation() {
+    toast.error("Are you sure you want to cancel this reservation?", {
+      duration: Infinity,
+      cancel: {
+        label: "No",
+        onClick: (e) => e.preventDefault(),
+      },
+      action: {
+        label: "Yes",
+        onClick: () => delReservation(reservation._id),
+      },
+    });
+  }
 
   return (
     <tr
@@ -47,7 +62,7 @@ function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
           {user?.role !== "doctor" && (
             <p
               className="text-red-800 cursor-pointer"
-              onClick={() => delReservation(reservation._id)}
+              onClick={onCancelReservation}
             >
               &#x2718;
             </p>

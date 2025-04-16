@@ -1,17 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
+import { AppError } from "../utils/errorHandlers";
 
 class DoctorsController {
-  static async getDoctorsByClinic(req: Request, res: Response) {
+  static async getDoctorsByClinic(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const clinicId = req.query["clinic-id"];
 
       if (!clinicId) {
-        res.status(400).json({
-          error: { message: "Clinic id is required." },
-        });
-
-        return;
+        throw new AppError("Clinic id is required.", "RequireError", 400);
       }
 
       // find doctors who have no shift by clinic id (for new doctors)
@@ -22,7 +23,9 @@ class DoctorsController {
       });
 
       res.json(doctors);
-    } catch (err) {}
+    } catch (err) {
+      next(err);
+    }
   }
 }
 

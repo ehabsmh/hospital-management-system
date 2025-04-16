@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import WorkSchedule from "../models/schedule";
-import { NotFoundError } from "../utils/errorHandlers";
+import { AppError, NotFoundError } from "../utils/errorHandlers";
 
 class ScheduleController {
-  static async setExtraDay(req: Request, res: Response) {
+  static async setExtraDay(req: Request, res: Response, next: NextFunction) {
     try {
       // get work schedules
       const workSchedule = await WorkSchedule.find();
@@ -23,15 +23,14 @@ class ScheduleController {
         await WorkSchedule.bulkSave([extraDayGroup, otherGroup]);
         res.json({ message: "Extra day set successfully." });
       } else {
-        throw new NotFoundError("Groups not found or extra day group not set.");
+        throw new AppError(
+          "Groups not found or extra day group not set.",
+          "NotFoundError",
+          404
+        );
       }
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-        return;
-      }
-
-      res.status(500).json({ error: "Internal server error." });
+      next(err);
     }
   }
 

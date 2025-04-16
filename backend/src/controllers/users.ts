@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import {
+  AppError,
   DuplicationError,
   NotFoundError,
   RequireError,
@@ -14,7 +15,7 @@ import { CustomRequest } from "../middlewares/auth";
 import Clinic from "../models/clinic";
 
 class UserController {
-  static async signup(req: CustomRequest, res: Response): Promise<void> {
+  static async signup(req: CustomRequest, res: Response, next: NextFunction) {
     const { fullName, phoneNumber, email, avatar, role, doctorInfo } = req.body;
 
     const currentUserRole = req.user?.role;
@@ -22,54 +23,66 @@ class UserController {
     try {
       // todo: handle that only admins can signup users.
       if (currentUserRole !== "admin")
-        throw new UnauthorizedError("Only Admins can sign up users.");
+        throw new AppError(
+          "Only Admins can sign up users.",
+          "UnauthorizedError",
+          401
+        );
 
       // If role is doctor, doctorInfo should be provided.
       if (role !== "doctor" && doctorInfo) {
-        res.status(400).json({
-          error: "Doctor info should be provided only if the role is doctor.",
-        });
-
-        return;
+        throw new AppError(
+          "Doctor info should be provided only if the role is doctor.",
+          "BadRequestError",
+          400
+        );
       }
 
       if (role === "doctor" && !doctorInfo) {
-        res.status(400).json({
-          error: "Doctor info should be provided if the role is doctor.",
-        });
-
-        return;
+        throw new AppError(
+          "Doctor info should be provided.",
+          "BadRequestError",
+          400
+        );
       }
 
       // check email duplication
       const emailIsFound = await User.findOne({ email });
-      if (emailIsFound) throw new DuplicationError("Email already exists.");
+      if (emailIsFound)
+        throw new AppError("Email already exists.", "DuplicationError", 409);
 
       // Check first name duplication
       const fullNameIsFound = await User.findOne({ fullName });
       if (fullNameIsFound)
-        throw new DuplicationError("Full name already exists.");
+        throw new AppError(
+          "Full name already exists.",
+          "DuplicationError",
+          409
+        );
 
       // check phoneNumber duplication
       const userPhoneIsFound = await User.findOne({ phoneNumber });
       if (userPhoneIsFound)
-        throw new DuplicationError("phone number already registered.");
+        throw new AppError(
+          "phone number already registered.",
+          "DuplicationError",
+          409
+        );
 
       // Check if the user provides a password while signing up.
       if (req.body.password) {
-        res.status(400).json({
-          error:
-            "Passwords must be set up only when the user logs in for the first time.",
-        });
-
-        return;
+        throw new AppError(
+          "Passwords must be set up only when the user logs in for the first time.",
+          "BadRequestError",
+          400
+        );
       }
 
       if (role === "doctor") {
         const isClinicExist = await Clinic.findById(doctorInfo?.clinicId);
 
         if (!isClinicExist) {
-          throw new NotFoundError("Clinic does not exist.");
+          throw new AppError("Clinic does not exist.", "NotFoundError", 404);
         }
       }
 
@@ -88,39 +101,23 @@ class UserController {
 
       res.status(201).json({ newUser, message: "User created successfully." });
     } catch (err) {
-      if (err instanceof DuplicationError) {
-        res.status(err.statusCode).json({ error: err.message });
-
-        return;
-      }
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-
-        return;
-      }
-
-      if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).json({ error: err.message });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: "Something went wrong with the server.",
-        });
-      }
+      next(err);
     }
   }
 
-  static async createPassword(req: Request, res: Response): Promise<void> {
+  static async createPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     // End user receives the `id` param after clicking on the button in the email sent to him/her.
     const { userId, password } = req.body;
 
     try {
       const user = await User.findById(userId);
 
-      if (!user) throw new NotFoundError("user does not exist");
+      if (!user)
+        throw new AppError("user does not exist", "NotFoundError", 404);
 
       // Validate password and update, only if it has passed the validation.
       user.password = password;
@@ -130,10 +127,12 @@ class UserController {
 
       user.password = hashedPw;
 
-      // user.password = undefined;
-
       if (!process.env.JWT_SECRET_KEY) {
-        throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
+        throw new AppError(
+          "Specify a JWT_SECRET_KEY in your env file.",
+          "NotFoundError",
+          404
+        );
       }
 
       if (user.role === "doctor") {
@@ -143,8 +142,6 @@ class UserController {
       }
 
       await user.save();
-
-      // const userObj = user.toObject();
 
       const userToken = jwt.sign(
         { _id: user._id, role: user.role, email: user.email },
@@ -162,91 +159,68 @@ class UserController {
 
       res.json({ message: "Password created successfully.", user });
     } catch (err) {
-      if (
-        err instanceof mongoose.Error.ValidationError &&
-        Object.keys(err.errors).includes("password")
-      ) {
-        res.status(400).json({
-          error: err.message,
-        });
-
-        return;
-      }
-
-      if (err instanceof NotFoundError) {
-        res.status(err.statusCode).json({ error: err.message });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: "Something went wrong with the server.",
-        });
-      }
+      next(err);
     }
   }
 
-  static async checkPassword(req: Request, res: Response) {
+  static async checkPassword(req: Request, res: Response, next: NextFunction) {
     const { userId } = req.params;
 
     try {
       const user = await User.findById(userId);
 
-      if (!user) throw new NotFoundError("user does not exist");
+      if (!user)
+        throw new AppError("user does not exist", "NotFoundError", 404);
 
       if (user.password) {
-        res.status(400).json({
-          error: "Password already set.",
-        });
-
-        return;
+        throw new AppError("Password already set.", "DuplicationError", 409);
       }
 
       res.json({ message: "Password is not set yet." });
     } catch (error) {
-      if (error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res.status(500).json({
-        message: "Something went wrong with the server.",
-      });
+      next(error);
     }
   }
 
-  static async signin(req: Request, res: Response): Promise<void> {
+  static async signin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const { email, password } = req.body;
 
     try {
       // fields required
-      if (!email) throw new RequireError("Email is required");
-      if (!password) throw new RequireError("Password is required");
+      if (!email) throw new AppError("Email is required", "RequireError", 400);
+      if (!password)
+        throw new AppError("Password is required", "RequireError", 400);
 
       // find user
       const user = await User.findOne({ email });
-      if (!user) throw new NotFoundError("Email is incorrect");
+      if (!user) throw new AppError("Email is incorrect", "NotFoundError", 404);
 
       // if password is undefined, user should create a password.
       if (!user.password) {
-        res.status(400).json({
-          error: { message: "Password is not set yet. Check your email." },
-        });
-
-        return;
+        throw new AppError(
+          "Password is not set yet. Check your email.",
+          "RequireError",
+          400
+        );
       }
 
       // Compare password with the hashed one
       const isMatch = await user.comparePassword(password);
 
       if (!isMatch) {
-        res.status(400).json({ message: "Password is incorrect" });
-        return;
+        throw new AppError("Password is incorrect", "BadRequestError", 400);
       }
 
       if (!process.env.JWT_SECRET_KEY) {
-        throw new NotFoundError("Specify a JWT_SECRET_KEY in your env file.");
+        throw new AppError(
+          "Specify a JWT_SECRET_KEY in your env file.",
+          "NotFoundError",
+          404
+        );
       }
 
       if (user.role === "doctor") {
@@ -277,27 +251,7 @@ class UserController {
       });
       res.json({ user: userInfo });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof RequireError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: { message: "Something went wrong with the server." },
-        });
-      }
+      next(err);
     }
   }
 
@@ -321,63 +275,41 @@ class UserController {
     }
   }
 
-  static async me(req: CustomRequest, res: Response): Promise<void> {
+  static async me(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const user = req.user;
-      if (!user) throw new NotFoundError("User not found.");
+      if (!user) throw new AppError("User not found.", "NotFoundError", 404);
 
       res.status(200).json(user);
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: { message: "Something went wrong with the server." },
-        });
-      }
+      next(err);
     }
   }
 
-  static async uploadAvatar(req: CustomRequest, res: Response) {
+  static async uploadAvatar(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const user = req.user;
-      if (!user) throw new NotFoundError("User not found.");
-
-      // // Check if the user is logged in
-      // if (!req.file) {
-      //   res.status(400).json({ error: "No image file provided." });
-      //   return;
-      // }
+      if (!user) throw new AppError("User not found.", "NotFoundError", 404);
 
       // Update the user's avatar field with the new image path
       if (!req.file) {
-        res.status(400).json({ error: "No image file provided." });
-        return;
+        throw new AppError("No image file provided.", "RequireError", 400);
       }
+
       res.status(200).json({
         message: "Image uploaded successfully.",
         avatarPath: req.file?.path,
       });
     } catch (err) {
-      if (err instanceof NotFoundError) {
-        res
-          .status(err.statusCode)
-          .json({ error: { name: err.name, message: err.message } });
-
-        return;
-      }
-
-      if (err instanceof Error) {
-        res.status(500).json({
-          error: { message: "Something went wrong with the server." },
-        });
-      }
+      next(err);
     }
   }
 }

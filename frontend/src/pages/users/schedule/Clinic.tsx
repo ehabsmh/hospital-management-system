@@ -67,17 +67,41 @@ function Clinic({
     }
   }
 
+  function onRemoveDoctorFromShift() {
+    toast.error("Are you sure you want to remove doctor from shift?", {
+      duration: Infinity,
+      cancel: {
+        label: "No",
+        onClick: (e) => {
+          e.preventDefault();
+        },
+      },
+      action: {
+        label: "Yes",
+        onClick: () => {
+          delDoctorFromShift({
+            doctorId: doctor!._id,
+            shiftId,
+            groupId,
+          });
+        },
+      },
+    });
+  }
+
   return (
     <>
       <div
-        className="text-sm px-3 py-2 bg-blue-100 rounded-md"
-        onMouseOver={() => setClinicIdToDeleteDr(clinic._id)}
+        className="text-sm px-3 py-2 bg-blue-100 rounded-md mt-6"
         onMouseLeave={() => setClinicIdToDeleteDr(null)}
       >
         {isLoading && !isError && <Loader size={13} color="#000" />}
 
         {!isLoading && user?.role === "receptionist" && (
-          <div className="min-w-52 grid grid-cols-2">
+          <div
+            className="min-w-52 grid grid-cols-2"
+            onMouseLeave={() => setClinicIdToDeleteDr(null)}
+          >
             {isError ? (
               <p className="text-red-400 font-medium">None</p>
             ) : (
@@ -106,18 +130,17 @@ function Clinic({
               <>
                 {showDeleteIcon ? (
                   <MdDelete
-                    onClick={() =>
-                      delDoctorFromShift({
-                        doctorId: doctor!._id,
-                        shiftId,
-                        groupId,
-                      })
-                    }
-                    size={21}
+                    onClick={onRemoveDoctorFromShift}
+                    size={19}
                     className="text-red-500 cursor-pointer"
                   />
                 ) : (
-                  <p>Dr. {doctor?.fullName}</p>
+                  <p
+                    onMouseLeave={() => setClinicIdToDeleteDr(null)}
+                    onMouseOver={() => setClinicIdToDeleteDr(clinic._id)}
+                  >
+                    Dr. {doctor?.fullName}
+                  </p>
                 )}
               </>
             )}
