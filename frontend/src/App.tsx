@@ -66,14 +66,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="accounts&clinics"
-                element={
-                  <ProtectedRoute>
-                    <Accounts />
-                  </ProtectedRoute>
-                }
-              />
+              {user?.role === "admin" && (
+                <Route
+                  path="accounts&clinics"
+                  element={
+                    <ProtectedRoute>
+                      <Accounts />
+                    </ProtectedRoute>
+                  }
+                />
+              )}
             </Route>
           ) : (
             <Route
@@ -97,6 +99,7 @@ function App() {
             path="/create-new-password/:id"
             element={<CreateNewPassword />}
           />
+          <Route path="*" element={<p>Not found</p>} />
         </Routes>
       </QueryClientProvider>
       <Toaster richColors position="top-center" />

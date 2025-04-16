@@ -26,11 +26,10 @@ function Reservations({
   doctorName,
   showAddCheck = false,
 }: ReservationsProps) {
-  const { isLoading, doctorReservations, error } = useDoctorReservations(
-    doctorId!
-  );
-
   const { user } = useAuth();
+  const { isLoading, doctorReservations, error } = useDoctorReservations(
+    user?.role === "doctor" ? user._id : doctorId!
+  );
 
   return (
     <>

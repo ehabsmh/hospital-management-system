@@ -20,4 +20,6 @@ userRouter.post(
   UserController.uploadAvatar
 );
 
+userRouter.get("/check-password/:userId", UserController.checkPassword);
+
 export default userRouter;

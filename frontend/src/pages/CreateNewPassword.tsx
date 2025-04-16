@@ -2,13 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import FormAccounts from "../ui/FormAccounts";
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
-import { setNewPassword } from "../services/apiAuth";
-import { FormEvent, useState } from "react";
+import { checkPassword, setNewPassword } from "../services/apiAuth";
+import { FormEvent, useEffect, useState } from "react";
 import Loader from "../ui/Loader";
 import { useAuth } from "../components/auth/useAuth";
+import { toast } from "sonner";
 
 function CreateNewPassword() {
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   const { id: userId } = useParams();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -34,6 +35,32 @@ function CreateNewPassword() {
       setIsLoading(false);
     }
   }
+
+  useEffect(
+    function () {
+      async function passwordCheck() {
+        try {
+          if (userId) {
+            await checkPassword(userId);
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            toast.error(err.message);
+            navigate("/");
+          }
+        }
+      }
+
+      if (user || user?._id === userId) {
+        navigate("/");
+      }
+
+      if (!user) {
+        passwordCheck();
+      }
+    },
+    [user, userId, navigate]
+  );
 
   return (
     <FormAccounts layerBgColor="bg-black/75">

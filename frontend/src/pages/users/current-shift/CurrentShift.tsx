@@ -15,6 +15,8 @@ const currShiftCols = [
 function CurrentShift() {
   const { isLoading, currentShift, error } = useCurrentDoctors();
 
+  console.log(currentShift, error);
+
   return (
     <>
       {isLoading && (

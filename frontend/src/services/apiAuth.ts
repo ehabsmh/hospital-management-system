@@ -52,6 +52,24 @@ export async function setNewPassword(payload: { password: string, userId: string
   }
 }
 
+export async function checkPassword(userId: string) {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:3000/api/v1/auth/check-password/${userId}`);
+    console.log(data);
+
+    return data;
+
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        const error = err.response.data.error;
+        if (error) throw new Error(error)
+      }
+    }
+  }
+}
+
 export async function uploadAvatar(avatar: File | string) {
   const formData = new FormData();
   formData.append("avatar", avatar);

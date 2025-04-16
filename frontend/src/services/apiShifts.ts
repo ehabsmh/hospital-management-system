@@ -4,13 +4,12 @@ import { IUser } from "../interfaces/User";
 
 export async function getCurrentShift() {
   try {
-    const { data } = await axios.get(
+    const { data }: { data: ICurrentShift } = await axios.get(
       "http://localhost:3000/api/v1/shifts/current",
       { withCredentials: true }
     );
 
-    const currentShift: ICurrentShift = data.data;
-    return currentShift;
+    return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }
@@ -54,6 +53,21 @@ export async function addDoctorToShift(
       { withCredentials: true }
     );
     console.log(data);
+    return data;
+  } catch (err) {
+    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+  }
+}
+
+export async function deleteDoctorFromShift(
+  shiftId: string,
+  payload: { doctorId: string; groupId: string; }
+) {
+  try {
+    const { data } = await axios.delete(
+      `http://localhost:3000/api/v1/shifts/${shiftId}`,
+      { withCredentials: true, data: payload }
+    );
     return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);

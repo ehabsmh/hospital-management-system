@@ -147,6 +147,42 @@ class DoctorsShiftsController {
     }
   }
 
+  static async deleteDoctorFromShift(req: Request, res: Response) {
+    try {
+      const { shiftId } = req.params;
+      const { doctorId, groupId } = req.body;
+
+      if (!doctorId || !groupId || !shiftId) {
+        throw new RequireError(
+          "Doctor id, group id and shift id are required."
+        );
+      }
+
+      const doctorShift = await DoctorsShifts.findOneAndUpdate(
+        { shiftId, groupId },
+        { $pull: { doctors: doctorId } }
+      );
+
+      if (!doctorShift) {
+        throw new NotFoundError("Doctor shift not found.");
+      }
+
+      const doctor = await User.findByIdAndUpdate(doctorId, {
+        "doctorInfo.shiftId": null,
+      });
+
+      res.json({
+        message: `Dr. ${doctor?.fullName.split(" ")[0]} ${doctor?.fullName
+          .split(" ")
+          .at(-1)} removed from shift.`,
+        doctorShift,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
+
   static async getCurrentShift(req: Request, res: Response) {
     const now = new Date();
 
@@ -178,11 +214,11 @@ class DoctorsShiftsController {
         },
       });
 
-      if (!doctorSchedule) {
+      if (!doctorSchedule || !doctorSchedule.doctors.length) {
         throw new NotFoundError("No doctors found for current shift.");
       }
 
-      res.json({ data: doctorSchedule });
+      res.json(doctorSchedule);
     } catch (err) {
       if (err instanceof NotFoundError) {
         res.status(err.statusCode).json({ error: err.message });

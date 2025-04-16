@@ -14,6 +14,13 @@ shiftsRouter.get(
 // Insert a doctor to doctorsShifts
 shiftsRouter.post("/", auth, isAdmin, DoctorsShiftsController.addDoctorToShift);
 
+shiftsRouter.delete(
+  "/:shiftId",
+  auth,
+  isAdmin,
+  DoctorsShiftsController.deleteDoctorFromShift
+);
+
 // get current shift
 shiftsRouter.get(
   "/current",

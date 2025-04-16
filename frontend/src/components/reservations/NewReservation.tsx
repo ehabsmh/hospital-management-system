@@ -4,6 +4,8 @@ import useNewReservation from "./useNewReservation";
 import { useSearchParams } from "react-router-dom";
 import { getConsultation } from "../../services/apiConsultations";
 import { fetchPatient } from "../../services/apiPatients";
+import { toast } from "sonner";
+import { MdClose } from "react-icons/md";
 
 type ReservationProps = {
   phoneNumber: string;
@@ -62,12 +64,20 @@ function Reservation({
         setPatientIsFound(null);
       }
     } catch (err) {
-      if (err instanceof Error) setError(err.message);
+      if (err instanceof Error) {
+        toast.error(err.message);
+        setError(err.message);
+      }
     }
   }
 
   return (
-    <div className="border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70">
+    <div className="border relative rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70">
+      <MdClose
+        onClick={onCloseModal}
+        className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
+        size={25}
+      />
       <div className="grid grid-cols-3 mb-3">
         <p className="font-bold">ID</p>
         <p className="col-span-2">{patient?._id}</p>

@@ -1,20 +1,31 @@
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import IClinic from "../../../interfaces/Clinic";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IUser } from "../../../interfaces/User";
 import { fetchDoctorsByClinicId } from "../../../services/apiDoctors";
 import { toast } from "sonner";
 import useDoctorByShift from "./useDoctorByShift";
 import useAddDoctorToShift from "./useAddDoctorToShift";
 import Loader from "../../../ui/Loader";
+import { MdDelete } from "react-icons/md";
+import useDeleteDoctorFromShift from "./useDeleteDoctorFromShift";
+import { useAuth } from "../../../components/auth/useAuth";
 
 type ClinicProps = {
   clinic: IClinic;
   groupId: string;
   shiftId: string;
+  setClinicIdToDeleteDr: React.Dispatch<React.SetStateAction<string | null>>;
+  showDeleteIcon: boolean;
 };
 
-function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
+function Clinic({
+  clinic,
+  groupId,
+  shiftId,
+  setClinicIdToDeleteDr,
+  showDeleteIcon,
+}: ClinicProps) {
   const { doctor, isError, isLoading } = useDoctorByShift(shiftId, {
     groupId,
     clinicId: clinic._id,
@@ -25,6 +36,14 @@ function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
     groupId,
     shiftId,
   });
+
+  const { delDoctorFromShift } = useDeleteDoctorFromShift({
+    clinicId: clinic._id,
+    groupId,
+    shiftId,
+  });
+
+  const { user } = useAuth();
 
   const [isAdding, setIsAdding] = useState(false);
 
@@ -50,57 +69,25 @@ function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
 
   return (
     <>
-      <div className="text-sm px-3 py-2 bg-blue-100 rounded-md">
+      <div
+        className="text-sm px-3 py-2 bg-blue-100 rounded-md"
+        onMouseOver={() => setClinicIdToDeleteDr(clinic._id)}
+        onMouseLeave={() => setClinicIdToDeleteDr(null)}
+      >
         {isLoading && !isError && <Loader size={13} color="#000" />}
 
-        {!isLoading && (
+        {!isLoading && user?.role === "receptionist" && (
           <div className="min-w-52 grid grid-cols-2">
-            {isError &&
-              (isAdding ? (
-                <FaMinusCircle
-                  onClick={() => setIsAdding(false)}
-                  className="text-gray-500  duration-150 text-lg hover:text-xl cursor-pointer"
-                />
-              ) : (
-                <FaPlusCircle
-                  onClick={getDoctorsByClinicId}
-                  className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
-                />
-              ))}
-
-            {!isError && <p>Dr. {doctor?.fullName}</p>}
+            {isError ? (
+              <p className="text-red-400 font-medium">None</p>
+            ) : (
+              <p className="font-medium">Dr. {doctor?.fullName}</p>
+            )}
             <p>{clinic.name}</p>
           </div>
         )}
-        {/* {!isLoading && isError }
 
-        {!isLoading && !isError }
-
-        {!isLoading && isError ? (
-        <div className="min-w-52 grid grid-cols-2">
-            {isAdding ? (
-              <FaMinusCircle
-                onClick={() => setIsAdding(false)}
-                className="text-gray-500  duration-150 text-lg hover:text-xl cursor-pointer"
-              />
-            ) : (
-              <FaPlusCircle
-                onClick={getDoctorsByClinicId}
-                className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
-              />
-            )}
-          </div>
-        ) : (
-          <FaPlusCircle
-            onClick={getDoctorsByClinicId}
-            className="text-green-600 hover:text-green-700 duration-150 text-lg hover:text-xl cursor-pointer"
-          />
-        )}
-        {!isError && !isLoading && <p>Dr. {doctor?.fullName}</p>}
-
-        {!isLoading && <p>{clinic.name}</p>} */}
-
-        {/* {!isLoading && (
+        {!isLoading && user?.role === "admin" && (
           <div className="min-w-52 grid grid-cols-2">
             {isError &&
               (isAdding ? (
@@ -115,10 +102,28 @@ function Clinic({ clinic, groupId, shiftId }: ClinicProps) {
                 />
               ))}
 
-            {!isError && !isLoading && <p>Dr. {doctor?.fullName}</p>}
-            
+            {!isError && (
+              <>
+                {showDeleteIcon ? (
+                  <MdDelete
+                    onClick={() =>
+                      delDoctorFromShift({
+                        doctorId: doctor!._id,
+                        shiftId,
+                        groupId,
+                      })
+                    }
+                    size={21}
+                    className="text-red-500 cursor-pointer"
+                  />
+                ) : (
+                  <p>Dr. {doctor?.fullName}</p>
+                )}
+              </>
+            )}
+            <p>{clinic.name}</p>
           </div>
-        )} */}
+        )}
       </div>
       {isAdding && (
         <div className="bg-zinc-50">

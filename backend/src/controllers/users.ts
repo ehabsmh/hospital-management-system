@@ -106,7 +106,6 @@ class UserController {
       }
 
       if (err instanceof Error) {
-        console.log(err);
         res.status(500).json({
           error: "Something went wrong with the server.",
         });
@@ -141,8 +140,9 @@ class UserController {
         if (user.doctorInfo) {
           user.doctorInfo.isAvailable = true;
         }
-        await user.save();
       }
+
+      await user.save();
 
       // const userObj = user.toObject();
 
@@ -187,6 +187,35 @@ class UserController {
     }
   }
 
+  static async checkPassword(req: Request, res: Response) {
+    const { userId } = req.params;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) throw new NotFoundError("user does not exist");
+
+      if (user.password) {
+        res.status(400).json({
+          error: "Password already set.",
+        });
+
+        return;
+      }
+
+      res.json({ message: "Password is not set yet." });
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+
+      res.status(500).json({
+        message: "Something went wrong with the server.",
+      });
+    }
+  }
+
   static async signin(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
 
@@ -224,6 +253,7 @@ class UserController {
         if (user.doctorInfo) {
           user.doctorInfo.isAvailable = true;
         }
+
         await user.save();
       }
 
@@ -271,8 +301,15 @@ class UserController {
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<void> {
+  static async logout(req: CustomRequest, res: Response): Promise<void> {
     try {
+      const user = req.user;
+      if (user?.role === "doctor" && user.doctorInfo) {
+        await User.findByIdAndUpdate(user._id, {
+          "doctorInfo.isAvailable": false,
+        });
+      }
+
       if (!req.cookies.Authorization) {
         res.status(400).json({ message: "User is not logged in." });
         return;
@@ -312,8 +349,6 @@ class UserController {
       const user = req.user;
       if (!user) throw new NotFoundError("User not found.");
 
-      console.log(req.file);
-
       // // Check if the user is logged in
       // if (!req.file) {
       //   res.status(400).json({ error: "No image file provided." });
@@ -325,12 +360,10 @@ class UserController {
         res.status(400).json({ error: "No image file provided." });
         return;
       }
-      res
-        .status(200)
-        .json({
-          message: "Image uploaded successfully.",
-          avatarPath: req.file?.path,
-        });
+      res.status(200).json({
+        message: "Image uploaded successfully.",
+        avatarPath: req.file?.path,
+      });
     } catch (err) {
       if (err instanceof NotFoundError) {
         res

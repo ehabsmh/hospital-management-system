@@ -11,12 +11,18 @@ import { MdClose } from "react-icons/md";
 import useDeleteReservation from "../reservations/useDeleteReservation";
 
 export interface ICaseRecord {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  doctorId: string;
   patientId: string;
   report: {
+    _id: string;
     title: string;
     body: string;
   };
   prescription: {
+    _id: string;
     name: string;
     type: string;
     dosage: string;
@@ -52,7 +58,6 @@ function CreateCaseRecord({
   async function onSubmit(data: ICaseRecord) {
     try {
       const message = await createCaseRecord(data);
-      console.log(dueDate);
 
       const consultation = await createConsultation({ patientId, dueDate });
       console.log(message);

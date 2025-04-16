@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import TableContext from "./Table";
+import { FaCircle } from "react-icons/fa";
 
 function CurrentShiftDoctor() {
   const tableContext = useContext(TableContext);
   const doctor = tableContext?.doctor;
   if (!doctor) return null;
-  console.log(doctor.avatar);
 
   return (
     <>
@@ -30,7 +30,11 @@ function CurrentShiftDoctor() {
       </td>
       <td className="p-3 border border-gray-300">
         <div className={`w-full h-full flex justify-center items-center`}>
-          <p className="w-4 h-4 bg-red-500 rounded-full"></p>
+          <FaCircle
+            className={`${
+              doctor.doctorInfo?.isAvailable ? "text-green-400" : "text-red-400"
+            }`}
+          />
         </div>
       </td>
     </>

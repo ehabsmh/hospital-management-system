@@ -4,7 +4,7 @@ import { logout } from "../services/apiAuth";
 import { useAuth } from "../components/auth/useAuth";
 
 function Sidebar() {
-  const { setUser } = useAuth();
+  const { setUser, user } = useAuth();
   async function onLogout() {
     await logout();
     setUser(null);
@@ -38,17 +38,19 @@ function Sidebar() {
             Schedule
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="accounts&clinics"
-            className={({ isActive }) =>
-              (isActive ? "font-bold text-lg" : "font-normal text-sm") +
-              " duration-150"
-            }
-          >
-            <p>Accounts & Clinics</p>
-          </NavLink>
-        </li>
+        {user?.role === "admin" && (
+          <li>
+            <NavLink
+              to="accounts&clinics"
+              className={({ isActive }) =>
+                (isActive ? "font-bold text-lg" : "font-normal text-sm") +
+                " duration-150"
+              }
+            >
+              <p>Accounts & Clinics</p>
+            </NavLink>
+          </li>
+        )}
         <li>
           <p>Settings</p>
         </li>

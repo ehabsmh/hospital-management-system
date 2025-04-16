@@ -39,7 +39,6 @@ export async function deleteReservation(reservationId: string) {
     console.log(data);
     return data.message;
   } catch (err) {
-    console.log(err.response?.data.error);
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }
 }
