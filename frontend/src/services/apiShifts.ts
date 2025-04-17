@@ -11,7 +11,7 @@ export async function getCurrentShift() {
 
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -35,10 +35,7 @@ export async function fetchDoctorByShift(params: { groupId: string, clinicId: st
 
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) {
-
-      throw new Error(err.response?.data.error);
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -46,16 +43,15 @@ export async function addDoctorToShift(
   payload: { doctorId: string; groupId: string; shiftId: string }
 ) {
   try {
-    console.log(payload);
     const { data } = await axios.post(
       `http://localhost:3000/api/v1/shifts/`,
       payload,
       { withCredentials: true }
     );
-    console.log(data);
+
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -70,6 +66,6 @@ export async function deleteDoctorFromShift(
     );
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }

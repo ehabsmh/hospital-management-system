@@ -19,9 +19,7 @@ export async function fetchCaseRecords(patientId: string): Promise<ICaseRecord[]
 
     return data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(error.message);
-    }
+    if (error instanceof AxiosError) throw new Error(error.response?.data.message);
     throw new Error("An unexpected error occurred while fetching the case records.");
   }
 }

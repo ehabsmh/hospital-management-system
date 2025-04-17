@@ -3,28 +3,19 @@ import IClinic from "../interfaces/Clinic";
 
 export async function fetchClinics() {
   try {
-    const { data } = await axios.get("http://localhost:3000/api/v1/clinics/", { withCredentials: true });
-    const clinics: IClinic[] = data;
-    return clinics;
+    const { data }: { data: IClinic[] } = await axios.get("http://localhost:3000/api/v1/clinics/", { withCredentials: true });
+    return data;
   } catch (err) {
-    if (err instanceof Error) {
-      throw new Error(err.message);
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
 export async function createClinic(payload: IClinic) {
   try {
     const { data } = await axios.post("http://localhost:3000/api/v1/clinics/", payload, { withCredentials: true });
-    console.log(data);
 
     return data.message;
   } catch (err) {
-    if (err instanceof AxiosError) {
-      if (err.response) {
-        const { data } = err.response;
-        throw new Error(data.message);
-      }
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }

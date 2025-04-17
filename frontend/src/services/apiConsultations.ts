@@ -9,7 +9,7 @@ export async function getConsultation(params: { doctorId: string, patientId: str
 
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error.message);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -22,6 +22,6 @@ export async function createConsultation(payload: { patientId: string, dueDate: 
     );
     return data;
   } catch (error) {
-    if (error instanceof AxiosError) throw new Error(error.response?.data.error);
+    if (error instanceof AxiosError) throw new Error(error.response?.data.message);
   }
 }

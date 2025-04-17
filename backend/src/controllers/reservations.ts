@@ -73,7 +73,7 @@ class ReservationsController {
         reservationTypeId,
       });
 
-      res.status(201).json({ data: reservation });
+      res.status(201).json(reservation);
     } catch (err) {
       next(err);
     }
@@ -103,7 +103,7 @@ class ReservationsController {
         .populate("reservationTypeId")
         .sort({ createdAt: 1 });
 
-      res.json({ data: reservations });
+      res.json(reservations);
     } catch (err) {
       next(err);
     }
@@ -134,7 +134,7 @@ class ReservationsController {
         { new: true }
       );
 
-      res.json({ data: reservation });
+      res.json(reservation);
     } catch (err) {
       next(err);
     }

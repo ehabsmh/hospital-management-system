@@ -36,7 +36,7 @@ class PatientController {
         job,
         additionalInfo,
       });
-      res.status(201).json({ data: newPatient });
+      res.status(201).json(newPatient);
     } catch (err) {
       next(err);
     }
@@ -51,7 +51,7 @@ class PatientController {
       const patient = await Patient.findOne({ phoneNumber });
       if (!patient)
         throw new AppError("Patient not found", "NotFoundError", 404);
-      res.status(200).json({ data: patient });
+      res.status(200).json(patient);
     } catch (err) {
       next(err);
     }

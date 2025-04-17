@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AccountsFormData } from "../pages/admins/Accounts";
 import { IUser } from "../interfaces/User";
 
@@ -13,13 +13,7 @@ export async function signup(formData: AccountsFormData) {
     return data.message;
 
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response) {
-        console.log(err.response);
-        const error = err.response.data.error;
-        if (error) throw new Error(error)
-      }
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -38,17 +32,11 @@ export async function setNewPassword(payload: { password: string, userId: string
   try {
     const { data }: { data: { message: string, user: IUser } } = await axios.put(
       `http://localhost:3000/api/v1/auth/create-password`, payload);
-    console.log(data);
 
     return data;
 
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response) {
-        const error = err.response.data.error;
-        if (error) throw new Error(error)
-      }
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 
@@ -56,17 +44,11 @@ export async function checkPassword(userId: string) {
   try {
     const { data } = await axios.get(
       `http://localhost:3000/api/v1/auth/check-password/${userId}`);
-    console.log(data);
 
     return data;
 
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      if (err.response) {
-        const error = err.response.data.error;
-        if (error) throw new Error(error)
-      }
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }
 

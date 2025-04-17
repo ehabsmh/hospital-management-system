@@ -8,9 +8,7 @@ export async function fetchScheduleData() {
     return schedule;
 
   } catch (err) {
-    if (err instanceof AxiosError) {
-      throw new Error(err.message);
-    }
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 
 }

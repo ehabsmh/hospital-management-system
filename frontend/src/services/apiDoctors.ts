@@ -9,6 +9,6 @@ export async function fetchDoctorsByClinicId(clinicId: string) {
     );
     return data;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }

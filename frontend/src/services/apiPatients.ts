@@ -4,14 +4,12 @@ import IPatient from "../interfaces/Patient";
 
 export async function fetchPatient(phoneNumber: string) {
   try {
-    const { data } = await axios.get(
+    const { data }: { data: IPatient } = await axios.get(
       "http://localhost:3000/api/v1/patients",
       { withCredentials: true, params: { "phone-number": phoneNumber } }
     );
 
-    const patient: IPatient = data.data;
-
-    return patient;
+    return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
@@ -22,9 +20,8 @@ export async function addPatient(patient: PatientFormData) {
     const { data } = await axios.post(
       "http://localhost:3000/api/v1/patients", patient, { withCredentials: true, }
     );
-    console.log(data.data);
 
-    return data.data;
+    return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
@@ -35,7 +32,6 @@ export async function editPatient(patient: IPatient) {
     const { data } = await axios.put(
       `http://localhost:3000/api/v1/patients/${patient._id}`, patient, { withCredentials: true, }
     );
-    console.log(data.message);
 
     return data.message;
   } catch (err) {

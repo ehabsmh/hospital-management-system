@@ -3,12 +3,12 @@ import IDoctorReservation from "../interfaces/DoctorReservation";
 
 export async function getDoctorReservations(doctorId: string) {
   try {
-    const { data } = await axios.get(
+    const { data }: { data: IDoctorReservation[] } = await axios.get(
       "http://localhost:3000/api/v1/reservations",
       { withCredentials: true, params: { "doctor-id": doctorId } }
     );
-    const doctorReservations: IDoctorReservation[] = data.data;
-    return doctorReservations;
+
+    return data;
   } catch (err) {
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }
@@ -20,11 +20,9 @@ export async function createReservation({ doctorId, patientId }: { doctorId: str
       "http://localhost:3000/api/v1/reservations", { reservationTypeId },
       { withCredentials: true, params: { "doctor-id": doctorId, "patient-id": patientId } }
     );
-    console.log(data.data);
 
-    return data.data;
+    return data;
   } catch (err) {
-    console.log(err);
     if (err instanceof AxiosError) throw new Error(err.response?.data.error);
   }
 }
@@ -36,9 +34,8 @@ export async function deleteReservation(reservationId: string) {
       `http://localhost:3000/api/v1/reservations/${reservationId}`,
       { withCredentials: true }
     );
-    console.log(data);
     return data.message;
   } catch (err) {
-    if (err instanceof AxiosError) throw new Error(err.response?.data.error);
+    if (err instanceof AxiosError) throw new Error(err.response?.data.message);
   }
 }

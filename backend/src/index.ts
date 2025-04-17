@@ -74,9 +74,7 @@ app.use(
 cron.schedule("0 0 * * 6", async () => {
   try {
     await axios.put("http://localhost:3000/api/v1/schedule/extra-day");
-  } catch (err) {
-    console.error("Error running cron job:", err);
-  }
+  } catch (err) {}
 });
 
 // Delete reservations every 4 hrs
@@ -85,7 +83,6 @@ cron.schedule("10 4 * * *", async () => {
     await axios.delete("http://localhost:3000/api/v1/reservations/all", {
       withCredentials: true,
     });
-    console.log("Deleted");
   } catch (err) {
     console.error("Error running cron job:", err);
   }
