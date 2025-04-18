@@ -14,8 +14,8 @@ function Shift({ shift, clinics, groupId }: ShiftProps) {
     null
   );
   return (
-    <div className="border border-gray-300 mb-5 rounded-xl p-4 shadow-lg bg-white">
-      <div className="font-medium text-gray-700">
+    <div className="dark:bg-gray-700 bg-white border border-gray-300 mb-5 rounded-xl p-4 shadow-lg ">
+      <div className="dark:text-white font-medium text-gray-700">
         {shift.startTime} - {shift.endTime}
       </div>
       <div className="mt-2 space-y-3">

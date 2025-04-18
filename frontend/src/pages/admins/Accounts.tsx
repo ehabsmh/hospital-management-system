@@ -77,8 +77,8 @@ function Accounts() {
   );
 
   return (
-    <FormAccounts layerBgColor="bg-white/80">
-      <div className="border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70 bg-white/60 overflow-auto">
+    <FormAccounts layerBgColor=" bg-white/80">
+      <div className="border-white/20 w-96 p-10 shadow-lg dark:shadow-black/70 border rounded-md overflow-auto">
         <div className="flex justify-center gap-4 mb-6">
           <Button
             className={`mt-3 block w-28 rounded-lg border-none py-1.5 px-3 text-sm text-white bg-primary duration-300 cursor-pointer ${

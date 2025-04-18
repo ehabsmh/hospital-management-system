@@ -16,7 +16,7 @@ function FormAccounts({
 }) {
   return (
     <AccountsPage className="h-screen bg-dark">
-      <div className={`layer h-full ${layerBgColor}`}>
+      <div className={`layer h-full dark:bg-black/75 ${layerBgColor}`}>
         <div className="container h-full lg:w-1/2 mx-auto flex flex-col justify-center items-center">
           {children}
         </div>

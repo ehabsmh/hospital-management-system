@@ -72,7 +72,7 @@ function Window<T extends { onCloseModal: () => void }>({
     <div
       onClick={(e) => e.stopPropagation()}
       id="overlay"
-      className="overlay bg-white/90 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center"
+      className="overlay dark:bg-black/80 bg-white/90 fixed h-screen top-0 left-0 right-0 flex flex-col items-center justify-center"
     >
       {cloneElement(children, { ...children.props, onCloseModal: close })}
     </div>,

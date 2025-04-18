@@ -32,7 +32,7 @@ function ClinicsForm() {
       <Field className="mb-5">
         <Label
           className={`text-sm/6 font-medium ${
-            errors.name ? "text-red-700" : "text-black"
+            errors.name ? "text-red-700" : "dark:text-white text-black"
           }`}
         >
           Clinic Name
@@ -41,7 +41,7 @@ function ClinicsForm() {
           data-focus
           {...register("name", { required: true })}
           className={clsx(
-            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,
+            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 dark:text-white text-black`,
             `focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary/30`
           )}
         />
@@ -50,7 +50,7 @@ function ClinicsForm() {
       <Field className="mb-5">
         <Label
           className={`text-sm/6 font-medium ${
-            errors.floor ? "text-red-700" : "text-black"
+            errors.floor ? "text-red-700" : "dark:text-white text-black"
           }`}
         >
           Floor
@@ -59,7 +59,7 @@ function ClinicsForm() {
           data-focus
           {...register("floor", { required: true })}
           className={clsx(
-            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,
+            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 dark:text-white text-black`,
             `focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary/30`
           )}
         />
@@ -68,7 +68,7 @@ function ClinicsForm() {
       <Field className="mb-5">
         <Label
           className={`text-sm/6 font-medium ${
-            errors.roomNumber ? "text-red-700" : "text-black"
+            errors.roomNumber ? "text-red-700" : "dark:text-white text-black"
           }`}
         >
           Room Number
@@ -77,7 +77,7 @@ function ClinicsForm() {
           data-focus
           {...register("roomNumber", { required: true })}
           className={clsx(
-            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,
+            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 dark:text-white text-black`,
             `focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary/30`
           )}
         />

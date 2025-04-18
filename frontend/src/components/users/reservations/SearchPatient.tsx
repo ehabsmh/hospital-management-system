@@ -55,7 +55,7 @@ function SearchPatient({
     >
       <p className="mb-7 text-red-400">{error}</p>
       <Field>
-        <Label className="text-sm/6 font-medium text-black">
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
           Patient Phone Number
         </Label>
         <Input

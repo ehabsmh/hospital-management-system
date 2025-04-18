@@ -72,7 +72,7 @@ function NewReservation({
   }
 
   return (
-    <div className="border relative rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70">
+    <div className="dark:text-white border relative rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70">
       <MdClose
         onClick={onCloseModal}
         className="absolute top-0 right-0 border border-gray-300 cursor-pointer"

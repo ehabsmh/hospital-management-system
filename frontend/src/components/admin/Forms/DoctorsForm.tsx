@@ -35,7 +35,9 @@ function DoctorsForm({ doctorForm }: UsersFormProps) {
   return (
     <>
       <Field className="mb-5">
-        <Label className="text-sm/6 font-medium text-black">Doctor Rank</Label>
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
+          Doctor Rank
+        </Label>
         <Select
           {...register("doctorInfo.rank", { required: true })}
           data-focus

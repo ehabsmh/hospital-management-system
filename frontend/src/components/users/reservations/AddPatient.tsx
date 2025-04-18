@@ -98,7 +98,9 @@ function AddPatient({
       )}
       <p className="error text-red-400">{error}</p>
       <Field className="mb-4">
-        <Label className="text-sm/6 font-medium text-black">Full Name</Label>
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
+          Full Name
+        </Label>
         <Input
           data-focus
           {...register("fullName", { required: true })}
@@ -110,7 +112,9 @@ function AddPatient({
       </Field>
 
       <Field className="mb-4">
-        <Label className="text-sm/6 font-medium text-black">Job</Label>
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
+          Job
+        </Label>
         <Input
           data-focus
           {...register("job", { required: true })}
@@ -121,7 +125,9 @@ function AddPatient({
         />
       </Field>
       <Field className="mb-4">
-        <Label className="text-sm/6 font-medium text-black">Phone Number</Label>
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
+          Phone Number
+        </Label>
         <Input
           data-focus
           {...register("phoneNumber", { required: true })}
@@ -133,7 +139,9 @@ function AddPatient({
       </Field>
 
       <Field className="mb-6 w-16">
-        <Label className="text-sm/6 font-medium text-black">Age</Label>
+        <Label className="text-sm/6 font-medium dark:text-white text-black">
+          Age
+        </Label>
         <Input
           data-focus
           type="number"

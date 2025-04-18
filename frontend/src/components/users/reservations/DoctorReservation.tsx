@@ -34,28 +34,28 @@ function DoctorReservation({ reservation }: DoctorReservationProps) {
 
   return (
     <>
-      <td className="p-3 border border-gray-300">
+      <td className="dark:text-white p-3 border border-gray-300">
         {reservation.patientId.fullName.split(" ").at(0)}{" "}
         {reservation.patientId.fullName.split(" ").at(-1)}
       </td>
 
-      <td className="p-3 border border-gray-300">
+      <td className="dark:text-white p-3 border border-gray-300">
         {reservation.patientId.age}
       </td>
 
-      <td className="p-3 border border-gray-300">
+      <td className="dark:text-white p-3 border border-gray-300">
         {reservation.patientId.job}
       </td>
 
-      <td className="p-3 border border-gray-300 text-center">
+      <td className="dark:text-white p-3 border border-gray-300 text-center">
         {reservation.patientId.phoneNumber}
       </td>
 
-      <td className="p-3 border border-gray-300 text-center">
+      <td className="dark:text-white p-3 border border-gray-300 text-center">
         {reservation.reservationTypeId.name}
       </td>
 
-      <td className="p-3 w-24 border border-gray-300">
+      <td className="dark:text-white p-3 w-24 border border-gray-300">
         <div className="flex justify-center items-center gap-5">
           {user?.role !== "doctor" && (
             <MdOutlineCancel

@@ -16,7 +16,7 @@ export function Table({ children }: { children: ReactNode }) {
 
 function Header({ children }: { children: ReactNode }) {
   return (
-    <thead className="bg-gray-200 ">
+    <thead className="dark:bg-gray-500 bg-gray-200 ">
       <tr>{children}</tr>
     </thead>
   );
@@ -61,14 +61,18 @@ function Row({
         <tr
           onClick={onClick}
           className={`${
-            !onClick ? "" : "cursor-pointer hover:bg-primary/15 duration-150"
+            !onClick
+              ? ""
+              : "dark:text-white cursor-pointer hover:bg-primary/15 duration-150"
           }`}
         >
           {children}
         </tr>
       ) : (
         <tr
-          className={"cursor-pointer hover:bg-primary/15 duration-150"}
+          className={
+            "dark:text-white cursor-pointer hover:bg-primary/15 duration-150"
+          }
           onClick={doctor ? goToDoctorReservations : undefined}
         >
           {children}
