@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import IPatient from "../../interfaces/Patient";
+import IPatient from "../../../interfaces/Patient";
 import useNewReservation from "./useNewReservation";
 import { useSearchParams } from "react-router-dom";
-import { getConsultation } from "../../services/apiConsultations";
-import { fetchPatient } from "../../services/apiPatients";
+import { getConsultation } from "../../../services/apiConsultations";
+import { fetchPatient } from "../../../services/apiPatients";
 import { toast } from "sonner";
 import { MdClose } from "react-icons/md";
 
@@ -12,7 +12,7 @@ type ReservationProps = {
   setPatientIsFound: Dispatch<SetStateAction<null | boolean>>;
   onCloseModal?: () => void;
 };
-function Reservation({
+function NewReservation({
   phoneNumber,
   setPatientIsFound,
   onCloseModal,
@@ -125,4 +125,4 @@ function Reservation({
   );
 }
 
-export default Reservation;
+export default NewReservation;

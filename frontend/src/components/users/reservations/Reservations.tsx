@@ -1,8 +1,8 @@
-import Loader from "../../ui/Loader";
-import Modal from "../../ui/Modal";
-import { useAuth } from "../auth/useAuth";
-import CaseRecords from "../case-records/CaseRecords";
-import { Table } from "../current-shift/Table";
+import Loader from "../../../ui/Loader";
+import Modal from "../../../ui/Modal";
+import { Table } from "../../../ui/Table";
+import { useAuth } from "../../auth/useAuth";
+import CaseRecords from "../../doctors/case-records/CaseRecords";
 import AddCheck from "./AddCheck";
 import DoctorReservation from "./DoctorReservation";
 import useDoctorReservations from "./useDoctorReservations";
@@ -21,6 +21,7 @@ type ReservationsProps = {
   doctorName: string | null;
   showAddCheck?: boolean;
 };
+
 function Reservations({
   doctorId,
   doctorName,
@@ -38,11 +39,13 @@ function Reservations({
           <Loader size={30} color={"#23B1F8"} />
         </div>
       )}
+
       {!isLoading && error && (
         <div className="h-screen flex justify-center items-center">
           <p className="text-red-500">{error.message}</p>
         </div>
       )}
+
       {!isLoading && !error && (
         <>
           <div className="bg-primary text-white font-bold text-center p-3">
@@ -58,21 +61,20 @@ function Reservations({
               render={() =>
                 doctorReservations?.map((reservation) =>
                   user?.role === "doctor" ? (
-                    <Table.Row key={reservation._id}>
-                      <Modal>
-                        <Modal.Open opens="case-records">
+                    <Modal>
+                      <Modal.Open opens="case-records">
+                        <Table.Row key={reservation._id}>
                           <DoctorReservation reservation={reservation} />
-                        </Modal.Open>
-                        <Modal.Window name="case-records">
-                          <CaseRecords patientId={reservation.patientId._id} />
-                        </Modal.Window>
-                      </Modal>
-                    </Table.Row>
+                        </Table.Row>
+                      </Modal.Open>
+                      <Modal.Window name="case-records">
+                        <CaseRecords patientId={reservation.patientId._id} />
+                      </Modal.Window>
+                    </Modal>
                   ) : (
-                    <DoctorReservation
-                      key={reservation._id}
-                      reservation={reservation}
-                    />
+                    <Table.Row key={reservation._id}>
+                      <DoctorReservation reservation={reservation} />
+                    </Table.Row>
                   )
                 )
               }

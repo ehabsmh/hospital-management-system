@@ -119,6 +119,14 @@ class UserController {
       if (!user)
         throw new AppError("user does not exist", "NotFoundError", 404);
 
+      if (user.password) {
+        throw new AppError(
+          "User already has a password.",
+          "DuplicationError",
+          409
+        );
+      }
+
       // Validate password and update, only if it has passed the validation.
       user.password = password;
       await user.validate(["password"]);

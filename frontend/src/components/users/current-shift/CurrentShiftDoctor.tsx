@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import TableContext from "./Table";
 import { FaCircle } from "react-icons/fa";
+import TableContext from "../../../ui/Table";
 
 function CurrentShiftDoctor() {
   const tableContext = useContext(TableContext);
@@ -12,12 +12,12 @@ function CurrentShiftDoctor() {
       <td className="p-3 border border-gray-300">
         <img
           src={`http://localhost:3000/${doctor.avatar}`}
-          alt={doctor.fullName + " photo"}
+          alt={"Photo of Dr. " + doctor.fullName}
           className="w-12 h-12 rounded-full mx-auto"
         />
       </td>
       <td className="p-3 border border-gray-300">
-        {doctor.fullName.split(" ")[0]} {doctor.fullName.split(" ")[3]}
+        {doctor.fullName.split(" ").at(0)} {doctor.fullName.split(" ").at(-1)}
       </td>
       <td className="p-3 border border-gray-300">{doctor.doctorInfo?.rank}</td>
       <td className="p-3 border border-gray-300">
@@ -32,7 +32,9 @@ function CurrentShiftDoctor() {
         <div className={`w-full h-full flex justify-center items-center`}>
           <FaCircle
             className={`${
-              doctor.doctorInfo?.isAvailable ? "text-green-400" : "text-red-400"
+              doctor.doctorInfo?.isAvailable
+                ? "text-green-400"
+                : "text-gray-400"
             }`}
           />
         </div>

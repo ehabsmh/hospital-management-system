@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createReservation } from "../../services/apiReservations";
+import { createReservation } from "../../../services/apiReservations";
 
 function useNewReservation(doctorId: string) {
   const queryClient = useQueryClient();

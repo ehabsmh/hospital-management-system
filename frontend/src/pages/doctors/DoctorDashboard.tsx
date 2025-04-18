@@ -1,6 +1,6 @@
 import { Button } from "@headlessui/react";
 import { useAuth } from "../../components/auth/useAuth";
-import Reservations from "../../components/reservations/Reservations";
+import Reservations from "../../components/users/reservations/Reservations";
 import { logout } from "../../services/apiAuth";
 
 function DoctorDashboard() {

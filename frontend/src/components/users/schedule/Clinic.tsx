@@ -4,12 +4,12 @@ import { useState } from "react";
 import { IUser } from "../../../interfaces/User";
 import { fetchDoctorsByClinicId } from "../../../services/apiDoctors";
 import { toast } from "sonner";
-import useDoctorByShift from "./useDoctorByShift";
-import useAddDoctorToShift from "./useAddDoctorToShift";
 import Loader from "../../../ui/Loader";
 import { MdDelete } from "react-icons/md";
+import { useAuth } from "../../auth/useAuth";
+import useDoctorByShift from "./useDoctorByShift";
+import useAddDoctorToShift from "./useAddDoctorToShift";
 import useDeleteDoctorFromShift from "./useDeleteDoctorFromShift";
-import { useAuth } from "../../../components/auth/useAuth";
 
 type ClinicProps = {
   clinic: IClinic;

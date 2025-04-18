@@ -1,11 +1,11 @@
 import { Field, Label, Select } from "@headlessui/react";
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
-import { fetchClinics } from "../../services/apiClinics";
 import { toast } from "sonner";
-import IClinic from "../../interfaces/Clinic";
 import { UseFormReturn } from "react-hook-form";
-import { AccountsFormData } from "../../pages/admins/Accounts";
+import { AccountsFormData } from "../../../pages/admins/Accounts";
+import IClinic from "../../../interfaces/Clinic";
+import { fetchClinics } from "../../../services/apiClinics";
 
 type UsersFormProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

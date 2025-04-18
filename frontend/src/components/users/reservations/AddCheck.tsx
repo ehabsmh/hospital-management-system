@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../../ui/Modal";
 import SearchPatient from "./SearchPatient";
 import AddPatient from "./AddPatient";
-import Reservation from "./NewReservation";
+import NewReservation from "./NewReservation";
 
 function AddCheck() {
   const [patientIsFound, setPatientIsFound] = useState<boolean | null>(null);
@@ -18,7 +18,7 @@ function AddCheck() {
         </Modal.Open>
         <Modal.Window name="new-check">
           {patientIsFound ? (
-            <Reservation
+            <NewReservation
               phoneNumber={phoneNumber}
               setPatientIsFound={setPatientIsFound}
             />

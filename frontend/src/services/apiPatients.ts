@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { PatientFormData } from "../components/reservations/AddPatient";
+import { PatientFormData } from "../components/users/reservations/AddPatient";
 import IPatient from "../interfaces/Patient";
 
 export async function fetchPatient(phoneNumber: string) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchScheduleData } from "../../../services/apiSchedule";
 import ISchedule from "../../../interfaces/Schedule";
-import Shifts from "./Shifts";
+import Shifts from "../../../components/users/schedule/Shifts";
 
 function Schedule() {
   const [schedule, setSchedule] = useState<ISchedule[] | null>(null);
@@ -22,7 +22,7 @@ function Schedule() {
   }, []);
 
   return (
-    <div className="p-6 grid grid-cols-2 gap-8 overflow-auto">
+    <div className="md:p-6 md:grid md:grid-cols-2 md:gap-8 overflow-auto">
       {schedule?.map((group) => (
         <div key={group._id}>
           <div>

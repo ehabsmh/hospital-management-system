@@ -1,4 +1,4 @@
-import ICaseRecord from "../../interfaces/CaseRecord";
+import ICaseRecord from "../../../interfaces/CaseRecord";
 
 function Report({ report }: { report: ICaseRecord["report"] }) {
   return (

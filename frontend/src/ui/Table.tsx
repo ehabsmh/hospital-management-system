@@ -1,7 +1,6 @@
 import { createContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { IUser } from "../../interfaces/User";
-import { useAuth } from "../auth/useAuth";
+import { IUser } from "../interfaces/User";
 
 const TableContext = createContext<{ doctor?: IUser } | null>(null);
 
@@ -39,9 +38,16 @@ function Body({ render }: { render: () => ReactNode }) {
   return <tbody>{render()}</tbody>;
 }
 
-function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
+function Row({
+  children,
+  doctor,
+  onClick,
+}: {
+  children: ReactNode;
+  doctor?: IUser;
+  onClick?: () => void;
+}) {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   function goToDoctorReservations() {
     navigate(
@@ -49,24 +55,25 @@ function Row({ children, doctor }: { children: ReactNode; doctor?: IUser }) {
     );
   }
 
-  // if (!doctor) return <tr>{children}</tr>;
-
-  if (user?.role === "doctor") {
-    return (
-      <TableContext.Provider value={{ doctor }}>
-        {children}
-      </TableContext.Provider>
-    );
-  }
-
   return (
     <TableContext.Provider value={{ doctor }}>
-      <tr
-        className={"cursor-pointer hover:bg-primary/15 duration-150"}
-        onClick={doctor ? goToDoctorReservations : undefined}
-      >
-        {children}
-      </tr>
+      {!doctor ? (
+        <tr
+          onClick={onClick}
+          className={`${
+            !onClick ? "" : "cursor-pointer hover:bg-primary/15 duration-150"
+          }`}
+        >
+          {children}
+        </tr>
+      ) : (
+        <tr
+          className={"cursor-pointer hover:bg-primary/15 duration-150"}
+          onClick={doctor ? goToDoctorReservations : undefined}
+        >
+          {children}
+        </tr>
+      )}
     </TableContext.Provider>
   );
 }

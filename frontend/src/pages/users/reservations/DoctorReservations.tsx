@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
 import { useEffect } from "react";
 // import DoctorReservation from "../../../components/reservations/DoctorReservation";
-import Reservations from "../../../components/reservations/Reservations";
+import Reservations from "../../../components/users/reservations/Reservations";
 
 // const doctorReservationsCols = [
 //   "Name",
@@ -21,16 +21,15 @@ function DoctorReservations() {
   const [searchParams] = useSearchParams();
   const doctorId = searchParams.get("id");
   const doctorName = searchParams.get("name");
-  const navigate = useNavigate();
-  // const { isLoading, doctorReservations, error } = useDoctorReservations(
-  //   doctorId!
-  // );
-  const { currentShift } = useCurrentDoctors();
 
+  // If doctor not in the current shift navigate to home page
+
+  const navigate = useNavigate();
+  const { currentShift } = useCurrentDoctors();
   useEffect(
     function () {
       if (currentShift) {
-        const isInCurrShift = currentShift.doctors.find(
+        const isInCurrShift = currentShift.doctors.some(
           (doctor) => doctor._id === doctorId
         );
 

@@ -1,9 +1,9 @@
 import { Button } from "@headlessui/react";
-import { Table } from "../current-shift/Table";
 import { useState } from "react";
 import { MdAddCircle } from "react-icons/md";
 import { UseFormGetValues, UseFormRegister } from "react-hook-form";
-import { ICaseRecord } from "./CreateCaseRecord";
+import { Table } from "../../../ui/Table";
+import ICaseRecord from "../../../interfaces/CaseRecord";
 
 type CreatePrescriptionProps = {
   register: UseFormRegister<ICaseRecord>;
@@ -16,11 +16,9 @@ function CreatePrescription({
   register,
   getValues,
 }: CreatePrescriptionProps) {
-  const [medicines, setMedicines] = useState(() =>
+  const [medicines, setMedicines] = useState<ICaseRecord["prescription"]>(() =>
     !getValues?.().prescription?.length ? [] : getValues?.().prescription
   );
-
-  console.log(getValues());
 
   return (
     <>

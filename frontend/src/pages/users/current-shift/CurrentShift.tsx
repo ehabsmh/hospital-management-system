@@ -1,7 +1,7 @@
 import Loader from "../../../ui/Loader";
 import useCurrentDoctors from "../../../hooks/useCurrentDoctors";
-import { Table } from "../../../components/current-shift/Table";
-import CurrentShiftDoctor from "../../../components/current-shift/CurrentShiftDoctor";
+import CurrentShiftDoctor from "../../../components/users/current-shift/CurrentShiftDoctor";
+import { Table } from "../../../ui/Table";
 
 const currShiftCols = [
   "Avatar",
@@ -14,8 +14,6 @@ const currShiftCols = [
 
 function CurrentShift() {
   const { isLoading, currentShift, error } = useCurrentDoctors();
-
-  console.log(currentShift, error);
 
   return (
     <>

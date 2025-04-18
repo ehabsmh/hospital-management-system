@@ -1,5 +1,5 @@
-import ICaseRecord from "../../interfaces/CaseRecord";
-import { Table } from "../current-shift/Table";
+import ICaseRecord from "../../../interfaces/CaseRecord";
+import { Table } from "../../../ui/Table";
 
 function Prescription({
   prescription,

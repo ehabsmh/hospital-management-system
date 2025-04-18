@@ -1,11 +1,11 @@
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import IClinic from "../../interfaces/Clinic";
-import Loader from "../../ui/Loader";
 import { useState } from "react";
-import { createClinic } from "../../services/apiClinics";
 import { toast } from "sonner";
+import IClinic from "../../../interfaces/Clinic";
+import Loader from "../../../ui/Loader";
+import { createClinic } from "../../../services/apiClinics";
 
 function ClinicsForm() {
   const {

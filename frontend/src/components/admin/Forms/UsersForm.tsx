@@ -1,7 +1,7 @@
 import { Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
 import { FieldErrors, UseFormReturn } from "react-hook-form";
-import { AccountsFormData } from "../../pages/admins/Accounts";
+import { AccountsFormData } from "../../../pages/admins/Accounts";
 
 type UsersFormProps = {
   formType: string;

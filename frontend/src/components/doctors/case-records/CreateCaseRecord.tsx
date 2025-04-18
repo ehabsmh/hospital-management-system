@@ -3,31 +3,13 @@ import { useEffect, useState } from "react";
 import CreateReport from "./CreateReport";
 import CreatePrescription from "./CreatePrescription";
 import { useForm } from "react-hook-form";
-import { createCaseRecord } from "../../services/apiCaseRecord";
+import { createCaseRecord } from "../../../services/apiCaseRecord";
 import CreateConsultation from "./CreateConsultation";
-import { createConsultation } from "../../services/apiConsultations";
+import { createConsultation } from "../../../services/apiConsultations";
 import { toast } from "sonner";
 import { MdClose } from "react-icons/md";
-import useDeleteReservation from "../reservations/useDeleteReservation";
-
-export interface ICaseRecord {
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-  doctorId: string;
-  patientId: string;
-  report: {
-    _id: string;
-    title: string;
-    body: string;
-  };
-  prescription: {
-    _id: string;
-    name: string;
-    type: string;
-    dosage: string;
-  }[];
-}
+import useDeleteReservation from "../../users/reservations/useDeleteReservation";
+import ICaseRecord from "../../../interfaces/CaseRecord";
 
 type Value = Date;
 type CreateCaseRecordProps = {

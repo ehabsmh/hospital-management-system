@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import FormAccounts from "../../ui/FormAccounts";
-import UsersForm from "../../components/Forms/UsersForm";
-import DoctorsForm from "../../components/Forms/DoctorsForm";
-import ClinicsForm from "../../components/Forms/ClinicsForm";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signup, uploadAvatar } from "../../services/apiAuth";
 import { toast } from "sonner";
 import Loader from "../../ui/Loader";
+import UsersForm from "../../components/admin/Forms/UsersForm";
+import DoctorsForm from "../../components/admin/Forms/DoctorsForm";
+import ClinicsForm from "../../components/admin/Forms/ClinicsForm";
 
 export type AccountsFormData = {
   fullName: string;

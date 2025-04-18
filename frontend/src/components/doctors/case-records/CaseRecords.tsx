@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import CaseRecord from "./CaseRecord";
-import { fetchCaseRecords } from "../../services/apiCaseRecord";
-import ICaseRecord from "../../interfaces/CaseRecord";
+import { fetchCaseRecords } from "../../../services/apiCaseRecord";
+import ICaseRecord from "../../../interfaces/CaseRecord";
 import { toast } from "sonner";
 
 type CaseRecordsProps = {

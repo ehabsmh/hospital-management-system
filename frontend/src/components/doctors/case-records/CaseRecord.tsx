@@ -4,11 +4,11 @@ import {
   FaFile,
   FaFileInvoice,
 } from "react-icons/fa";
-import ICaseRecord from "../../interfaces/CaseRecord";
+import ICaseRecord from "../../../interfaces/CaseRecord";
 import { useState } from "react";
 import Prescription from "./Prescription";
 import Report from "./Report";
-import { format } from "./../../../node_modules/date-fns/format";
+import { format } from "date-fns/format";
 
 function CaseRecord({
   toggleAccordion,

@@ -1,11 +1,11 @@
-import IDoctorReservation from "../../interfaces/DoctorReservation";
-import { MdEdit } from "react-icons/md";
-import Modal from "../../ui/Modal";
+import IDoctorReservation from "../../../interfaces/DoctorReservation";
+import { MdEdit, MdOutlineCancel } from "react-icons/md";
+import Modal from "../../../ui/Modal";
 import AddPatient from "./AddPatient";
 import useDeleteReservation from "./useDeleteReservation";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../auth/useAuth";
 import { FaCheckCircle } from "react-icons/fa";
-import CreateCaseRecord from "../case-records/CreateCaseRecord";
+import CreateCaseRecord from "../../doctors/case-records/CreateCaseRecord";
 import { toast } from "sonner";
 
 type DoctorReservationProps = {
@@ -13,9 +13,10 @@ type DoctorReservationProps = {
   onClick?: () => void;
 };
 
-function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
-  const { delReservation } = useDeleteReservation();
+function DoctorReservation({ reservation }: DoctorReservationProps) {
   const { user } = useAuth();
+
+  const { delReservation } = useDeleteReservation();
 
   function onCancelReservation() {
     toast.error("Are you sure you want to cancel this reservation?", {
@@ -32,13 +33,10 @@ function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
   }
 
   return (
-    <tr
-      onClick={onClick}
-      className={"cursor-pointer hover:bg-primary/15 duration-150"}
-    >
+    <>
       <td className="p-3 border border-gray-300">
-        {reservation.patientId.fullName.split(" ")[0]}{" "}
-        {reservation.patientId.fullName.split(" ")[3]}
+        {reservation.patientId.fullName.split(" ").at(0)}{" "}
+        {reservation.patientId.fullName.split(" ").at(-1)}
       </td>
 
       <td className="p-3 border border-gray-300">
@@ -60,18 +58,20 @@ function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
       <td className="p-3 w-24 border border-gray-300">
         <div className="flex justify-center items-center gap-5">
           {user?.role !== "doctor" && (
-            <p
-              className="text-red-800 cursor-pointer"
+            <MdOutlineCancel
+              size={20}
               onClick={onCancelReservation}
-            >
-              &#x2718;
-            </p>
+              className="text-red-500 cursor-pointer hover:text-red-800 duration-200"
+            />
           )}
           <Modal>
             {user?.role !== "doctor" && (
               <>
                 <Modal.Open opens="edit-patient">
-                  <MdEdit className="text-yellow-800 cursor-pointer" />
+                  <MdEdit
+                    size={20}
+                    className="text-amber-400 hover:text-amber-600 cursor-pointer duration-200"
+                  />
                 </Modal.Open>
                 <Modal.Window name="edit-patient">
                   <AddPatient
@@ -100,7 +100,7 @@ function DoctorReservation({ reservation, onClick }: DoctorReservationProps) {
           </Modal>
         </div>
       </td>
-    </tr>
+    </>
   );
 }
 
