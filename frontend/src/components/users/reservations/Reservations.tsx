@@ -61,9 +61,9 @@ function Reservations({
               render={() =>
                 doctorReservations?.map((reservation) =>
                   user?.role === "doctor" ? (
-                    <Modal>
+                    <Modal key={reservation._id}>
                       <Modal.Open opens="case-records">
-                        <Table.Row key={reservation._id}>
+                        <Table.Row>
                           <DoctorReservation reservation={reservation} />
                         </Table.Row>
                       </Modal.Open>

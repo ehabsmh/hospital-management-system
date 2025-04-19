@@ -17,7 +17,7 @@ function CreateReport({ setRecordType, register }: CreateReportProps) {
           data-focus
           placeholder="Title"
           className={clsx(
-            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,
+            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 dark:text-white text-black`,
             `focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary/30`
           )}
         />
@@ -29,7 +29,7 @@ function CreateReport({ setRecordType, register }: CreateReportProps) {
           data-focus
           placeholder="Body"
           className={clsx(
-            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 text-black`,
+            `mt-2 block w-full rounded-lg border-none bg-primary/20 py-1.5 px-3 text-sm/6 dark:text-white text-black`,
             `focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary/30`
           )}
         />

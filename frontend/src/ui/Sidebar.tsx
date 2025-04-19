@@ -2,16 +2,26 @@ import { MdDarkMode, MdLightMode, MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { logout } from "../services/apiAuth";
 import { useAuth } from "../components/auth/useAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Sidebar() {
   const { setUser, user } = useAuth();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isOnDarkMode, setIsOnDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
   async function onLogout() {
     await logout();
     setUser(null);
   }
+
+  useEffect(
+    function () {
+      if (isOnDarkMode) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+    },
+    [isOnDarkMode]
+  );
   return (
     <aside className="dark:bg-primary-darker bg-primary flex flex-col items-center py-16 h-screen">
       <ul className="flex flex-col items-center gap-10 text-white">
@@ -58,22 +68,24 @@ function Sidebar() {
 
       <ul className="mt-auto text-white mb-4 flex gap-5">
         <MdLogout size={30} className="cursor-pointer" onClick={onLogout} />
-        {isDarkMode ? (
+        {isOnDarkMode ? (
           <MdLightMode
             size={30}
             className="cursor-pointer"
+            color="yellow"
             onClick={() => {
-              document.documentElement.classList.remove("dark");
-              setIsDarkMode(!isDarkMode);
+              localStorage.setItem("darkMode", String(false));
+              setIsOnDarkMode(!isOnDarkMode);
             }}
           />
         ) : (
           <MdDarkMode
             size={30}
+            color="white"
             className="cursor-pointer text-zinc-800"
             onClick={() => {
-              document.documentElement.classList.add("dark");
-              setIsDarkMode(!isDarkMode);
+              localStorage.setItem("darkMode", String(true));
+              setIsOnDarkMode(!isOnDarkMode);
             }}
           />
         )}

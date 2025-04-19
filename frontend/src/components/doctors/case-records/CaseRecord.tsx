@@ -25,13 +25,15 @@ function CaseRecord({
   const recordedAt = format(record.createdAt, "MMMM dd, yyyy");
 
   return (
-    <div className="border border-gray-300 rounded-xl shadow-sm bg-white">
+    <div className="rounded-xl shadow-sm bg-white">
       <button
         onClick={() => toggleAccordion(index)}
-        className="w-full flex justify-between items-center px-6 py-4 text-left bg-gray-100 hover:bg-gray-200 transition-all"
+        className="w-full flex justify-between items-center px-6 py-4 dark:bg-light-dark dark:hover:dark:bg-dark bg-gray-100 hover:bg-gray-200 transition-all"
       >
-        <span className="text-lg font-medium text-gray-800">{recordedAt}</span>
-        <span className="text-gray-500">
+        <span className="text-lg font-medium dark:text-white text-gray-800">
+          {recordedAt}
+        </span>
+        <span className="dark:text-white text-gray-500">
           {isOpen ? (
             <FaChevronUp className="cursor-pointer" size={20} />
           ) : (
@@ -41,7 +43,7 @@ function CaseRecord({
       </button>
 
       {isOpen && (
-        <div className="px-6 py-5 bg-white border-t space-y-5">
+        <div className="px-6 py-5 dark:bg-light-dark bg-white border-t space-y-5">
           <div className="flex gap-4">
             <button
               disabled={recordType === "Report"}

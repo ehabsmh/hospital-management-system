@@ -91,7 +91,7 @@ function AddPatient({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70"
+      className="dark:text-white border rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70"
     >
       {!patientToEdit && (
         <h2 className="mb-3 font-bold text-lg">New patient</h2>

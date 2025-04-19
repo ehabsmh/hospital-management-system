@@ -16,7 +16,7 @@ export function Table({ children }: { children: ReactNode }) {
 
 function Header({ children }: { children: ReactNode }) {
   return (
-    <thead className="dark:bg-gray-500 bg-gray-200 ">
+    <thead className="dark:bg-zinc-400 bg-gray-200 ">
       <tr>{children}</tr>
     </thead>
   );
@@ -26,7 +26,10 @@ function Columns({ headers }: { headers: string[] }) {
   return (
     <>
       {headers.map((header, index) => (
-        <th key={index} className="p-3 border border-gray-300">
+        <th
+          key={index}
+          className="p-3 border dark:border-white border-gray-300"
+        >
           {header}
         </th>
       ))}

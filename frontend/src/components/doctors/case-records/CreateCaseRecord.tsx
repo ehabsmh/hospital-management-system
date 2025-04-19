@@ -39,11 +39,9 @@ function CreateCaseRecord({
 
   async function onSubmit(data: ICaseRecord) {
     try {
-      const message = await createCaseRecord(data);
+      await createCaseRecord(data);
 
-      const consultation = await createConsultation({ patientId, dueDate });
-      console.log(message);
-      console.log(consultation);
+      await createConsultation({ patientId, dueDate });
       onCloseModal?.();
       toast.success(`Record created for case #${patientId}.`);
       delReservation(reservationId);
@@ -53,13 +51,10 @@ function CreateCaseRecord({
   }
 
   return (
-    <section className="border relative rounded-md border-white/20  w-1/2 p-10 shadow-lg shadow-black/70">
+    <section className="border relative rounded-md border-white/20 w-1/2 p-10 shadow-lg shadow-black/70">
       <MdClose
-        onClick={(e) => {
-          onCloseModal?.();
-          e.stopPropagation();
-        }}
-        className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
+        onClick={() => onCloseModal?.()}
+        className="dark:text-white dark:border-gray-600 absolute top-0 right-0 border border-gray-300 cursor-pointer"
         size={25}
       />
       <div className="flex justify-center gap-8">
@@ -84,7 +79,7 @@ function CreateCaseRecord({
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center flex-col"
+        className="flex items-center flex-col mt-5"
       >
         <div className="w-1/2">
           {recordType === "Report" && (

@@ -39,10 +39,10 @@ function CaseRecords({ onCloseModal, patientId }: CaseRecordsProps) {
   );
 
   return (
-    <section className="border relative rounded-md border-white/20 min-h-96  w-1/2 p-10 shadow-lg shadow-black/70">
+    <section className="dark:bg-semi_light-dark border relative rounded-md border-white/20 min-h-96  w-1/2 p-10 shadow-lg shadow-black/70">
       <MdClose
         onClick={onCloseModal}
-        className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
+        className="dark:text-white dark:border-gray-600 absolute top-0 right-0 border border-gray-300 cursor-pointer"
         size={25}
       />
       <div className="max-w-3xl mx-auto mt-8 space-y-4">

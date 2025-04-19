@@ -30,35 +30,42 @@ function CreatePrescription({
           render={() =>
             medicines.map((_, i) => (
               <Table.Row key={i}>
-                <tr>
-                  <td className="border border-gray-200 ">
-                    <input
-                      type="text"
-                      placeholder="Medicine Name"
-                      className="w-full text-sm text-center"
-                      {...register(`prescription.${i}.name`)}
-                    />
-                  </td>
-                  <td className="border border-gray-200">
-                    <select
-                      defaultValue="tablet"
-                      className="w-full"
-                      {...register(`prescription.${i}.type`)}
-                    >
-                      <option value="tablet">tablet</option>
-                      <option value="syrup">syrup</option>
-                      <option value="injection">injection</option>
-                      <option value="ointment">ointment</option>
-                    </select>
-                  </td>
-                  <td className="border border-gray-200">
-                    <input
-                      type="text"
-                      {...register(`prescription.${i}.dosage`)}
-                      className="w-full text-sm text-center"
-                    />
-                  </td>
-                </tr>
+                <td className="dark:text-white border border-gray-200 ">
+                  <input
+                    type="text"
+                    placeholder="Medicine Name"
+                    className="w-full text-sm text-center dark:focus:outline-none"
+                    {...register(`prescription.${i}.name`)}
+                  />
+                </td>
+                <td className="dark:text-white border border-gray-200">
+                  <select
+                    defaultValue="tablet"
+                    className="w-full text-center dark:focus:outline-none"
+                    {...register(`prescription.${i}.type`)}
+                  >
+                    <option className="dark:text-black" value="tablet">
+                      tablet
+                    </option>
+                    <option className="dark:text-black" value="syrup">
+                      syrup
+                    </option>
+                    <option className="dark:text-black" value="injection">
+                      injection
+                    </option>
+                    <option className="dark:text-black" value="ointment">
+                      ointment
+                    </option>
+                  </select>
+                </td>
+                <td className="dark:text-white border border-gray-200">
+                  <input
+                    type="text"
+                    placeholder="Dosage"
+                    {...register(`prescription.${i}.dosage`)}
+                    className="w-full text-sm text-center dark:focus:outline-none"
+                  />
+                </td>
               </Table.Row>
             ))
           }
