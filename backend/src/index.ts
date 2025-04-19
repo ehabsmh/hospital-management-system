@@ -73,16 +73,29 @@ app.use(
 // Run the endpoint every saturday at 00:00
 cron.schedule("0 0 * * */Sat", async () => {
   try {
-    await axios.put("http://localhost:3000/api/v1/schedule/extra-day");
+    await axios.put(
+      `${
+        process.env.ON_PRODUCTION
+          ? `${process.env.HOST_NAME}/api/v1/schedule/extra-day`
+          : "http://localhost:3000/api/v1/schedule/extra-day"
+      }`
+    );
   } catch (err) {}
 });
 
 // Delete reservations every 4 hrs
 cron.schedule("10 0,4,8,12,16,20 * * *", async () => {
   try {
-    await axios.delete("http://localhost:3000/api/v1/reservations/all", {
-      withCredentials: true,
-    });
+    await axios.delete(
+      `${
+        process.env.ON_PRODUCTION
+          ? `${process.env.HOST_NAME}/api/v1/reservations/all`
+          : "http://localhost:3000/api/v1/reservations/all"
+      }`,
+      {
+        withCredentials: true,
+      }
+    );
   } catch (err) {
     console.error("Error running cron job:", err);
   }
