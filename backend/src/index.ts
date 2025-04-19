@@ -88,6 +88,6 @@ cron.schedule("10 0,4,8,12,16,20 * * *", async () => {
   }
 });
 
-app.listen(PORT, () =>
+app.listen(process.env.PORT || PORT, () =>
   console.log(`Hospital_MS app listening on port ${PORT}!`)
 );
