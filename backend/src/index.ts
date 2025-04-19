@@ -71,14 +71,14 @@ app.use(
 );
 
 // Run the endpoint every saturday at 00:00
-cron.schedule("0 0 * * 6", async () => {
+cron.schedule("0 0 * * */Sat", async () => {
   try {
     await axios.put("http://localhost:3000/api/v1/schedule/extra-day");
   } catch (err) {}
 });
 
 // Delete reservations every 4 hrs
-cron.schedule("10 4 * * *", async () => {
+cron.schedule("10 0,4,8,12,16,20 * * *", async () => {
   try {
     await axios.delete("http://localhost:3000/api/v1/reservations/all", {
       withCredentials: true,
