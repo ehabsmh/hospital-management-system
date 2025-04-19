@@ -22,14 +22,14 @@ import { AppError } from "./utils/errorHandlers";
 const app = express();
 const PORT = 3000;
 
+app.use("/public", express.static("public"));
+
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
-
-app.use("/public", express.static("public"));
 
 // connect and instantiate DB
 export const db = new DB();
@@ -102,5 +102,5 @@ cron.schedule("10 0,4,8,12,16,20 * * *", async () => {
 });
 
 app.listen(process.env.PORT || PORT, () =>
-  console.log(`Hospital_MS app listening on port ${PORT}!`)
+  console.log(`Hospital_MS app listening on port ${process.env.PORT || PORT}!`)
 );
