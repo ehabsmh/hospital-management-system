@@ -25,7 +25,8 @@ function Accounts() {
   const [formType, setFormType] = useState("user");
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<AccountsFormData>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const form = useForm<AccountsFormData, any, undefined>();
 
   const {
     handleSubmit,
