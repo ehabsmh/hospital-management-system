@@ -325,6 +325,7 @@ class UserController {
         avatarPath: req.file?.path,
       });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
