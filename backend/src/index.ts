@@ -26,7 +26,7 @@ app.use("/public", express.static("public"));
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://hospital-msys.netlify.app/"],
     credentials: true,
   })
 );
