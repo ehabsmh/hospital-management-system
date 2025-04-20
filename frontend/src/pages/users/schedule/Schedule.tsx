@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { fetchScheduleData } from "../../../services/apiSchedule";
 import ISchedule from "../../../interfaces/Schedule";
@@ -6,7 +5,7 @@ import Shifts from "../../../components/users/schedule/Shifts";
 
 function Schedule() {
   const [schedule, setSchedule] = useState<ISchedule[] | null>(null);
-  const [scheduleError, setScheduleError] = useState("");
+  const [, setScheduleError] = useState("");
 
   async function getSchedule() {
     try {
