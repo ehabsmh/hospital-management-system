@@ -8,8 +8,7 @@ import IClinic from "../../../interfaces/Clinic";
 import { fetchClinics } from "../../../services/apiClinics";
 
 type UsersFormProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  doctorForm: UseFormReturn<AccountsFormData, any, undefined>;
+  doctorForm: UseFormReturn<AccountsFormData>;
 };
 function DoctorsForm({ doctorForm }: UsersFormProps) {
   const [clinics, setClinics] = useState<IClinic[] | null>(null);

@@ -5,8 +5,7 @@ import { AccountsFormData } from "../../../pages/admins/Accounts";
 
 type UsersFormProps = {
   formType: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  userForm: UseFormReturn<AccountsFormData, any, undefined>;
+  userForm: UseFormReturn<AccountsFormData>;
   errors: FieldErrors<AccountsFormData>;
 };
 
