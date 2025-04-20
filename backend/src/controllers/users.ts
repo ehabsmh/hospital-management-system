@@ -278,7 +278,12 @@ class UserController {
         res.status(400).json({ message: "User is not logged in." });
         return;
       }
-      res.clearCookie("Authorization", { path: "/" });
+      res.clearCookie("Authorization", {
+        path: "/",
+        httpOnly: true, // Prevent JavaScript access (XSS protection)
+        sameSite: "none", // Prevent CSRF attacks
+        secure: process.env.ON_PRODUCTION === "true",
+      });
       res.status(200).json({ message: "User logged out successfully." });
     } catch (err) {
       res.status(500).json({ error: "Something went wrong with the server." });
