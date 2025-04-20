@@ -51,7 +51,7 @@ function CreateNewPassword() {
         }
       }
 
-      if (user || user?._id === userId) {
+      if (user || user!._id === userId) {
         navigate("/");
       }
 

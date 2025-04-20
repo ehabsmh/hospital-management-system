@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import axios from "axios";
 import { IUser } from "../interfaces/User";
 import api from "../config/axios.config";
 
