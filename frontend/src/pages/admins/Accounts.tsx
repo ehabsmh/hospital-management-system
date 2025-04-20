@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 import FormAccounts from "../../ui/FormAccounts";
@@ -64,8 +63,6 @@ function Accounts() {
     }
   };
 
-  const onInvalid = (err: any) => console.log(err);
-
   useEffect(
     function () {
       const formValues = getValues();
@@ -106,7 +103,7 @@ function Accounts() {
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit(onValid, onInvalid)}>
+        <form onSubmit={handleSubmit(onValid)}>
           {formType !== "clinic" && (
             <UsersForm formType={formType} userForm={form} errors={errors} />
           )}
@@ -116,7 +113,7 @@ function Accounts() {
           <div className="flex justify-center">
             {formType !== "clinic" && (
               <Button
-                onClick={handleSubmit(onValid, onInvalid)}
+                onClick={handleSubmit(onValid)}
                 type="submit"
                 className="mt-3 block rounded-lg border-none py-2 px-9 text-sm/6 text-white bg-primary duration-300  data-[hover]:bg-sky-600 cursor-pointer data-[active]:bg-sky-700"
               >
