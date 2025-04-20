@@ -22,7 +22,7 @@ import { AppError } from "./utils/errorHandlers";
 const app = express();
 const PORT = 3000;
 
-app.use(express.static("public"));
+app.use("/public", express.static("public"));
 
 app.use(
   cors({

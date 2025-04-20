@@ -20,7 +20,7 @@ export async function getCurrentShift() {
 
 export async function fetchShifts() {
   try {
-    const { data } = await api.get("${endpoint}/all", {
+    const { data } = await api.get(`${endpoint}/all`, {
       withCredentials: true,
     });
     return data;
