@@ -29,12 +29,7 @@ app.use(
   })
 );
 
-if (process.env.ON_PRODUCTION === "true") {
-  app.use("/public", express.static("public"));
-} else {
-  console.log("YESSSSS");
-  app.use("/public", express.static("public"));
-}
+app.use("/public", express.static("public"));
 
 // connect and instantiate DB
 export const db = new DB();

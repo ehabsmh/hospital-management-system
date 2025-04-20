@@ -2,11 +2,9 @@ import express from "express";
 import UserController from "../controllers/users";
 import { auth, isAdmin } from "../middlewares/auth";
 import multer from "multer";
+import storage from "../utils/avatarStore";
 
-let upload;
-if (process.env.ON_PRODUCTION === "true") {
-  upload = multer({ dest: "../public/uploads/" });
-} else upload = multer({ dest: "public/uploads/" });
+const upload = multer({ storage });
 
 const userRouter = express.Router();
 
