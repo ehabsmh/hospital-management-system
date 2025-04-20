@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
 import { IUser } from "../interfaces/User";
+import api from "../config/axios.config";
 
 type ValueType = {
   user: IUser | null;
@@ -18,8 +19,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch user data on mount
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/v1/auth/me", { withCredentials: true }) // withCredentials allows cookies
+    api
+      .get("/api/v1/auth/me") // withCredentials allows cookies
       .then(({ data }) => setUser(data))
       .catch(() => setUser(null)) // Handle unauthenticated state
       .finally(() => setLoading(false));

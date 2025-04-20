@@ -15,6 +15,8 @@ import Loader from "./ui/Loader";
 
 function App() {
   const { user, loading } = useAuth();
+  console.log(user);
+
   const location = useLocation();
   if (loading) {
     return (

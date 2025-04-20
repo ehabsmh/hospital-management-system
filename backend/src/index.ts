@@ -22,7 +22,7 @@ import { AppError } from "./utils/errorHandlers";
 const app = express();
 const PORT = 3000;
 
-app.use("/public", express.static("public"));
+app.use(express.static("public"));
 
 app.use(
   cors({
@@ -91,10 +91,7 @@ cron.schedule("10 0,4,8,12,16,20 * * *", async () => {
         process.env.ON_PRODUCTION
           ? `${process.env.HOST_NAME}/api/v1/reservations/all`
           : "http://localhost:3000/api/v1/reservations/all"
-      }`,
-      {
-        withCredentials: true,
-      }
+      }`
     );
   } catch (err) {
     console.error("Error running cron job:", err);

@@ -3,11 +3,13 @@ import ICurrentShift from "../interfaces/CurrentShift";
 import { IUser } from "../interfaces/User";
 import api from "../config/axios.config";
 
+const endpoint = '/api/v1/shifts';
+
 export async function getCurrentShift() {
   try {
+    console.log(import.meta.env.VITE_PRODUCTION_BASE_URL);
     const { data }: { data: ICurrentShift } = await api.get(
-      "/api/v1/shifts/current",
-      { withCredentials: true }
+      `${endpoint}/current`, { withCredentials: true }
     );
 
     return data;
@@ -18,7 +20,7 @@ export async function getCurrentShift() {
 
 export async function fetchShifts() {
   try {
-    const { data } = await api.get("/api/v1/shifts/all", {
+    const { data } = await api.get("${endpoint}/all", {
       withCredentials: true,
     });
     return data;
@@ -30,7 +32,7 @@ export async function fetchShifts() {
 export async function fetchDoctorByShift(params: { groupId: string, clinicId: string }, shiftId: string) {
   try {
     const { data }: { data: IUser } = await api.get(
-      `/api/v1/shifts/${shiftId}`,
+      `${endpoint}/${shiftId}`,
       { withCredentials: true, params: { 'group-id': params.groupId, 'clinic-id': params.clinicId } }
     );
 
@@ -45,7 +47,7 @@ export async function addDoctorToShift(
 ) {
   try {
     const { data } = await api.post(
-      `/api/v1/shifts/`,
+      `${endpoint}/`,
       payload,
       { withCredentials: true }
     );
@@ -62,7 +64,7 @@ export async function deleteDoctorFromShift(
 ) {
   try {
     const { data } = await api.delete(
-      `/api/v1/shifts/${shiftId}`,
+      `${endpoint}/${shiftId}`,
       { withCredentials: true, data: payload }
     );
     return data;

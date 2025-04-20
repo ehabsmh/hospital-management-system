@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuth } from "../../components/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import FormAccounts from "../../ui/FormAccounts";
+import api from "../../config/axios.config";
 
 export type FormData = {
   email: string;
@@ -26,11 +27,9 @@ function Login() {
   const onSubmit = handleSubmit(async (formData) => {
     setIsLoading(true);
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/auth/sign-in",
-        formData,
-        { withCredentials: true }
-      );
+      const { data } = await api.post("/api/v1/auth/sign-in", formData, {
+        withCredentials: true,
+      });
 
       setError("");
       setUser(data.user);

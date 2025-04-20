@@ -21,7 +21,7 @@ export async function signup(formData: AccountsFormData) {
 export async function logout() {
   try {
     const { data } = await api.post(
-      "/api/v1/auth/logout", {}, { withCredentials: true })
+      "/api/v1/auth/logout", {})
 
     return data.message;
   } catch (err) {
