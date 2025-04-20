@@ -254,7 +254,7 @@ class UserController {
 
       res.cookie("Authorization", userToken, {
         httpOnly: true, // Prevent JavaScript access (XSS protection)
-        sameSite: "strict", // Prevent CSRF attacks
+        sameSite: "none", // Prevent CSRF attacks
         secure: process.env.ON_PRODUCTION === "true",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000, // Set expiration time (e.g., 7 days)

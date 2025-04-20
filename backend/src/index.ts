@@ -26,7 +26,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", process.env.HOST_NAME!],
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
