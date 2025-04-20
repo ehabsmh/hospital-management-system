@@ -2,8 +2,7 @@ import express from "express";
 import UserController from "../controllers/users";
 import { auth, isAdmin } from "../middlewares/auth";
 import multer from "multer";
-
-const upload = multer({ dest: "public/uploads/" });
+import upload from "../utils/avatarStore";
 
 const userRouter = express.Router();
 
