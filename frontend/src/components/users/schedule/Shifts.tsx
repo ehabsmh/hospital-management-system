@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import IShift from "../../../interfaces/Shift";
 import { fetchShifts } from "../../../services/apiShifts";
@@ -13,8 +12,8 @@ type ShiftsProps = {
 function Shifts({ groupId }: ShiftsProps) {
   const [shifts, setShifts] = useState<IShift[] | null>(null);
   const [clinics, setClinics] = useState<IClinic[]>([]);
-  const [shiftError, setShiftError] = useState("");
-  const [clinicError, setClinicError] = useState("");
+  const [, setShiftError] = useState("");
+  const [, setClinicError] = useState("");
 
   async function getClinics() {
     try {
