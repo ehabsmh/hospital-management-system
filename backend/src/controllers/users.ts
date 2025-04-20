@@ -315,6 +315,7 @@ class UserController {
       if (!user) throw new AppError("User not found.", "NotFoundError", 404);
 
       // Update the user's avatar field with the new image path
+      console.log(req.file);
       if (!req.file) {
         throw new AppError("No image file provided.", "RequireError", 400);
       }

@@ -56,7 +56,8 @@ export async function checkPassword(userId: string) {
 export async function uploadAvatar(avatar: File | string) {
   const formData = new FormData();
   formData.append("avatar", avatar);
-  const { data }: { data: { message: string, avatarPath: string } } = await api.post('/api/v1/auth/upload-avatar', formData, { withCredentials: true })
-  return data
 
+  const { data }: { data: { message: string, avatarPath: string } } = await api.post('/api/v1/auth/upload-avatar', formData)
+  console.log(data);
+  return data
 }
