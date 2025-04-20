@@ -1,10 +1,7 @@
 import express from "express";
 import UserController from "../controllers/users";
 import { auth, isAdmin } from "../middlewares/auth";
-import multer from "multer";
-import storage from "../utils/avatarStore";
-
-const upload = multer({ storage });
+import upload from "../utils/avatarStore";
 
 const userRouter = express.Router();
 
