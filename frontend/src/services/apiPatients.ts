@@ -1,11 +1,12 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { PatientFormData } from "../components/users/reservations/AddPatient";
 import IPatient from "../interfaces/Patient";
+import api from "../config/axios.config";
 
 export async function fetchPatient(phoneNumber: string) {
   try {
-    const { data }: { data: IPatient } = await axios.get(
-      "http://localhost:3000/api/v1/patients",
+    const { data }: { data: IPatient } = await api.get(
+      "/api/v1/patients",
       { withCredentials: true, params: { "phone-number": phoneNumber } }
     );
 
@@ -17,8 +18,8 @@ export async function fetchPatient(phoneNumber: string) {
 
 export async function addPatient(patient: PatientFormData) {
   try {
-    const { data } = await axios.post(
-      "http://localhost:3000/api/v1/patients", patient, { withCredentials: true, }
+    const { data } = await api.post(
+      "/api/v1/patients", patient, { withCredentials: true, }
     );
 
     return data;
@@ -29,8 +30,8 @@ export async function addPatient(patient: PatientFormData) {
 
 export async function editPatient(patient: IPatient) {
   try {
-    const { data } = await axios.put(
-      `http://localhost:3000/api/v1/patients/${patient._id}`, patient, { withCredentials: true, }
+    const { data } = await api.put(
+      `/api/v1/patients/${patient._id}`, patient, { withCredentials: true, }
     );
 
     return data.message;

@@ -1,9 +1,10 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import ISchedule from "../interfaces/Schedule";
+import api from "../config/axios.config";
 
 export async function fetchScheduleData() {
   try {
-    const { data } = await axios.get("http://localhost:3000/api/v1/schedule/", { withCredentials: true });
+    const { data } = await api.get("/api/v1/schedule/", { withCredentials: true });
     const schedule: ISchedule[] = data;
     return schedule;
 

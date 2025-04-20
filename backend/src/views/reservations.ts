@@ -26,11 +26,6 @@ reservationsRouter.delete(
   ReservationsController.deleteReservation
 );
 
-reservationsRouter.delete(
-  "/all",
-  auth,
-  isNotDoctor,
-  ReservationsController.deleteReservations
-);
+reservationsRouter.delete("/all", ReservationsController.deleteReservations);
 
 export default reservationsRouter;

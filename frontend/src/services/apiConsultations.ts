@@ -1,9 +1,10 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import api from "../config/axios.config";
 
 export async function getConsultation(params: { doctorId: string, patientId: string }) {
   try {
-    const { data } = await axios.get(
-      "http://localhost:3000/api/v1/consultations",
+    const { data } = await api.get(
+      "/api/v1/consultations",
       { withCredentials: true, params: { "doctor-id": params.doctorId, "patient-id": params.patientId } }
     );
 
@@ -15,8 +16,8 @@ export async function getConsultation(params: { doctorId: string, patientId: str
 
 export async function createConsultation(payload: { patientId: string, dueDate: Date }) {
   try {
-    const { data } = await axios.post(
-      "http://localhost:3000/api/v1/consultations",
+    const { data } = await api.post(
+      "/api/v1/consultations",
       payload,
       { withCredentials: true }
     );

@@ -1,12 +1,13 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { AccountsFormData } from "../pages/admins/Accounts";
 import { IUser } from "../interfaces/User";
+import api from "../config/axios.config";
 
 export async function signup(formData: AccountsFormData) {
   try {
 
-    const { data } = await axios.post(
-      "http://localhost:3000/api/v1/auth/sign-up", formData, {
+    const { data } = await api.post(
+      "/api/v1/auth/sign-up", formData, {
       withCredentials: true
     })
 
@@ -19,8 +20,8 @@ export async function signup(formData: AccountsFormData) {
 
 export async function logout() {
   try {
-    const { data } = await axios.post(
-      "http://localhost:3000/api/v1/auth/logout", {}, { withCredentials: true })
+    const { data } = await api.post(
+      "/api/v1/auth/logout", {}, { withCredentials: true })
 
     return data.message;
   } catch (err) {
@@ -30,8 +31,8 @@ export async function logout() {
 
 export async function setNewPassword(payload: { password: string, userId: string }) {
   try {
-    const { data }: { data: { message: string, user: IUser } } = await axios.put(
-      `http://localhost:3000/api/v1/auth/create-password`, payload);
+    const { data }: { data: { message: string, user: IUser } } = await api.put(
+      `/api/v1/auth/create-password`, payload);
 
     return data;
 
@@ -42,8 +43,8 @@ export async function setNewPassword(payload: { password: string, userId: string
 
 export async function checkPassword(userId: string) {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/api/v1/auth/check-password/${userId}`);
+    const { data } = await api.get(
+      `/api/v1/auth/check-password/${userId}`);
 
     return data;
 
@@ -55,7 +56,7 @@ export async function checkPassword(userId: string) {
 export async function uploadAvatar(avatar: File | string) {
   const formData = new FormData();
   formData.append("avatar", avatar);
-  const { data }: { data: { message: string, avatarPath: string } } = await axios.post('http://localhost:3000/api/v1/auth/upload-avatar', formData, { withCredentials: true })
+  const { data }: { data: { message: string, avatarPath: string } } = await api.post('/api/v1/auth/upload-avatar', formData, { withCredentials: true })
   return data
 
 }

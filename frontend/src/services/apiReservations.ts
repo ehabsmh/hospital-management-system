@@ -1,10 +1,11 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import IDoctorReservation from "../interfaces/DoctorReservation";
+import api from "../config/axios.config";
 
 export async function getDoctorReservations(doctorId: string) {
   try {
-    const { data }: { data: IDoctorReservation[] } = await axios.get(
-      "http://localhost:3000/api/v1/reservations",
+    const { data }: { data: IDoctorReservation[] } = await api.get(
+      "/api/v1/reservations",
       { withCredentials: true, params: { "doctor-id": doctorId } }
     );
 
@@ -16,8 +17,8 @@ export async function getDoctorReservations(doctorId: string) {
 
 export async function createReservation({ doctorId, patientId }: { doctorId: string, patientId: string }, reservationTypeId: string = "67e04d65182214fdd7282918") {
   try {
-    const { data } = await axios.post(
-      "http://localhost:3000/api/v1/reservations", { reservationTypeId },
+    const { data } = await api.post(
+      "/api/v1/reservations", { reservationTypeId },
       { withCredentials: true, params: { "doctor-id": doctorId, "patient-id": patientId } }
     );
 
@@ -30,8 +31,8 @@ export async function createReservation({ doctorId, patientId }: { doctorId: str
 
 export async function deleteReservation(reservationId: string) {
   try {
-    const { data } = await axios.delete(
-      `http://localhost:3000/api/v1/reservations/${reservationId}`,
+    const { data } = await api.delete(
+      `/api/v1/reservations/${reservationId}`,
       { withCredentials: true }
     );
     return data.message;
