@@ -3,7 +3,10 @@ import UserController from "../controllers/users";
 import { auth, isAdmin } from "../middlewares/auth";
 import multer from "multer";
 
-const upload = multer({ dest: "public/uploads/" });
+let upload;
+if (process.env.ON_PRODUCTION === "true") {
+  upload = multer({ dest: "../public/uploads/" });
+} else upload = multer({ dest: "public/uploads/" });
 
 const userRouter = express.Router();
 
