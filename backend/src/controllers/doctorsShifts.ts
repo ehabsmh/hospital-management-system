@@ -192,6 +192,8 @@ class DoctorsShiftsController {
     next: NextFunction
   ) {
     const now = new Date();
+    const egyptTime = now.toLocaleString("en-EG", { timeZone: "Africa/Cairo" });
+    console.log("Egypt Time:", egyptTime);
 
     // get current day
     const currentDay = now.toLocaleString("en-us", { weekday: "long" });
