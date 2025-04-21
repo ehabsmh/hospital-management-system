@@ -12,6 +12,8 @@ export async function findShift(currentDate: Date) {
   const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
   const shifts = await Shift.find();
 
+  console.log("TIME:", currentDate.getHours(), currentDate.getMinutes());
+
   const shift = shifts?.find(({ startTime, endTime }) => {
     const startHours = parseInt(startTime.split(":")[0]);
     const startMins = parseInt(startTime.split(":")[1]);
