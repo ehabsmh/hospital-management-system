@@ -192,8 +192,10 @@ class DoctorsShiftsController {
     next: NextFunction
   ) {
     const now = new Date();
-    const egyptTime = now.toLocaleString("en-EG", { timeZone: "Africa/Cairo" });
-    console.log("Egypt Time:", egyptTime);
+    const egyptTimeStr = now.toLocaleString("en-EG", {
+      timeZone: "Africa/Cairo",
+    });
+    const egyptTimeDate = new Date(egyptTimeStr);
 
     // get current day
     const currentDay = now.toLocaleString("en-us", { weekday: "long" });
@@ -207,7 +209,7 @@ class DoctorsShiftsController {
         { _id: 1 }
       );
 
-      const shift = await findShift(now);
+      const shift = await findShift(egyptTimeDate);
 
       // get doctors for the current shift
       const doctorSchedule = await DoctorsShifts.findOne({
