@@ -3,6 +3,8 @@ import clsx from "clsx";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormData } from "../../pages/auth/Login";
 import Loader from "../../ui/Loader";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 type LoginFormProps = {
   register: UseFormRegister<FormData>;
@@ -18,6 +20,11 @@ function LoginForm({
   error,
   isLoading,
 }: LoginFormProps) {
+  useEffect(function () {
+    toast.info(
+      "You can use the default email and password of an admin to try the system."
+    );
+  }, []);
   return (
     <form
       onSubmit={onSubmit}
