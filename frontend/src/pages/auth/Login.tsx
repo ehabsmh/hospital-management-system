@@ -1,11 +1,12 @@
 import LoginForm from "../../components/auth/LoginForm";
 import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../components/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import FormAccounts from "../../ui/FormAccounts";
 import api from "../../config/axios.config";
+import { toast } from "sonner";
 
 export type FormData = {
   email: string;
@@ -46,6 +47,10 @@ function Login() {
       setIsLoading(false);
     }
   });
+
+  useEffect(function () {
+    toast.info("You can use the default admin's account to try the system.");
+  }, []);
 
   return (
     <FormAccounts layerBgColor="bg-black/75">
