@@ -1,11 +1,12 @@
 import { MdDarkMode, MdLightMode, MdLogout } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../services/apiAuth";
 import { useAuth } from "../components/auth/useAuth";
 import { useEffect, useState } from "react";
 
 function Sidebar() {
   const { setUser, user } = useAuth();
+  const navigate = useNavigate();
   const [isOnDarkMode, setIsOnDarkMode] = useState(
     localStorage.getItem("darkMode") === "true"
   );
@@ -13,6 +14,7 @@ function Sidebar() {
   async function onLogout() {
     await logout();
     setUser(null);
+    navigate("/");
   }
 
   useEffect(
