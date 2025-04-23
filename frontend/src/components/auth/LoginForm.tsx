@@ -28,7 +28,10 @@ function LoginForm({
         <Field>
           <Label className="text-sm/6 font-medium text-white">Email</Label>
           <Input
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: true,
+              value: "sahidih408@erapk.com",
+            })}
             data-focus
             className={clsx(
               `mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white`,
@@ -45,7 +48,7 @@ function LoginForm({
         <Field>
           <Label className="text-sm/6 font-medium text-white">Password</Label>
           <Input
-            {...register("password", { required: true })}
+            {...register("password", { required: true, value: "12345678" })}
             data-focus
             type="password"
             className={clsx(
