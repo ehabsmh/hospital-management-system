@@ -74,7 +74,10 @@ function NewReservation({
   return (
     <div className="dark:text-white border relative rounded-md border-white/20 w-96 p-10 shadow-lg shadow-black/70">
       <MdClose
-        onClick={onCloseModal}
+        onClick={() => {
+          onCloseModal?.();
+          setPatientIsFound(null);
+        }}
         className="absolute top-0 right-0 border border-gray-300 cursor-pointer"
         size={25}
       />
