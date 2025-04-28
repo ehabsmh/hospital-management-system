@@ -54,5 +54,5 @@ git clone https://github.com/ehabsmh/hospital-management-system.git
 **https://hospital-msys.netlify.app/**
 
 ## Contact Me 📬
-- [LinkedIn]([your-link](https://www.linkedin.com/in/dev-ehabelsayed/))
-- [GitHub]([your-link](https://github.com/ehabsmh))
+- [LinkedIn](https://www.linkedin.com/in/dev-ehabelsayed/)
+- [GitHub](https://github.com/ehabsmh)
