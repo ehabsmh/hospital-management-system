@@ -33,7 +33,7 @@ A full-stack hospital management web application to manage doctor shifts, patien
 
 1. Clone the project:
 ```bash
-git clone https://github.com/your-username/hospital-management-system.git
+git clone https://github.com/ehabsmh/hospital-management-system.git
 ```
 
 2. Install Dependencies and run:
