@@ -2,7 +2,7 @@
 
 A full-stack hospital management web application to manage doctor shifts, patient reservations, and cases tracking with role-based access control (Admin, Receptionist, Doctor).
 
-## Roles Features
+## Roles Features ✨
 ### Admins and Receptionists:
 - Check doctors in the current shift.
 - Search patients by phone number to see if the patient registered in the system.
