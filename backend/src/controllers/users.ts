@@ -321,12 +321,12 @@ class UserController {
         throw new AppError("No image file provided.", "RequireError", 400);
       }
 
-      const publicId = await uploadImage(req.file.path);
-      console.log(publicId);
+      const url = await uploadImage(req.file.path);
+      console.log(url);
 
       res.status(200).json({
         message: "Image uploaded successfully.",
-        avatarPath: req.file?.path,
+        avatarPath: url,
       });
     } catch (err) {
       console.log(err);
