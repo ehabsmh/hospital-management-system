@@ -2,14 +2,6 @@ import multer from "multer";
 import path from "path";
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    try {
-      console.log("File received:", file);
-      cb(null, "public/uploads");
-    } catch (err) {
-      console.error("Error in multer storage destination:", err);
-    }
-  },
   filename: function (req, file, cb) {
     try {
       console.log("File received:", file);

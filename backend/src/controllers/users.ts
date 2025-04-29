@@ -13,6 +13,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { CustomRequest } from "../middlewares/auth";
 import Clinic from "../models/clinic";
+import { uploadImage } from "../utils/imageHandling";
 
 class UserController {
   static async signup(req: CustomRequest, res: Response, next: NextFunction) {
@@ -319,6 +320,9 @@ class UserController {
       if (!req.file) {
         throw new AppError("No image file provided.", "RequireError", 400);
       }
+
+      const publicId = await uploadImage(req.file.path);
+      console.log(publicId);
 
       res.status(200).json({
         message: "Image uploaded successfully.",
