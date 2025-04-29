@@ -10,8 +10,15 @@ export const uploadImage = async (imgPath: string) => {
   try {
     // Upload the image
     const result = await cloudinary.uploader.upload(imgPath, options);
-    console.log(result);
-    return result.public_id;
+    const url = cloudinary.url(result.public_id, {
+      transformation: [
+        { quality: "auto", fetch_format: "auto" },
+        { crop: "fill", gravity: "auto" },
+      ],
+    });
+
+    console.log(url);
+    return url;
   } catch (error) {
     console.error(error);
   }

@@ -11,7 +11,7 @@ function CurrentShiftDoctor() {
     <>
       <td className="p-3 border border-gray-300">
         <img
-          src={`${import.meta.env.VITE_PRODUCTION_BASE_URL}/${doctor.avatar}`}
+          src={doctor.avatar}
           alt={"Photo of Dr. " + doctor.fullName}
           className="w-12 h-12 rounded-full mx-auto"
         />
