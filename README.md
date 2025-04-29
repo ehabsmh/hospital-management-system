@@ -26,7 +26,7 @@ A full-stack hospital management web application to manage doctor shifts, patien
 - Frontend: React.js, TailwindCSS, TypeScript
 - Remote State Management: React Query
 - Authentication: JWT + Cookies
-- File Upload: Multer
+- File Upload: Multer + Cloudinary
 - Emails: Nodemailer
 
 ## Getting Started Locally 🖥️
